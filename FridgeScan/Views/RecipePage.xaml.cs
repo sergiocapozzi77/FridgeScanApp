@@ -7,7 +7,7 @@ public partial class RecipePage : ContentPage
     public RecipePage()
     {
         InitializeComponent();
-        _vm = Application.Current?.Handler?.MauiContext?.Services?.GetService<MainViewModel>() ?? new MainViewModel();
+        _vm = Application.Current?.Handler?.MauiContext?.Services?.GetService<MainViewModel>();
         BindingContext = _vm;
     }
 

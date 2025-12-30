@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
 
 namespace FridgeScan.Services
 {
@@ -10,13 +11,13 @@ namespace FridgeScan.Services
         private const string ProjectId = "6954045e003c75c1c3bf";
         private const string DatabaseId = "695404ac0021bf7d9707";
         private const string CollectionId = "products";
-        private const string ApiKey = "";
 
         public ProductService()
         {
+            var apiKey = Secrets.AppWriteApiKey;
             _http = new HttpClient();
             _http.DefaultRequestHeaders.Add("X-Appwrite-Project", ProjectId);
-            _http.DefaultRequestHeaders.Add("X-Appwrite-Key", ApiKey);
+            _http.DefaultRequestHeaders.Add("X-Appwrite-Key", apiKey);
         }
 
         public async Task<List<Product>> GetProductsAsync()

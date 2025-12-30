@@ -10,7 +10,9 @@ public partial class ProductsPage : ContentPage
         InitializeComponent();
 
         var services = Application.Current?.Handler?.MauiContext?.Services;
-        BindingContext = new MainViewModel();
+
+        var vm = services.GetService<MainViewModel>();
+        BindingContext = vm;
     }
 
     private void SfAutocomplete_Completed(object sender, EventArgs e)

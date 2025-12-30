@@ -5,8 +5,6 @@ namespace FridgeScan.ViewModels;
 
 public partial class MainViewModel : BaseViewModel
 {
-    private readonly ProductService _service = new();
-
     public ObservableCollection<Product> Products { get; set; }
 
     public ObservableCollection<ListViewFoodCategory> GroupedProducts { get; } = new();
@@ -35,6 +33,8 @@ public partial class MainViewModel : BaseViewModel
     }
 
     private string _newItemName;
+    private readonly ProductService productService;
+
     public string NewItemName
     {
         get => _newItemName;
@@ -47,8 +47,9 @@ public partial class MainViewModel : BaseViewModel
 
     public ICommand AddItemCommand { get; }
 
-    public MainViewModel()
+    public MainViewModel(ProductService productService)
     {
+        this.productService = productService;
 
         IncreaseCommand = new Command<Product>(p => IncreaseQuantity(p));
         DecreaseCommand = new Command<Product>(p =>
@@ -67,7 +68,7 @@ public partial class MainViewModel : BaseViewModel
 
     private async Task LoadProductsAsync()
     {
-        var items = await _service.GetProductsAsync();
+        var items = await productService.GetProductsAsync();
 
         Products = new ObservableCollection<Product>(items);
         Products.CollectionChanged += (s, e) => RefreshGrouping();
@@ -173,7 +174,7 @@ public partial class MainViewModel : BaseViewModel
         };
 
         Products.Add(product);
-        await _service.AddProductAsync(product);
+        await productService.AddProductAsync(product);
     }
 
 

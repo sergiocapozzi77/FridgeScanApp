@@ -1,21 +1,23 @@
 ﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Configuration;
 using Syncfusion.Maui.Core.Hosting;
+using System.Reflection;
 
 namespace FridgeScan;
 
-public static class MauiProgram
+public static partial class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder
-			.UseMauiApp<App>()
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
             .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFont("MaterialSymbolsRounded.ttf", "Material");
                 fonts.AddFont("Roboto-Medium.ttf", "Roboto-Medium");
                 fonts.AddFont("Roboto-Regular.ttf", "Roboto-Regular");
@@ -24,29 +26,31 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-			// view models and services
-			builder.Services.AddSingleton<MainViewModel>();
-			builder.Services.AddSingleton<ImportViewModel>();
-			builder.Services.AddSingleton<EmailService>();
+        // view models and services
+        builder.Services.AddSingleton<MainViewModel>();
+        builder.Services.AddSingleton<ImportViewModel>();
+        builder.Services.AddSingleton<EmailService>();
 
-			// pages
-			builder.Services.AddTransient<Views.ProductsPage>();
-			builder.Services.AddTransient<Views.ImportPage>();
-			builder.Services.AddTransient<Views.RecipePage>();
+        builder.Services.AddSingleton<ProductService>();
+
+        // pages
+        builder.Services.AddTransient<Views.ProductsPage>();
+        builder.Services.AddTransient<Views.ImportPage>();
+        builder.Services.AddTransient<Views.RecipePage>();
 
 #if ANDROID || IOS || MACCATALYST
-		// Initialize Syncfusion license (replace with your license key)
-		try
-		{
-			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("YOUR_SYNCFUSION_LICENSE_KEY");
-		}
-		catch
-		{
-			// ignore if license call fails in design time
-		}
+        // Initialize Syncfusion license (replace with your license key)
+        try
+        {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Secrets.SyncfusionLicenseKey);
+        }
+        catch
+        {
+            // ignore if license call fails in design time
+        }
 
 #endif
 
         return builder.Build();
-	}
+    }
 }

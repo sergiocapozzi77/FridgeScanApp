@@ -14,18 +14,7 @@ public partial class ImportPage : ContentPage
 
         // Try to resolve viewmodel from the MAUI service provider
         var services = Application.Current?.Handler?.MauiContext?.Services;
-        if (services != null)
-        {
-            _vm = services.GetService<ImportViewModel>();
-        }
-
-        if (_vm == null)
-        {
-            // fallback (not ideal for real app)
-            var emailService = services?.GetService<Services.EmailService>() ?? new Services.EmailService();
-            var mainVm = services?.GetService<MainViewModel>() ?? new MainViewModel();
-            _vm = new ImportViewModel(emailService, mainVm);
-        }
+        _vm = services.GetService<ImportViewModel>();
 
         BindingContext = _vm;
     }
