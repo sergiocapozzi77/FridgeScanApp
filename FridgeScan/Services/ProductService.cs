@@ -10,7 +10,7 @@ namespace FridgeScan.Services
         private const string ProjectId = "6954045e003c75c1c3bf";
         private const string DatabaseId = "695404ac0021bf7d9707";
         private const string CollectionId = "products";
-        private const string ApiKey = "standard_be38725166f290995ea6d9e81ecedbf689d687ca94cd2ff05568ab629f7a51f506401b98e9cc750af531e5cee47c8a60ad94144c573adfb148579b1bec2492becf9200618e021b7bc599be841be73f75bfbd6a23e6440cc4ff5496a502af8f5c8fb5e3d04d406d3aa5f5663f80e1c0d2e4da7266e19e1fab5fb9ccf9a0695ad0";
+        private const string ApiKey = "";
 
         public ProductService()
         {
