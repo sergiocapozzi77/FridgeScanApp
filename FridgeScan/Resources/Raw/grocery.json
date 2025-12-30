@@ -1,0 +1,730 @@
+[
+  {
+    "name": "Milk",
+    "category": "Dairy"
+  },
+  {
+    "name": "Whole Milk",
+    "category": "Dairy"
+  },
+  {
+    "name": "Skim Milk",
+    "category": "Dairy"
+  },
+  {
+    "name": "2% Milk",
+    "category": "Dairy"
+  },
+  {
+    "name": "Cheddar Cheese",
+    "category": "Dairy"
+  },
+  {
+    "name": "Mozzarella Cheese",
+    "category": "Dairy"
+  },
+  {
+    "name": "Swiss Cheese",
+    "category": "Dairy"
+  },
+  {
+    "name": "Feta Cheese",
+    "category": "Dairy"
+  },
+  {
+    "name": "Parmesan Cheese",
+    "category": "Dairy"
+  },
+  {
+    "name": "Yogurt",
+    "category": "Dairy"
+  },
+  {
+    "name": "Greek Yogurt",
+    "category": "Dairy"
+  },
+  {
+    "name": "Butter",
+    "category": "Dairy"
+  },
+  {
+    "name": "Cream Cheese",
+    "category": "Dairy"
+  },
+  {
+    "name": "Sour Cream",
+    "category": "Dairy"
+  },
+  {
+    "name": "Heavy Cream",
+    "category": "Dairy"
+  },
+  {
+    "name": "Half and Half",
+    "category": "Dairy"
+  },
+
+  {
+    "name": "Eggs",
+    "category": "Eggs"
+  },
+  {
+    "name": "Free-Range Eggs",
+    "category": "Eggs"
+  },
+  {
+    "name": "Organic Eggs",
+    "category": "Eggs"
+  },
+
+  {
+    "name": "Chicken Breast",
+    "category": "Meat"
+  },
+  {
+    "name": "Chicken Thighs",
+    "category": "Meat"
+  },
+  {
+    "name": "Whole Chicken",
+    "category": "Meat"
+  },
+  {
+    "name": "Ground Beef",
+    "category": "Meat"
+  },
+  {
+    "name": "Steak",
+    "category": "Meat"
+  },
+  {
+    "name": "Ribeye Steak",
+    "category": "Meat"
+  },
+  {
+    "name": "Sirloin Steak",
+    "category": "Meat"
+  },
+  {
+    "name": "Pork Chops",
+    "category": "Meat"
+  },
+  {
+    "name": "Pork Shoulder",
+    "category": "Meat"
+  },
+  {
+    "name": "Bacon",
+    "category": "Meat"
+  },
+  {
+    "name": "Ham",
+    "category": "Meat"
+  },
+  {
+    "name": "Turkey Breast",
+    "category": "Meat"
+  },
+  {
+    "name": "Ground Turkey",
+    "category": "Meat"
+  },
+  {
+    "name": "Lamb Chops",
+    "category": "Meat"
+  },
+  {
+    "name": "Sausages",
+    "category": "Meat"
+  },
+  {
+    "name": "Hot Dogs",
+    "category": "Meat"
+  },
+  {
+    "name": "Beef Brisket",
+    "category": "Meat"
+  },
+  {
+    "name": "Beef Ribs",
+    "category": "Meat"
+  },
+  {
+    "name": "Meatballs",
+    "category": "Meat"
+  },
+  {
+    "name": "Salami",
+    "category": "Meat"
+  },
+  {
+    "name": "Prosciutto",
+    "category": "Meat"
+  },
+  {
+    "name": "Duck Breast",
+    "category": "Meat"
+  },
+  {
+    "name": "Venison",
+    "category": "Meat"
+  },
+
+  {
+    "name": "Salmon",
+    "category": "Seafood"
+  },
+  {
+    "name": "Shrimp",
+    "category": "Seafood"
+  },
+  {
+    "name": "Tuna",
+    "category": "Seafood"
+  },
+  {
+    "name": "Cod",
+    "category": "Seafood"
+  },
+  {
+    "name": "Tilapia",
+    "category": "Seafood"
+  },
+  {
+    "name": "Crab",
+    "category": "Seafood"
+  },
+  {
+    "name": "Lobster",
+    "category": "Seafood"
+  },
+  {
+    "name": "Scallops",
+    "category": "Seafood"
+  },
+  {
+    "name": "Clams",
+    "category": "Seafood"
+  },
+  {
+    "name": "Mussels",
+    "category": "Seafood"
+  },
+  {
+    "name": "Haddock",
+    "category": "Seafood"
+  },
+  {
+    "name": "Halibut",
+    "category": "Seafood"
+  },
+  {
+    "name": "Sardines",
+    "category": "Seafood"
+  },
+  {
+    "name": "Anchovies",
+    "category": "Seafood"
+  },
+
+  {
+    "name": "Apples",
+    "category": "Fruit"
+  },
+  {
+    "name": "Bananas",
+    "category": "Fruit"
+  },
+  {
+    "name": "Oranges",
+    "category": "Fruit"
+  },
+  {
+    "name": "Mandarins",
+    "category": "Fruit"
+  },
+  {
+    "name": "Strawberries",
+    "category": "Fruit"
+  },
+  {
+    "name": "Blueberries",
+    "category": "Fruit"
+  },
+  {
+    "name": "Raspberries",
+    "category": "Fruit"
+  },
+  {
+    "name": "Blackberries",
+    "category": "Fruit"
+  },
+  {
+    "name": "Grapes",
+    "category": "Fruit"
+  },
+  {
+    "name": "Pineapple",
+    "category": "Fruit"
+  },
+  {
+    "name": "Mango",
+    "category": "Fruit"
+  },
+  {
+    "name": "Papaya",
+    "category": "Fruit"
+  },
+  {
+    "name": "Kiwi",
+    "category": "Fruit"
+  },
+  {
+    "name": "Watermelon",
+    "category": "Fruit"
+  },
+  {
+    "name": "Cantaloupe",
+    "category": "Fruit"
+  },
+  {
+    "name": "Honeydew",
+    "category": "Fruit"
+  },
+  {
+    "name": "Pears",
+    "category": "Fruit"
+  },
+  {
+    "name": "Peaches",
+    "category": "Fruit"
+  },
+  {
+    "name": "Plums",
+    "category": "Fruit"
+  },
+  {
+    "name": "Cherries",
+    "category": "Fruit"
+  },
+  {
+    "name": "Lemons",
+    "category": "Fruit"
+  },
+  {
+    "name": "Limes",
+    "category": "Fruit"
+  },
+  {
+    "name": "Pomegranate",
+    "category": "Fruit"
+  },
+  {
+    "name": "Dragon Fruit",
+    "category": "Fruit"
+  },
+  {
+    "name": "Passion Fruit",
+    "category": "Fruit"
+  },
+
+  {
+    "name": "Potatoes",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Sweet Potatoes",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Carrots",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Broccoli",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Cauliflower",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Spinach",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Lettuce",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Kale",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Cabbage",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Tomatoes",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Cherry Tomatoes",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Cucumbers",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Zucchini",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Eggplant",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Bell Peppers",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Onions",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Red Onions",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Garlic",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Green Beans",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Peas",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Corn",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Mushrooms",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Asparagus",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Brussels Sprouts",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Beets",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Radishes",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Leeks",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Turnips",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Okra",
+    "category": "Vegetables"
+  },
+  {
+    "name": "Artichokes",
+    "category": "Vegetables"
+  },
+
+  {
+    "name": "Rice",
+    "category": "Grains"
+  },
+  {
+    "name": "Brown Rice",
+    "category": "Grains"
+  },
+  {
+    "name": "Basmati Rice",
+    "category": "Grains"
+  },
+  {
+    "name": "Jasmine Rice",
+    "category": "Grains"
+  },
+  {
+    "name": "Pasta",
+    "category": "Grains"
+  },
+  {
+    "name": "Spaghetti",
+    "category": "Grains"
+  },
+  {
+    "name": "Macaroni",
+    "category": "Grains"
+  },
+  {
+    "name": "Fusilli",
+    "category": "Grains"
+  },
+  {
+    "name": "Quinoa",
+    "category": "Grains"
+  },
+  {
+    "name": "Oats",
+    "category": "Grains"
+  },
+  {
+    "name": "Bread",
+    "category": "Bakery"
+  },
+  {
+    "name": "Whole Wheat Bread",
+    "category": "Bakery"
+  },
+  {
+    "name": "Bagels",
+    "category": "Bakery"
+  },
+  {
+    "name": "Tortillas",
+    "category": "Bakery"
+  },
+  {
+    "name": "Croissants",
+    "category": "Bakery"
+  },
+  {
+    "name": "Muffins",
+    "category": "Bakery"
+  },
+
+  {
+    "name": "Black Beans",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Kidney Beans",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Chickpeas",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Canned Corn",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Canned Tomatoes",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Tomato Sauce",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Canned Tuna",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Canned Salmon",
+    "category": "Canned Goods"
+  },
+  {
+    "name": "Coconut Milk",
+    "category": "Canned Goods"
+  },
+
+  {
+    "name": "Olive Oil",
+    "category": "Pantry"
+  },
+  {
+    "name": "Vegetable Oil",
+    "category": "Pantry"
+  },
+  {
+    "name": "Salt",
+    "category": "Pantry"
+  },
+  {
+    "name": "Pepper",
+    "category": "Pantry"
+  },
+  {
+    "name": "Sugar",
+    "category": "Pantry"
+  },
+  {
+    "name": "Brown Sugar",
+    "category": "Pantry"
+  },
+  {
+    "name": "Flour",
+    "category": "Pantry"
+  },
+  {
+    "name": "Baking Soda",
+    "category": "Pantry"
+  },
+  {
+    "name": "Baking Powder",
+    "category": "Pantry"
+  },
+  {
+    "name": "Honey",
+    "category": "Pantry"
+  },
+  {
+    "name": "Peanut Butter",
+    "category": "Pantry"
+  },
+  {
+    "name": "Jam",
+    "category": "Pantry"
+  },
+  {
+    "name": "Maple Syrup",
+    "category": "Pantry"
+  },
+  {
+    "name": "Soy Sauce",
+    "category": "Pantry"
+  },
+  {
+    "name": "Vinegar",
+    "category": "Pantry"
+  },
+
+  {
+    "name": "Coffee",
+    "category": "Beverages"
+  },
+  {
+    "name": "Tea",
+    "category": "Beverages"
+  },
+  {
+    "name": "Orange Juice",
+    "category": "Beverages"
+  },
+  {
+    "name": "Apple Juice",
+    "category": "Beverages"
+  },
+  {
+    "name": "Soda",
+    "category": "Beverages"
+  },
+  {
+    "name": "Sparkling Water",
+    "category": "Beverages"
+  },
+  {
+    "name": "Energy Drink",
+    "category": "Beverages"
+  },
+  {
+    "name": "Sports Drink",
+    "category": "Beverages"
+  },
+
+  {
+    "name": "Chips",
+    "category": "Snacks"
+  },
+  {
+    "name": "Crackers",
+    "category": "Snacks"
+  },
+  {
+    "name": "Popcorn",
+    "category": "Snacks"
+  },
+  {
+    "name": "Chocolate",
+    "category": "Snacks"
+  },
+  {
+    "name": "Granola Bars",
+    "category": "Snacks"
+  },
+  {
+    "name": "Pretzels",
+    "category": "Snacks"
+  },
+  {
+    "name": "Trail Mix",
+    "category": "Snacks"
+  },
+
+  {
+    "name": "Shampoo",
+    "category": "Personal Care"
+  },
+  {
+    "name": "Conditioner",
+    "category": "Personal Care"
+  },
+  {
+    "name": "Soap",
+    "category": "Personal Care"
+  },
+  {
+    "name": "Toothpaste",
+    "category": "Personal Care"
+  },
+  {
+    "name": "Toothbrush",
+    "category": "Personal Care"
+  },
+  {
+    "name": "Deodorant",
+    "category": "Personal Care"
+  },
+
+  {
+    "name": "Toilet Paper",
+    "category": "Household"
+  },
+  {
+    "name": "Paper Towels",
+    "category": "Household"
+  },
+  {
+    "name": "Laundry Detergent",
+    "category": "Household"
+  },
+  {
+    "name": "Dish Soap",
+    "category": "Household"
+  },
+  {
+    "name": "Trash Bags",
+    "category": "Household"
+  },
+  {
+    "name": "Aluminum Foil",
+    "category": "Household"
+  },
+  {
+    "name": "Plastic Wrap",
+    "category": "Household"
+  }
+]

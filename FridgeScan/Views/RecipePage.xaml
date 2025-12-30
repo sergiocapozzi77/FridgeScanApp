@@ -1,0 +1,17 @@
+<ContentPage
+    x:Class="FridgeScan.Views.RecipePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfListView="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView">
+
+    <sfListView:SfListView>
+        <sfListView:SfListView.ItemsSource>
+            <x:Array Type="{x:Type x:String}">
+                <x:String>Item 1</x:String>
+                <x:String>Item 2</x:String>
+                <x:String>Item 3</x:String>
+            </x:Array>
+        </sfListView:SfListView.ItemsSource>
+    </sfListView:SfListView>
+
+</ContentPage>

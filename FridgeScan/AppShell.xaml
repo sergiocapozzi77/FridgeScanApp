@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FridgeScan.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FridgeScan"
+    xmlns:views="clr-namespace:FridgeScan.Views"
+    Title="FridgeScan">
+
+    <TabBar>
+        <ShellContent Title="Products" ContentTemplate="{DataTemplate views:ProductsPage}">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="Material"
+                    Glyph="&#xE701;"
+                    Color="Black" />
+            </ShellContent.Icon>
+
+        </ShellContent>
+        <ShellContent
+            Title="Recipe"
+            ContentTemplate="{DataTemplate views:RecipePage}"
+            Icon="icon_recipe.png" />
+        <ShellContent
+            Title="Import"
+            ContentTemplate="{DataTemplate views:ImportPage}"
+            Icon="icon_import.png" />
+    </TabBar>
+</Shell>

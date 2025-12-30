@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FridgeScan.ViewModels"
+             x:Class="FridgeScan.Views.ImportPage"
+             x:DataType="vm:ImportViewModel">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Button Text="Import from Outlook" Clicked="OnImportClicked" />
+        <Label x:Name="StatusLabel" Text="" />
+    </VerticalStackLayout>
+
+</ContentPage>

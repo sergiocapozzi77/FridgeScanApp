@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FridgeScan.Views.ProductsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviours="clr-namespace:FridgeScan.Behaviours"
+    xmlns:converters="clr-namespace:FridgeScan.Converters"
+    xmlns:ds="clr-namespace:Syncfusion.Maui.DataSource;assembly=Syncfusion.Maui.DataSource"
+    xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+    xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+    xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:FridgeScan.ViewModels"
+    x:Name="ProductsPageRoot"
+    x:DataType="vm:MainViewModel">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ExpandCollapseIconConverter x:Key="ExpandCollapseIconConverter" />
+            <converters:FoodSelectionIconConverter x:Key="foodSelectionIconConverter" />
+            <converters:FoodSelectionIconColorConverter x:Key="foodSelectionIconColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+
+    <Grid Padding="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+
+        <!--  AUTOCOMPLETE INPUT  -->
+        <editors:SfAutocomplete
+            Completed="SfAutocomplete_Completed"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding GrocerySuggestions}"
+            MaximumSuggestion="3"
+            MinimumPrefixCharacters="1"
+            SelectedItem="{Binding SelectedGrocerySuggestion}"
+            Text="{Binding NewItemName, Mode=TwoWay}"
+            TextMemberPath="Name">
+            <editors:SfAutocomplete.FilterBehavior>
+                <behaviours:SearchBehavior />
+            </editors:SfAutocomplete.FilterBehavior>
+        </editors:SfAutocomplete>
+        <Entry
+            x:Name="hiddenEntry"
+            IsVisible="False"
+            Text="{Binding NewItemName, Mode=TwoWay}" />
+
+        <sf:SfListView
+            x:Name="listView"
+            Grid.Row="1"
+            x:DataType="vm:MainViewModel"
+            AutoFitMode="DynamicHeight"
+            IsStickyGroupHeader="True"
+            ItemsSource="{Binding GroupedProducts}"
+            SelectionMode="None">
+
+            <sf:SfListView.ItemTemplate>
+                <DataTemplate x:DataType="models:ListViewFoodCategory">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.Behaviors>
+                                <behaviours:GridBehavior ListView="{x:Reference listView}" />
+                            </Grid.Behaviors>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--     <Label
+                                Grid.Column="0"
+                                FontFamily="Material"
+                                FontSize="26"
+                                HorizontalOptions="Center"
+                                Text="{Binding FoodIcon}"
+                                VerticalOptions="Center" />-->
+
+                            <Label
+                                Grid.Column="0"
+                                CharacterSpacing="0.1"
+                                FontFamily="Roboto-Medium"
+                                FontSize="14"
+                                HorizontalOptions="Start"
+                                Text="{Binding FoodCategory}"
+                                VerticalOptions="Center" />
+
+                            <Label
+                                Grid.Column="1"
+                                Margin="0,0,16,0"
+                                FontFamily="Material"
+                                FontSize="14"
+                                Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}"
+                                VerticalOptions="Center" />
+
+                        </Grid>
+
+                        <Grid Grid.Row="1" IsVisible="{Binding IsExpanded}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <BoxView Grid.Row="0" HeightRequest="1" />
+
+                            <StackLayout
+                                Grid.Row="1"
+                                BindableLayout.ItemsSource="{Binding FoodMenuCollection}"
+                                IsVisible="{Binding IsExpanded}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Product">
+                                        <ContentView HeightRequest="40">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding SelectCommand, Source={x:Reference viewModel}, x:DataType=vm:MainViewModel}" CommandParameter="{Binding .}" />
+                                                </Grid.GestureRecognizers>
+
+                                                <Label
+                                                    Grid.Column="1"
+                                                    Margin="16,0,0,0"
+                                                    CharacterSpacing="0.25"
+                                                    FontFamily="Roboto-Regular"
+                                                    FontSize="14"
+                                                    Text="{Binding Name}"
+                                                    VerticalOptions="Center"
+                                                    VerticalTextAlignment="Center" />
+                                            </Grid>
+                                        </ContentView>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </sf:SfListView.ItemTemplate>
+        </sf:SfListView>
+    </Grid>
+</ContentPage>
