@@ -1,0 +1,125 @@
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Visual Studio cache/options
+.vs/
+.vscode/
+
+# JetBrains
+.idea/
+*.iml
+
+# Generated files
+*.dbmdl
+*.jfm
+GeneratedFiles/
+
+# NuGet
+*.nupkg
+*.snupkg
+.packages/
+.nuget/packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Dotnet tools
+.dotnet-tools.json
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+*.~*
+*.bak
+
+# Logs
+*.log
+
+# Coverage
+coverage*
+*.coverage
+*.coveragexml
+
+# Resharper / Rider
+_ReSharper*/
+*.[Rr]e[Ss]harper
+resharper-host/
+
+# StyleCop
+StyleCopReport.xml
+
+# SQLite / local db
+*.db
+*.sqlite
+*.sqlite3
+
+# Key files
+*.pfx
+*.key
+*.keystore
+*.jks
+
+# Mac
+.DS_Store
+
+# Node (for hybrid apps/build tooling)
+node_modules/
+
+# =========================
+# .NET MAUI platform builds
+# =========================
+
+# Android
+**/Platforms/Android/*/bin/
+**/Platforms/Android/*/obj/
+*.apk
+*.aab
+
+# iOS / MacCatalyst
+**/Platforms/iOS/*/bin/
+**/Platforms/iOS/*/obj/
+**/Platforms/MacCatalyst/*/bin/
+**/Platforms/MacCatalyst/*/obj/
+*.ipa
+*.xcuserstate
+*.xcworkspace
+*.xcuserdata/
+
+# Windows
+**/Platforms/Windows/*/bin/
+**/Platforms/Windows/*/obj/
+AppPackages/
+BundleArtifacts/
+
+# Tizen
+**/Platforms/Tizen/*/bin/
+**/Platforms/Tizen/*/obj/
+
+# Images / assets cache
+*.png.cache
+*.jpg.cache
+
+# Maui build artifacts
+*.maui*cache
+Resources/Raw/*.stamp
+
+# Secrets (don’t commit!)
+secrets.json
+appsettings.Development.json
+*.env
+
+# Crash reports
+crash.log
+hs_err_pid*
