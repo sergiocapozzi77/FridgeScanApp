@@ -7,7 +7,7 @@ public class Product : INotifyPropertyChanged
 {
     private string _name = string.Empty;
     private int _quantity;
-    private string _type = "Other";
+    private string _category = "Other";
 
     public string Name
     {
@@ -36,14 +36,14 @@ public class Product : INotifyPropertyChanged
     }
 
     // New: product type/category for grouping (e.g., Dairy, Vegetables, Meat)
-    public string Type
+    public string Category
     {
-        get => _type;
+        get => _category;
         set
         {
-            if (_type != value)
+            if (_category != value)
             {
-                _type = value;
+                _category = value;
                 OnPropertyChanged();
             }
         }

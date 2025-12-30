@@ -14,7 +14,7 @@ namespace FridgeScan.Converters
             // You can also inspect properties:
             if (value is FridgeScan.Models.Product p)
             {
-                Debug.WriteLine($"   -> Product: {p.Name}, Qty: {p.Quantity}, Type: {p.Type}");
+                Debug.WriteLine($"   -> Product: {p.Name}, Qty: {p.Quantity}, Type: {p.Category}");
             }
 
             // IMPORTANT: return the same value, so app works normally

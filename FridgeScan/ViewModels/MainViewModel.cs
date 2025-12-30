@@ -5,7 +5,9 @@ namespace FridgeScan.ViewModels;
 
 public partial class MainViewModel : BaseViewModel
 {
-    public ObservableCollection<Product> Products { get; }
+    private readonly ProductService _service = new();
+
+    public ObservableCollection<Product> Products { get; set; }
 
     public ObservableCollection<ListViewFoodCategory> GroupedProducts { get; } = new();
 
@@ -60,22 +62,17 @@ public partial class MainViewModel : BaseViewModel
         AddItemCommand = new Command(OnAddItem);
         LoadSuggestionsFromJson();
 
+        _ = LoadProductsAsync();
+    }
 
-        var defaults = new List<Product>
-            {
-                new Product { Name = "Milk", Quantity = 2, Type = "Dairy" },
-                new Product { Name = "Eggs", Quantity = 12, Type = "Dairy" },
-                new Product { Name = "Yogurt", Quantity = 3, Type = "Dairy" },
-                new Product { Name = "Lettuce", Quantity = 1, Type = "Vegetables" },
-                new Product { Name = "Tomatoes", Quantity = 4, Type = "Vegetables" },
-                new Product { Name = "Chicken Breast", Quantity = 2, Type = "Meat" },
-                new Product { Name = "Apples", Quantity = 6, Type = "Fruit" },
-                new Product { Name = "Bread", Quantity = 1, Type = "Bakery" },
-                new Product { Name = "Pork", Quantity = 1, Type = "Dairy" },
-            };
+    private async Task LoadProductsAsync()
+    {
+        var items = await _service.GetProductsAsync();
 
-        Products = new ObservableCollection<Product>(defaults);
+        Products = new ObservableCollection<Product>(items);
         Products.CollectionChanged += (s, e) => RefreshGrouping();
+
+
         RefreshGrouping();
     }
 
@@ -100,14 +97,55 @@ public partial class MainViewModel : BaseViewModel
 
     public void RefreshGrouping()
     {
-        GroupedProducts.Clear();
+        // Build lookup of current groups from Products
+        var newGroups = Products
+            .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category)
+            .ToDictionary(g => g.Key, g => g.ToList());
 
-        var groups = Products
-            .GroupBy(p => string.IsNullOrWhiteSpace(p.Type) ? "Other" : p.Type)
-            .OrderBy(g => g.Key);
+        // 1. REMOVE groups that no longer exist
+        for (int i = GroupedProducts.Count - 1; i >= 0; i--)
+        {
+            var existingGroup = GroupedProducts[i];
 
-        foreach (var g in groups)
-            GroupedProducts.Add(new ListViewFoodCategory(g.Key, g.ToList()));
+            if (!newGroups.ContainsKey(existingGroup.FoodCategory))
+            {
+                GroupedProducts.RemoveAt(i);
+            }
+        }
+
+        // 2. UPDATE existing groups or ADD new ones
+        foreach (var kvp in newGroups)
+        {
+            var category = kvp.Key;
+            var items = kvp.Value;
+
+            var existingGroup = GroupedProducts
+                .FirstOrDefault(g => g.FoodCategory == category);
+
+            if (existingGroup == null)
+            {
+                // Add new group
+                GroupedProducts.Add(new ListViewFoodCategory(category, items));
+            }
+            else
+            {
+                // Update existing group items
+                existingGroup.FoodMenuCollection.Clear();
+                foreach (var item in items)
+                    existingGroup.FoodMenuCollection.Add(item);
+            }
+        }
+
+        // 3. Sort groups alphabetically
+        var sorted = GroupedProducts.OrderBy(g => g.FoodCategory).ToList();
+
+        for (int i = 0; i < sorted.Count; i++)
+        {
+            if (!ReferenceEquals(GroupedProducts[i], sorted[i]))
+            {
+                GroupedProducts.Move(GroupedProducts.IndexOf(sorted[i]), i);
+            }
+        }
     }
 
     public void OnAddItem()
@@ -116,34 +154,28 @@ public partial class MainViewModel : BaseViewModel
         NewItemName = null;
     }
 
-    void AddItem(string item)
+    async void AddItem(string item)
     {
         if (string.IsNullOrEmpty(item))
             return;
 
         var trimmed = item.Trim();
 
-        // Try find in suggestion list to get correct Type
         var match = GrocerySuggestions
             .FirstOrDefault(x =>
                 string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
 
-        string type = match?.Category ?? "Other";
-
-        Products.Add(new Product
+        var product = new Product
         {
             Name = trimmed,
             Quantity = 1,
-            Type = type
-        });
+            Category = match?.Category ?? "Other"
+        };
 
-        // Maintain recent list (no duplicates, last 5)
-        if (!RecentItems.Contains(trimmed, StringComparer.OrdinalIgnoreCase))
-            RecentItems.Insert(0, trimmed);
-
-        while (RecentItems.Count > 5)
-            RecentItems.RemoveAt(RecentItems.Count - 1);
+        Products.Add(product);
+        await _service.AddProductAsync(product);
     }
+
 
     public void IncreaseQuantity(Product product, int delta = 1)
     {
@@ -161,6 +193,5 @@ public partial class MainViewModel : BaseViewModel
     {
         if (product == null) return;
         Products.Remove(product);
-        RefreshGrouping();
     }
 }

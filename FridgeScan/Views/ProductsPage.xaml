@@ -67,7 +67,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0">
+                        <Grid Grid.Row="0" BackgroundColor="{DynamicResource SfTabViewActivePressedBackground}">
                             <Grid.Behaviors>
                                 <behaviours:GridBehavior ListView="{x:Reference listView}" />
                             </Grid.Behaviors>
@@ -124,11 +124,6 @@
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
-
-                                                <Grid.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding SelectCommand, Source={x:Reference viewModel}, x:DataType=vm:MainViewModel}" CommandParameter="{Binding .}" />
-                                                </Grid.GestureRecognizers>
-
                                                 <Label
                                                     Grid.Column="1"
                                                     Margin="16,0,0,0"
