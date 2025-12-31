@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 
 namespace FridgeScan.Services
 {
@@ -20,11 +21,24 @@ namespace FridgeScan.Services
             _http.DefaultRequestHeaders.Add("X-Appwrite-Key", apiKey);
         }
 
-        public async Task<List<Product>> GetProductsAsync()
+        public async Task<List<Product>> GetProductsAsync(string[]? queries = null)
         {
             try
             {
-                var url = $"{Endpoint}/tablesdb/{DatabaseId}/tables/{CollectionId}/rows";
+                var baseUrl = $"{Endpoint}/tablesdb/{DatabaseId}/tables/{CollectionId}/rows";
+
+                string queryString = string.Empty;
+
+                if (queries is { Length: > 0 })
+                {
+                    var encoded = queries
+                        .Select((q, index) =>
+                            $"queries[{index}]={Uri.EscapeDataString(q)}");
+
+                    queryString = "?" + string.Join("&", encoded);
+                }
+
+                var url = baseUrl + queryString;
 
                 var response = await _http.GetFromJsonAsync<AppwriteRowsResponse>(url);
 
@@ -32,13 +46,36 @@ namespace FridgeScan.Services
                 {
                     Name = r.Name,
                     Quantity = r.Quantity,
-                    Category = r.Category ?? "Other"
+                    Category = r.Category ?? "Other",
+                    RowId = r.Id
+
                 }).ToList() ?? new();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching products: {ex.Message}");
                 return new List<Product>();
+            }
+        }
+
+
+        public async Task<AppwriteRow?> AddOrUpdateQuantityAsync(Product product)
+        {
+            var existing = await GetProductsAsync(new[]
+{
+    $@"{{""method"":""equal"",""attribute"":""name"",""values"":[""{product.Name}""]}}"
+});
+
+
+            if (existing.Count > 0)
+            {
+                var existingProduct = existing[0];
+                existingProduct.Quantity += product.Quantity;
+                return await UpdateProductAsync(existingProduct);
+            }
+            else
+            {
+                return await AddProductAsync(product);
             }
         }
 
@@ -63,7 +100,58 @@ namespace FridgeScan.Services
 
                 response.EnsureSuccessStatusCode();
 
-                var created1 = await response.Content.ReadAsStringAsync();
+                // Deserialize the created row
+                var created = await response.Content.ReadFromJsonAsync<AppwriteRow>();
+                product.RowId = created.Id;
+
+                return created;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching products: {ex.Message}");
+                return new AppwriteRow();
+            }
+        }
+
+        public async Task<bool> DeleteProductAsync(string rowId)
+        {
+            try
+            {
+                var url = $"{Endpoint}/tablesdb/{DatabaseId}/tables/{CollectionId}/rows/{rowId}";
+
+                var response = await _http.DeleteAsync(url);
+
+                response.EnsureSuccessStatusCode();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching products: {ex.Message}");
+                return false;
+            }
+        }
+
+
+        public async Task<AppwriteRow?> UpdateProductAsync(Product product)
+        {
+            try
+            {
+                var url = $"{Endpoint}/tablesdb/{DatabaseId}/tables/{CollectionId}/rows/{product.RowId}";
+
+                var body = new
+                {
+                    data = new
+                    {
+                        quantity = product.Quantity,
+                        category = product.Category
+                    }
+                };
+
+                var response = await _http.PatchAsJsonAsync(url, body);
+
+                response.EnsureSuccessStatusCode();
+
                 // Deserialize the created row
                 var created = await response.Content.ReadFromJsonAsync<AppwriteRow>();
 
@@ -72,7 +160,7 @@ namespace FridgeScan.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching products: {ex.Message}");
-                return new AppwriteRow();
+                return null;
             }
         }
 
@@ -110,6 +198,7 @@ namespace FridgeScan.Services
             public int Quantity { get; set; }
             public string Category { get; set; }
 
+            [JsonPropertyName("$id")]
             public string Id { get; set; } // maps $id
         }
     }

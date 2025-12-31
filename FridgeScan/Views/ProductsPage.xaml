@@ -8,6 +8,7 @@
     xmlns:ds="clr-namespace:Syncfusion.Maui.DataSource;assembly=Syncfusion.Maui.DataSource"
     xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
     xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:pulltoRefresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
     xmlns:sf="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
     xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -55,6 +56,7 @@
             Grid.Row="1"
             x:DataType="vm:MainViewModel"
             AutoFitMode="DynamicHeight"
+            IsPullToRefreshEnabled="True"
             IsStickyGroupHeader="True"
             ItemsSource="{Binding GroupedProducts}"
             SelectionMode="None">
@@ -119,13 +121,18 @@
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:Product">
                                         <ContentView HeightRequest="40">
-                                            <Grid>
+                                            <Grid Padding="0,0,12,0" ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
+
+                                                <!--  PRODUCT NAME  -->
                                                 <Label
-                                                    Grid.Column="1"
+                                                    Grid.Column="0"
                                                     Margin="16,0,0,0"
                                                     CharacterSpacing="0.25"
                                                     FontFamily="Roboto-Regular"
@@ -133,6 +140,53 @@
                                                     Text="{Binding Name}"
                                                     VerticalOptions="Center"
                                                     VerticalTextAlignment="Center" />
+
+                                                <!--  MINUS BUTTON  -->
+                                                <Label
+                                                    Grid.Column="1"
+                                                    FontFamily="Material"
+                                                    FontSize="20"
+                                                    Text="remove"
+                                                    VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding DecreaseCommand}" CommandParameter="{Binding}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+
+                                                <!--  QUANTITY  -->
+                                                <Label
+                                                    Grid.Column="2"
+                                                    FontFamily="Roboto-Medium"
+                                                    FontSize="14"
+                                                    HorizontalOptions="Center"
+                                                    Text="{Binding Quantity}"
+                                                    VerticalOptions="Center" />
+
+                                                <!--  PLUS BUTTON  -->
+                                                <Label
+                                                    Grid.Column="3"
+                                                    FontFamily="Material"
+                                                    FontSize="20"
+                                                    Text="add"
+                                                    VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding IncreaseCommand}" CommandParameter="{Binding}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+
+                                                <!--  DELETE BUTTON  -->
+                                                <Label
+                                                    Grid.Column="4"
+                                                    FontFamily="Material"
+                                                    FontSize="20"
+                                                    Text="delete"
+                                                    TextColor="Red"
+                                                    VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding RemoveCommand}" CommandParameter="{Binding}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+
                                             </Grid>
                                         </ContentView>
                                     </DataTemplate>

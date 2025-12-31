@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using FridgeScan.Models;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace FridgeScan.ViewModels;
@@ -8,10 +9,6 @@ public partial class MainViewModel : BaseViewModel
     public ObservableCollection<Product> Products { get; set; }
 
     public ObservableCollection<ListViewFoodCategory> GroupedProducts { get; } = new();
-
-    public ICommand IncreaseCommand { get; }
-    public ICommand DecreaseCommand { get; }
-    public ICommand RemoveCommand { get; }
 
     public ObservableCollection<GroceryItem> GrocerySuggestions { get; } = new();
     public ObservableCollection<string> RecentItems { get; } = new();
@@ -51,15 +48,6 @@ public partial class MainViewModel : BaseViewModel
     {
         this.productService = productService;
 
-        IncreaseCommand = new Command<Product>(p => IncreaseQuantity(p));
-        DecreaseCommand = new Command<Product>(p =>
-        {
-            DecreaseQuantity(p);
-            if (p.Quantity <= 0)
-                RemoveProduct(p);
-        });
-        RemoveCommand = new Command<Product>(RemoveProduct);
-
         AddItemCommand = new Command(OnAddItem);
         LoadSuggestionsFromJson();
 
@@ -72,9 +60,27 @@ public partial class MainViewModel : BaseViewModel
 
         Products = new ObservableCollection<Product>(items);
         Products.CollectionChanged += (s, e) => RefreshGrouping();
+        foreach (var item in Products)
+        {
+            item.PropertyChanged += (s, e) => ProductPropertChanged(e, s as Product);
+        }
 
 
         RefreshGrouping();
+    }
+
+    private async Task ProductPropertChanged(PropertyChangedEventArgs e, Product item)
+    {
+        if (e.PropertyName == nameof(Product.Quantity))
+        {
+            if (item.Quantity <= 0)
+            {
+                await RemoveProduct(item);
+            } else
+            {
+                await productService.UpdateProductAsync(item);
+            }
+        }
     }
 
     private async void LoadSuggestionsFromJson()
@@ -162,6 +168,14 @@ public partial class MainViewModel : BaseViewModel
 
         var trimmed = item.Trim();
 
+        var existing = Products.FirstOrDefault(x =>
+                string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
+        if (existing != null)
+        {
+            existing.Quantity += 1;
+            return;
+        }
+
         var match = GrocerySuggestions
             .FirstOrDefault(x =>
                 string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
@@ -172,27 +186,22 @@ public partial class MainViewModel : BaseViewModel
             Quantity = 1,
             Category = match?.Category ?? "Other"
         };
+        product.PropertyChanged += (s, e) => ProductPropertChanged(e, s as Product);
 
         Products.Add(product);
-        await productService.AddProductAsync(product);
+        await productService.AddOrUpdateQuantityAsync(product);
     }
 
 
-    public void IncreaseQuantity(Product product, int delta = 1)
+    public async Task RemoveProduct(Product product)
     {
         if (product == null) return;
-        product.Quantity += delta;
-    }
 
-    public void DecreaseQuantity(Product product, int delta = 1)
-    {
-        if (product == null) return;
-        product.Quantity = Math.Max(0, product.Quantity - delta);
-    }
-
-    public void RemoveProduct(Product product)
-    {
-        if (product == null) return;
+        product.PropertyChanged -= (s, e) => ProductPropertChanged(e, s as Product);
         Products.Remove(product);
+        var success = await productService.DeleteProductAsync(product.RowId);
+        if(success)
+        {
+        }
     }
 }
