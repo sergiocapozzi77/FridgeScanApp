@@ -30,4 +30,18 @@ public partial class ProductsPage : ContentPage
 
     }
 
+    private async void pullToRefresh_Refreshing(object sender, EventArgs e)
+    {
+        pullToRefresh.IsRefreshing = true;
+        try
+        {
+            await((MainViewModel)BindingContext).LoadProductsAsync();
+        }
+        finally
+        {
+            pullToRefresh.IsRefreshing = false;
+        }
+
+
+    }
 }

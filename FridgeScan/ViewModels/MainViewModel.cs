@@ -54,7 +54,7 @@ public partial class MainViewModel : BaseViewModel
         _ = LoadProductsAsync();
     }
 
-    private async Task LoadProductsAsync()
+    public async Task LoadProductsAsync()
     {
         var items = await productService.GetProductsAsync();
 

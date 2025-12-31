@@ -50,36 +50,45 @@
             x:Name="hiddenEntry"
             IsVisible="False"
             Text="{Binding NewItemName, Mode=TwoWay}" />
+        <pulltoRefresh:SfPullToRefresh
+            x:Name="pullToRefresh"
+            IsRefreshing="False"
+            PullingThreshold="150"
+            RefreshViewHeight="50"
+            RefreshViewThreshold="30"
+            RefreshViewWidth="50"
+            Refreshing="pullToRefresh_Refreshing"
+            TransitionMode="SlideOnTop">
+            <pulltoRefresh:SfPullToRefresh.PullableContent>
+                <Grid x:Name="mainGrid">
+                    <sf:SfListView
+                        x:Name="listView"
+                        Grid.Row="1"
+                        x:DataType="vm:MainViewModel"
+                        AutoFitMode="DynamicHeight"
+                        IsStickyGroupHeader="True"
+                        ItemsSource="{Binding GroupedProducts}"
+                        SelectionMode="None">
 
-        <sf:SfListView
-            x:Name="listView"
-            Grid.Row="1"
-            x:DataType="vm:MainViewModel"
-            AutoFitMode="DynamicHeight"
-            IsPullToRefreshEnabled="True"
-            IsStickyGroupHeader="True"
-            ItemsSource="{Binding GroupedProducts}"
-            SelectionMode="None">
+                        <sf:SfListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ListViewFoodCategory">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="40" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
 
-            <sf:SfListView.ItemTemplate>
-                <DataTemplate x:DataType="models:ListViewFoodCategory">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="40" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" BackgroundColor="{DynamicResource SfTabViewActivePressedBackground}">
+                                        <Grid.Behaviors>
+                                            <behaviours:GridBehavior ListView="{x:Reference listView}" />
+                                        </Grid.Behaviors>
 
-                        <Grid Grid.Row="0" BackgroundColor="{DynamicResource SfTabViewActivePressedBackground}">
-                            <Grid.Behaviors>
-                                <behaviours:GridBehavior ListView="{x:Reference listView}" />
-                            </Grid.Behaviors>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <!--     <Label
+                                        <!--     <Label
                                 Grid.Column="0"
                                 FontFamily="Material"
                                 FontSize="26"
@@ -87,115 +96,118 @@
                                 Text="{Binding FoodIcon}"
                                 VerticalOptions="Center" />-->
 
-                            <Label
-                                Grid.Column="0"
-                                CharacterSpacing="0.1"
-                                FontFamily="Roboto-Medium"
-                                FontSize="14"
-                                HorizontalOptions="Start"
-                                Text="{Binding FoodCategory}"
-                                VerticalOptions="Center" />
+                                        <Label
+                                            Grid.Column="0"
+                                            CharacterSpacing="0.1"
+                                            FontFamily="Roboto-Medium"
+                                            FontSize="14"
+                                            HorizontalOptions="Start"
+                                            Text="{Binding FoodCategory}"
+                                            VerticalOptions="Center" />
 
-                            <Label
-                                Grid.Column="1"
-                                Margin="0,0,16,0"
-                                FontFamily="Material"
-                                FontSize="14"
-                                Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}"
-                                VerticalOptions="Center" />
+                                        <Label
+                                            Grid.Column="1"
+                                            Margin="0,0,16,0"
+                                            FontFamily="Material"
+                                            FontSize="14"
+                                            Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}"
+                                            VerticalOptions="Center" />
 
-                        </Grid>
+                                    </Grid>
 
-                        <Grid Grid.Row="1" IsVisible="{Binding IsExpanded}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
+                                    <Grid Grid.Row="1" IsVisible="{Binding IsExpanded}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
 
-                            <BoxView Grid.Row="0" HeightRequest="1" />
+                                        <BoxView Grid.Row="0" HeightRequest="1" />
 
-                            <StackLayout
-                                Grid.Row="1"
-                                BindableLayout.ItemsSource="{Binding FoodMenuCollection}"
-                                IsVisible="{Binding IsExpanded}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="models:Product">
-                                        <ContentView HeightRequest="40">
-                                            <Grid Padding="0,0,12,0" ColumnSpacing="12">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
+                                        <StackLayout
+                                            Grid.Row="1"
+                                            BindableLayout.ItemsSource="{Binding FoodMenuCollection}"
+                                            IsVisible="{Binding IsExpanded}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="models:Product">
+                                                    <ContentView HeightRequest="40">
+                                                        <Grid Padding="0,0,12,0" ColumnSpacing="12">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
 
-                                                <!--  PRODUCT NAME  -->
-                                                <Label
-                                                    Grid.Column="0"
-                                                    Margin="16,0,0,0"
-                                                    CharacterSpacing="0.25"
-                                                    FontFamily="Roboto-Regular"
-                                                    FontSize="14"
-                                                    Text="{Binding Name}"
-                                                    VerticalOptions="Center"
-                                                    VerticalTextAlignment="Center" />
+                                                            <!--  PRODUCT NAME  -->
+                                                            <Label
+                                                                Grid.Column="0"
+                                                                Margin="16,0,0,0"
+                                                                CharacterSpacing="0.25"
+                                                                FontFamily="Roboto-Regular"
+                                                                FontSize="14"
+                                                                Text="{Binding Name}"
+                                                                VerticalOptions="Center"
+                                                                VerticalTextAlignment="Center" />
 
-                                                <!--  MINUS BUTTON  -->
-                                                <Label
-                                                    Grid.Column="1"
-                                                    FontFamily="Material"
-                                                    FontSize="20"
-                                                    Text="remove"
-                                                    VerticalOptions="Center">
-                                                    <Label.GestureRecognizers>
-                                                        <TapGestureRecognizer Command="{Binding DecreaseCommand}" CommandParameter="{Binding}" />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
+                                                            <!--  MINUS BUTTON  -->
+                                                            <Label
+                                                                Grid.Column="1"
+                                                                FontFamily="Material"
+                                                                FontSize="20"
+                                                                Text="remove"
+                                                                VerticalOptions="Center">
+                                                                <Label.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding DecreaseCommand}" CommandParameter="{Binding}" />
+                                                                </Label.GestureRecognizers>
+                                                            </Label>
 
-                                                <!--  QUANTITY  -->
-                                                <Label
-                                                    Grid.Column="2"
-                                                    FontFamily="Roboto-Medium"
-                                                    FontSize="14"
-                                                    HorizontalOptions="Center"
-                                                    Text="{Binding Quantity}"
-                                                    VerticalOptions="Center" />
+                                                            <!--  QUANTITY  -->
+                                                            <Label
+                                                                Grid.Column="2"
+                                                                FontFamily="Roboto-Medium"
+                                                                FontSize="14"
+                                                                HorizontalOptions="Center"
+                                                                Text="{Binding Quantity}"
+                                                                VerticalOptions="Center" />
 
-                                                <!--  PLUS BUTTON  -->
-                                                <Label
-                                                    Grid.Column="3"
-                                                    FontFamily="Material"
-                                                    FontSize="20"
-                                                    Text="add"
-                                                    VerticalOptions="Center">
-                                                    <Label.GestureRecognizers>
-                                                        <TapGestureRecognizer Command="{Binding IncreaseCommand}" CommandParameter="{Binding}" />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
+                                                            <!--  PLUS BUTTON  -->
+                                                            <Label
+                                                                Grid.Column="3"
+                                                                FontFamily="Material"
+                                                                FontSize="20"
+                                                                Text="add"
+                                                                VerticalOptions="Center">
+                                                                <Label.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding IncreaseCommand}" CommandParameter="{Binding}" />
+                                                                </Label.GestureRecognizers>
+                                                            </Label>
 
-                                                <!--  DELETE BUTTON  -->
-                                                <Label
-                                                    Grid.Column="4"
-                                                    FontFamily="Material"
-                                                    FontSize="20"
-                                                    Text="delete"
-                                                    TextColor="Red"
-                                                    VerticalOptions="Center">
-                                                    <Label.GestureRecognizers>
-                                                        <TapGestureRecognizer Command="{Binding RemoveCommand}" CommandParameter="{Binding}" />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
+                                                            <!--  DELETE BUTTON  -->
+                                                            <Label
+                                                                Grid.Column="4"
+                                                                FontFamily="Material"
+                                                                FontSize="20"
+                                                                Text="delete"
+                                                                TextColor="Red"
+                                                                VerticalOptions="Center">
+                                                                <Label.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding RemoveCommand}" CommandParameter="{Binding}" />
+                                                                </Label.GestureRecognizers>
+                                                            </Label>
 
-                                            </Grid>
-                                        </ContentView>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </sf:SfListView.ItemTemplate>
-        </sf:SfListView>
+                                                        </Grid>
+                                                    </ContentView>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </StackLayout>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </sf:SfListView.ItemTemplate>
+                    </sf:SfListView>
+                </Grid>
+            </pulltoRefresh:SfPullToRefresh.PullableContent>
+        </pulltoRefresh:SfPullToRefresh>
     </Grid>
 </ContentPage>
