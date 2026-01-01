@@ -33,29 +33,50 @@
 
 
         <!--  AUTOCOMPLETE INPUT  -->
-        <editors:SfAutocomplete
-            Completed="SfAutocomplete_Completed"
-            Placeholder="+ Add Item"
-            DisplayMemberPath="Name"
-            ItemsSource="{Binding GrocerySuggestions}"
-            MaximumSuggestion="3"
-            MinimumPrefixCharacters="1"
-            SelectedItem="{Binding SelectedGrocerySuggestion}"
-            Text="{Binding NewItemName, Mode=TwoWay}"
-            TextMemberPath="Name">
-            <editors:SfAutocomplete.FilterBehavior>
-                <behaviours:SearchBehavior />
-            </editors:SfAutocomplete.FilterBehavior>
-        </editors:SfAutocomplete>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <editors:SfAutocomplete
+                Completed="SfAutocomplete_Completed"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding GrocerySuggestions}"
+                MaximumSuggestion="3"
+                MinimumPrefixCharacters="1"
+                Placeholder="+ Add Item"
+                SelectedItem="{Binding SelectedGrocerySuggestion}"
+                Text="{Binding NewItemName, Mode=TwoWay}"
+                TextMemberPath="Name">
+                <editors:SfAutocomplete.FilterBehavior>
+                    <behaviours:SearchBehavior />
+                </editors:SfAutocomplete.FilterBehavior>
+            </editors:SfAutocomplete>
+            <Label
+                Grid.Column="1"
+                FontFamily="Material"
+                FontSize="24"
+                HeightRequest="30"
+                HorizontalTextAlignment="Center"
+                Text="barcode"
+                VerticalTextAlignment="Center"
+                WidthRequest="30">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BarcodeCommand}" CommandParameter="{Binding}" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Border Stroke="Red" Grid.Column="1"></Border>
+        </Grid>
+
         <Entry
             x:Name="hiddenEntry"
             IsVisible="False"
             Text="{Binding NewItemName, Mode=TwoWay}" />
         <pulltoRefresh:SfPullToRefresh
             x:Name="pullToRefresh"
+            Grid.Row="1"
             IsRefreshing="False"
             PullingThreshold="150"
-            Grid.Row="1"
             RefreshViewHeight="50"
             RefreshViewThreshold="30"
             RefreshViewWidth="50"
@@ -65,13 +86,11 @@
                 <Grid x:Name="mainGrid">
                     <sf:SfListView
                         x:Name="listView"
-                        
                         x:DataType="vm:ProductsViewModel"
                         AutoFitMode="DynamicHeight"
                         IsStickyGroupHeader="True"
                         ItemsSource="{Binding GroupedProducts}"
                         SelectionMode="None">
-
                         <sf:SfListView.ItemTemplate>
                             <DataTemplate x:DataType="models:ListViewFoodCategory">
                                 <Grid>
@@ -157,11 +176,11 @@
                                                                 Grid.Column="1"
                                                                 FontFamily="Material"
                                                                 FontSize="20"
-                                                                Text="remove"
-                                                                WidthRequest="30"
-                                                                VerticalTextAlignment="Center"
                                                                 HorizontalTextAlignment="Center"
-                                                                VerticalOptions="FillAndExpand">
+                                                                Text="remove"
+                                                                VerticalOptions="FillAndExpand"
+                                                                VerticalTextAlignment="Center"
+                                                                WidthRequest="30">
                                                                 <Label.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding DecreaseCommand}" CommandParameter="{Binding}" />
                                                                 </Label.GestureRecognizers>
@@ -181,12 +200,11 @@
                                                                 Grid.Column="3"
                                                                 FontFamily="Material"
                                                                 FontSize="20"
+                                                                HorizontalTextAlignment="Center"
                                                                 Text="add"
-                                                                  WidthRequest="30"
-  VerticalTextAlignment="Center"
-  HorizontalTextAlignment="Center"
-  VerticalOptions="FillAndExpand"
-                                                              >
+                                                                VerticalOptions="FillAndExpand"
+                                                                VerticalTextAlignment="Center"
+                                                                WidthRequest="30">
                                                                 <Label.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding IncreaseCommand}" CommandParameter="{Binding}" />
                                                                 </Label.GestureRecognizers>
@@ -197,13 +215,12 @@
                                                                 Grid.Column="4"
                                                                 FontFamily="Material"
                                                                 FontSize="20"
+                                                                HorizontalTextAlignment="Center"
                                                                 Text="delete"
                                                                 TextColor="Red"
-                                                                  WidthRequest="30"
-  VerticalTextAlignment="Center"
-  HorizontalTextAlignment="Center"
-  VerticalOptions="FillAndExpand"
-                                                                >
+                                                                VerticalOptions="FillAndExpand"
+                                                                VerticalTextAlignment="Center"
+                                                                WidthRequest="30">
                                                                 <Label.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding RemoveCommand}" CommandParameter="{Binding}" />
                                                                 </Label.GestureRecognizers>

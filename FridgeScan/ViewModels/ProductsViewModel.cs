@@ -47,6 +47,8 @@ public partial class ProductsViewModel : BaseViewModel
 
     public ICommand AddItemCommand { get; }
 
+    public ICommand BarcodeCommand { get; }
+
     public ProductsViewModel(ProductService productService, ActivityService activityService)
     {
         this.productService = productService;
@@ -55,10 +57,16 @@ public partial class ProductsViewModel : BaseViewModel
         WeakReferenceMessenger.Default.Register<PropertyChangedMessage<int>>(this, OnQuantityChanged);
 
         AddItemCommand = new Command(OnAddItem);
+        BarcodeCommand = new Command(OnBarcodeCommand);
         LoadSuggestionsFromJson();
 
         _ = LoadProductsAsync();
         
+    }
+
+    private void OnBarcodeCommand(object obj)
+    {
+        throw new NotImplementedException();
     }
 
     private void OnQuantityChanged(object recipient, PropertyChangedMessage<int> message)

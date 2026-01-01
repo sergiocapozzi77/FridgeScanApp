@@ -12,15 +12,22 @@
             <ShellContent.Icon>
                 <FontImageSource
                     FontFamily="Material"
-                    Glyph="&#xE701;"
-                    Color="Black" />
+                    Glyph="&#xe85d;"
+                  />
             </ShellContent.Icon>
 
         </ShellContent>
         <ShellContent
             Title="Recipe"
             ContentTemplate="{DataTemplate views:RecipePage}"
-            Icon="icon_recipe.png" />
+           >
+            <ShellContent.Icon>
+                <FontImageSource
+         FontFamily="Material"
+         Glyph="&#xf357;"
+       />
+            </ShellContent.Icon>
+        </ShellContent>
         <ShellContent
             Title="Import"
             ContentTemplate="{DataTemplate views:ImportPage}"
@@ -29,8 +36,8 @@
             <ShellContent.Icon>
                 <FontImageSource
                     FontFamily="Material"
-                    Glyph="&#xE701;"
-                    Color="Black" />
+                    Glyph="&#xe889;"
+                    />
             </ShellContent.Icon>
 
         </ShellContent>

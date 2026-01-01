@@ -29,6 +29,7 @@
                 <Grid x:Name="mainGrid">
                     <sf:SfListView
                       x:Name="listView"
+                       
                         DisplayMemberPath="Description"
                       ItemsSource="{Binding Activities}"
                       >
