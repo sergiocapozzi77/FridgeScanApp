@@ -7,9 +7,6 @@ public static class Secrets
     public static string SyncfusionLicenseKey =>
         GetValue(nameof(SyncfusionLicenseKey));
 
-    public static string MicrosoftAppCenterKey =>
-        GetValue(nameof(MicrosoftAppCenterKey));
-
     public static string AppWriteApiKey =>
         GetValue(nameof(AppWriteApiKey));
 

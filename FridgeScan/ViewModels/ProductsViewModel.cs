@@ -1,10 +1,12 @@
-﻿using FridgeScan.Models;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using FridgeScan.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace FridgeScan.ViewModels;
 
-public partial class MainViewModel : BaseViewModel
+public partial class ProductsViewModel : BaseViewModel
 {
     public ObservableCollection<Product> Products { get; set; }
 
@@ -31,6 +33,7 @@ public partial class MainViewModel : BaseViewModel
 
     private string _newItemName;
     private readonly ProductService productService;
+    private readonly ActivityService activityService;
 
     public string NewItemName
     {
@@ -44,14 +47,48 @@ public partial class MainViewModel : BaseViewModel
 
     public ICommand AddItemCommand { get; }
 
-    public MainViewModel(ProductService productService)
+    public ProductsViewModel(ProductService productService, ActivityService activityService)
     {
         this.productService = productService;
+        this.activityService = activityService;
+
+        WeakReferenceMessenger.Default.Register<PropertyChangedMessage<int>>(this, OnQuantityChanged);
 
         AddItemCommand = new Command(OnAddItem);
         LoadSuggestionsFromJson();
 
         _ = LoadProductsAsync();
+        
+    }
+
+    private void OnQuantityChanged(object recipient, PropertyChangedMessage<int> message)
+    {
+        if (message.PropertyName == nameof(Product.Quantity))
+        {
+            // message.Sender is the Product instance
+            var product = (Product)message.Sender;
+
+            int oldValue = message.OldValue;
+            int newValue = message.NewValue;
+
+            // React however you want
+            HandleQuantityChanged(product, oldValue, newValue);
+        }
+    }
+
+    private async void HandleQuantityChanged(Product product, int oldValue, int newValue)
+    {
+        if(oldValue != newValue)
+        {
+            if (product.Quantity <= 0)
+            {
+                await RemoveProduct(product);
+            }
+            else
+            {
+                await productService.UpdateProductAsync(product);
+            }
+        }
     }
 
     public async Task LoadProductsAsync()
@@ -60,27 +97,8 @@ public partial class MainViewModel : BaseViewModel
 
         Products = new ObservableCollection<Product>(items);
         Products.CollectionChanged += (s, e) => RefreshGrouping();
-        foreach (var item in Products)
-        {
-            item.PropertyChanged += (s, e) => ProductPropertChanged(e, s as Product);
-        }
-
 
         RefreshGrouping();
-    }
-
-    private async Task ProductPropertChanged(PropertyChangedEventArgs e, Product item)
-    {
-        if (e.PropertyName == nameof(Product.Quantity))
-        {
-            if (item.Quantity <= 0)
-            {
-                await RemoveProduct(item);
-            } else
-            {
-                await productService.UpdateProductAsync(item);
-            }
-        }
     }
 
     private async void LoadSuggestionsFromJson()
@@ -180,13 +198,7 @@ public partial class MainViewModel : BaseViewModel
             .FirstOrDefault(x =>
                 string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
 
-        var product = new Product
-        {
-            Name = trimmed,
-            Quantity = 1,
-            Category = match?.Category ?? "Other"
-        };
-        product.PropertyChanged += (s, e) => ProductPropertChanged(e, s as Product);
+        var product = new Product(trimmed, match?.Category, 1);
 
         Products.Add(product);
         await productService.AddOrUpdateQuantityAsync(product);
@@ -197,7 +209,6 @@ public partial class MainViewModel : BaseViewModel
     {
         if (product == null) return;
 
-        product.PropertyChanged -= (s, e) => ProductPropertChanged(e, s as Product);
         Products.Remove(product);
         var success = await productService.DeleteProductAsync(product.RowId);
         if(success)

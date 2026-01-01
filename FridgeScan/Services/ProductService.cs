@@ -7,18 +7,19 @@ namespace FridgeScan.Services
     public class ProductService
     {
         private readonly HttpClient _http;
-
+        private readonly ActivityService activityService;
         private const string Endpoint = "https://fra.cloud.appwrite.io/v1";
         private const string ProjectId = "6954045e003c75c1c3bf";
         private const string DatabaseId = "695404ac0021bf7d9707";
         private const string CollectionId = "products";
 
-        public ProductService()
+        public ProductService(ActivityService activityService)
         {
             var apiKey = Secrets.AppWriteApiKey;
             _http = new HttpClient();
             _http.DefaultRequestHeaders.Add("X-Appwrite-Project", ProjectId);
             _http.DefaultRequestHeaders.Add("X-Appwrite-Key", apiKey);
+            this.activityService = activityService;
         }
 
         public async Task<List<Product>> GetProductsAsync(string[]? queries = null)
@@ -42,14 +43,10 @@ namespace FridgeScan.Services
 
                 var response = await _http.GetFromJsonAsync<AppwriteRowsResponse>(url);
 
-                return response?.Rows?.Select(r => new Product
+                return response?.Rows?.Select((Func<AppwriteRow, Product>)(r => new Product(r.Name, r.Category, r.Quantity)
                 {
-                    Name = r.Name,
-                    Quantity = r.Quantity,
-                    Category = r.Category ?? "Other",
                     RowId = r.Id
-
-                }).ToList() ?? new();
+                })).ToList() ?? new();
             }
             catch (Exception ex)
             {
@@ -103,6 +100,13 @@ namespace FridgeScan.Services
                 // Deserialize the created row
                 var created = await response.Content.ReadFromJsonAsync<AppwriteRow>();
                 product.RowId = created.Id;
+
+                _ = this.activityService.AddActivityAsync(new Models.Activity
+                {
+                    Type = "added",
+                    ProductName = product.Name,
+                    Source = "app"
+                });
 
                 return created;
             }

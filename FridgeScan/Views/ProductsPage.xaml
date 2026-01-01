@@ -14,7 +14,7 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:FridgeScan.ViewModels"
     x:Name="ProductsPageRoot"
-    x:DataType="vm:MainViewModel">
+    x:DataType="vm:ProductsViewModel">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -35,6 +35,7 @@
         <!--  AUTOCOMPLETE INPUT  -->
         <editors:SfAutocomplete
             Completed="SfAutocomplete_Completed"
+            Placeholder="+ Add Item"
             DisplayMemberPath="Name"
             ItemsSource="{Binding GrocerySuggestions}"
             MaximumSuggestion="3"
@@ -54,6 +55,7 @@
             x:Name="pullToRefresh"
             IsRefreshing="False"
             PullingThreshold="150"
+            Grid.Row="1"
             RefreshViewHeight="50"
             RefreshViewThreshold="30"
             RefreshViewWidth="50"
@@ -63,8 +65,8 @@
                 <Grid x:Name="mainGrid">
                     <sf:SfListView
                         x:Name="listView"
-                        Grid.Row="1"
-                        x:DataType="vm:MainViewModel"
+                        
+                        x:DataType="vm:ProductsViewModel"
                         AutoFitMode="DynamicHeight"
                         IsStickyGroupHeader="True"
                         ItemsSource="{Binding GroupedProducts}"
@@ -156,7 +158,10 @@
                                                                 FontFamily="Material"
                                                                 FontSize="20"
                                                                 Text="remove"
-                                                                VerticalOptions="Center">
+                                                                WidthRequest="30"
+                                                                VerticalTextAlignment="Center"
+                                                                HorizontalTextAlignment="Center"
+                                                                VerticalOptions="FillAndExpand">
                                                                 <Label.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding DecreaseCommand}" CommandParameter="{Binding}" />
                                                                 </Label.GestureRecognizers>
@@ -177,7 +182,11 @@
                                                                 FontFamily="Material"
                                                                 FontSize="20"
                                                                 Text="add"
-                                                                VerticalOptions="Center">
+                                                                  WidthRequest="30"
+  VerticalTextAlignment="Center"
+  HorizontalTextAlignment="Center"
+  VerticalOptions="FillAndExpand"
+                                                              >
                                                                 <Label.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding IncreaseCommand}" CommandParameter="{Binding}" />
                                                                 </Label.GestureRecognizers>
@@ -190,7 +199,11 @@
                                                                 FontSize="20"
                                                                 Text="delete"
                                                                 TextColor="Red"
-                                                                VerticalOptions="Center">
+                                                                  WidthRequest="30"
+  VerticalTextAlignment="Center"
+  HorizontalTextAlignment="Center"
+  VerticalOptions="FillAndExpand"
+                                                                >
                                                                 <Label.GestureRecognizers>
                                                                     <TapGestureRecognizer Command="{Binding RemoveCommand}" CommandParameter="{Binding}" />
                                                                 </Label.GestureRecognizers>

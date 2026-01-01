@@ -25,5 +25,14 @@
             Title="Import"
             ContentTemplate="{DataTemplate views:ImportPage}"
             Icon="icon_import.png" />
+        <ShellContent Title="Activities" ContentTemplate="{DataTemplate views:ActivitiesPage}">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="Material"
+                    Glyph="&#xE701;"
+                    Color="Black" />
+            </ShellContent.Icon>
+
+        </ShellContent>
     </TabBar>
 </Shell>

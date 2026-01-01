@@ -11,7 +11,7 @@ public partial class ProductsPage : ContentPage
 
         var services = Application.Current?.Handler?.MauiContext?.Services;
 
-        var vm = services.GetService<MainViewModel>();
+        var vm = services.GetService<ProductsViewModel>();
         BindingContext = vm;
     }
 
@@ -22,7 +22,7 @@ public partial class ProductsPage : ContentPage
             return;
 
         // Call your ViewModel method
-        ((MainViewModel)BindingContext).OnAddItem();
+        ((ProductsViewModel)BindingContext).OnAddItem();
 
         // Dismiss the keyboard
         hiddenEntry.HideSoftInputAsync(CancellationToken.None);
@@ -35,7 +35,7 @@ public partial class ProductsPage : ContentPage
         pullToRefresh.IsRefreshing = true;
         try
         {
-            await((MainViewModel)BindingContext).LoadProductsAsync();
+            await((ProductsViewModel)BindingContext).LoadProductsAsync();
         }
         finally
         {

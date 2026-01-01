@@ -11,9 +11,9 @@ namespace FridgeScan.ViewModels;
 public partial class ImportViewModel : BaseViewModel
 {
     private readonly EmailService _emailService;
-    private readonly MainViewModel _mainViewModel;
+    private readonly ProductsViewModel _mainViewModel;
 
-    public ImportViewModel(EmailService emailService, MainViewModel mainViewModel)
+    public ImportViewModel(EmailService emailService, ProductsViewModel mainViewModel)
     {
         _emailService = emailService;
         _mainViewModel = mainViewModel;
@@ -49,7 +49,7 @@ public partial class ImportViewModel : BaseViewModel
         if (parts.Length >= 3 && int.TryParse(parts[0], out var q) && (parts[1].ToLower().Contains("x") || parts[1] == "x"))
         {
             var name = string.Join(' ', parts.Skip(2));
-            return new Product { Name = name, Quantity = q };
+            return new Product(name, null, q);
         }
 
         // try last token is number
@@ -57,7 +57,7 @@ public partial class ImportViewModel : BaseViewModel
         if (int.TryParse(last, out q))
         {
             var name = string.Join(' ', parts.Take(parts.Length - 1));
-            return new Product { Name = name, Quantity = q };
+            return new Product(name, null, q);
         }
 
         // find tokens like "x2"
@@ -66,7 +66,7 @@ public partial class ImportViewModel : BaseViewModel
             if (token.StartsWith("x") && int.TryParse(token.Substring(1), out q))
             {
                 var name = string.Join(' ', parts.Where(p => p != token));
-                return new Product { Name = name, Quantity = q };
+                return new Product(name, null, q);
             }
         }
 

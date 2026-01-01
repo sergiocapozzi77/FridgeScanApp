@@ -78,6 +78,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\ActivitiesPage.xaml.cs">
+	    <DependentUpon>ActivitiesPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\ActivitiesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ImportPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

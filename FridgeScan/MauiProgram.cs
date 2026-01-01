@@ -27,11 +27,14 @@ public static partial class MauiProgram
         builder.Logging.AddDebug();
 #endif
         // view models and services
-        builder.Services.AddSingleton<MainViewModel>();
+        builder.Services.AddSingleton<ProductsViewModel>();
         builder.Services.AddSingleton<ImportViewModel>();
+        builder.Services.AddSingleton<ActivitiesViewModel>();
+
         builder.Services.AddSingleton<EmailService>();
 
         builder.Services.AddSingleton<ProductService>();
+        builder.Services.AddSingleton<ActivityService>();
 
         // pages
         builder.Services.AddTransient<Views.ProductsPage>();

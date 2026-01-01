@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FridgeScan.Views.ActivitiesPage"
+  xmlns:behaviours="clr-namespace:FridgeScan.Behaviours"
+  xmlns:converters="clr-namespace:FridgeScan.Converters"
+  xmlns:ds="clr-namespace:Syncfusion.Maui.DataSource;assembly=Syncfusion.Maui.DataSource"
+  xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+  xmlns:models="clr-namespace:FridgeScan.Models"
+  xmlns:pulltoRefresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
+  xmlns:sf="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+  xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
+  xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+  xmlns:vm="clr-namespace:FridgeScan.ViewModels"
+             x:DataType="vm:ActivitiesViewModel"
+             Title="Activities">
+    <Grid>
+        <pulltoRefresh:SfPullToRefresh
+          x:Name="pullToRefresh"
+          IsRefreshing="False"
+          PullingThreshold="150"
+          Grid.Row="1"
+          RefreshViewHeight="50"
+          RefreshViewThreshold="30"
+          RefreshViewWidth="50"
+          Refreshing="pullToRefresh_Refreshing"
+          TransitionMode="SlideOnTop">
+            <pulltoRefresh:SfPullToRefresh.PullableContent>
+                <Grid x:Name="mainGrid">
+                    <sf:SfListView
+                      x:Name="listView"
+                        DisplayMemberPath="Description"
+                      ItemsSource="{Binding Activities}"
+                      >
+                    </sf:SfListView>
+                </Grid>
+            </pulltoRefresh:SfPullToRefresh.PullableContent>
+        </pulltoRefresh:SfPullToRefresh>
+    </Grid>
+</ContentPage>

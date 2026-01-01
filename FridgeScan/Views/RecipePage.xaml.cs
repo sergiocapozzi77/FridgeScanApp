@@ -2,12 +2,12 @@ namespace FridgeScan.Views;
 
 public partial class RecipePage : ContentPage
 {
-    private readonly MainViewModel _vm;
+    private readonly ProductsViewModel _vm;
 
     public RecipePage()
     {
         InitializeComponent();
-        _vm = Application.Current?.Handler?.MauiContext?.Services?.GetService<MainViewModel>();
+        _vm = Application.Current?.Handler?.MauiContext?.Services?.GetService<ProductsViewModel>();
         BindingContext = _vm;
     }
 
