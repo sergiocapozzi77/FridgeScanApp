@@ -66,7 +66,7 @@ public partial class ProductsViewModel : BaseViewModel
 
     private void OnBarcodeCommand(object obj)
     {
-        throw new NotImplementedException();
+        Application.Current.MainPage.Navigation.PushAsync(new BarcodeScannerPage());
     }
 
     private void OnQuantityChanged(object recipient, PropertyChangedMessage<int> message)
@@ -104,7 +104,7 @@ public partial class ProductsViewModel : BaseViewModel
         var items = await productService.GetProductsAsync();
 
         Products = new ObservableCollection<Product>(items);
-        Products.CollectionChanged += (s, e) => RefreshGrouping();
+      //  Products.CollectionChanged += (s, e) => RefreshGrouping();
 
         RefreshGrouping();
     }
@@ -209,7 +209,8 @@ public partial class ProductsViewModel : BaseViewModel
         var product = new Product(trimmed, match?.Category, 1);
 
         Products.Add(product);
-        await productService.AddOrUpdateQuantityAsync(product);
+        GroupedProducts[0].FoodMenuCollection.Add(product);
+        //  await productService.AddOrUpdateQuantityAsync(product);
     }
 
 

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using Camera.MAUI;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Syncfusion.Maui.Core.Hosting;
 using System.Reflection;
@@ -22,6 +23,7 @@ public static partial class MauiProgram
                 fonts.AddFont("Roboto-Medium.ttf", "Roboto-Medium");
                 fonts.AddFont("Roboto-Regular.ttf", "Roboto-Regular");
             })
+         .UseMauiCameraView()
             ;
 #if DEBUG
         builder.Logging.AddDebug();

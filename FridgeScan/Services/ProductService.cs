@@ -101,7 +101,7 @@ namespace FridgeScan.Services
                 var created = await response.Content.ReadFromJsonAsync<AppwriteRow>();
                 product.RowId = created.Id;
 
-                _ = this.activityService.AddActivityAsync(new Models.Activity
+                await this.activityService.AddActivityAsync(new Models.Activity
                 {
                     Type = "added",
                     ProductName = product.Name,

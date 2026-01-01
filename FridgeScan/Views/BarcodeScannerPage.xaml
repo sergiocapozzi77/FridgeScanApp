@@ -1,0 +1,12 @@
+<ContentPage
+    x:Class="FridgeScan.Views.BarcodeScannerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:camera="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+    xmlns:zxing="clr-namespace:Camera.MAUI.ZXing;assembly=Camera.MAUI.ZXing">
+    <camera:CameraView
+        x:Name="cameraView"
+        HeightRequest="200"
+        WidthRequest="300" />
+
+</ContentPage>

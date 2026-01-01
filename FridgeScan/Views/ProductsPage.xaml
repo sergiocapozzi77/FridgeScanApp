@@ -65,7 +65,7 @@
                     <TapGestureRecognizer Command="{Binding BarcodeCommand}" CommandParameter="{Binding}" />
                 </Label.GestureRecognizers>
             </Label>
-            <Border Stroke="Red" Grid.Column="1"></Border>
+            <Border Grid.Column="1" Stroke="Red" />
         </Grid>
 
         <Entry
