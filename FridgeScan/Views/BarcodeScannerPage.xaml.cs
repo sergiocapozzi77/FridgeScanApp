@@ -1,66 +1,159 @@
-namespace FridgeScan.Views;
-
-
-using Camera.MAUI;
-using Camera.MAUI.ZXing;
-using Camera.MAUI.ZXingHelper;
+﻿using BarcodeScanning;
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using FridgeScan.Models;
+
+namespace FridgeScan.Views;
 
 public partial class BarcodeScannerPage : ContentPage
 {
+
+    private readonly BarcodeDrawable _drawable = new();
+    private string lastBarcode = "";
+
     public BarcodeScannerPage()
     {
         InitializeComponent();
-        cameraView.CamerasLoaded += CameraView_CamerasLoaded;
-        cameraView.BarcodeDetected += CameraView_BarcodeDetected;
-        cameraView.BarCodeDecoder = new ZXingBarcodeDecoder();
-        cameraView.BarCodeOptions = new BarcodeDecodeOptions
-        {
-            AutoRotate = true,
-           
-            PossibleFormats = { BarcodeFormat.All_1D },
-            ReadMultipleCodes = false,
-            TryHarder = true,
-            TryInverted = true
-        };
-        cameraView.BarCodeDetectionFrameRate = 10;
-        cameraView.BarCodeDetectionMaxThreads = 5;
-        cameraView.ControlBarcodeResultDuplicate = true;
-        cameraView.BarCodeDetectionEnabled = true;
+
+        BackButton.Text = "<";
     }
 
-
-    private async void CameraView_BarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
+    protected override async void OnAppearing()
     {
-        foreach (var result in args.Result)
-        {
-            await MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                await Toast.Make(result.Text, ToastDuration.Long).Show();
-            });
-        }
+        await Methods.AskForRequiredPermissionAsync();
+        base.OnAppearing();
+
+        Barcode.CameraEnabled = true;
+        Graphics.Drawable = _drawable;
     }
 
-    private void CameraView_CamerasLoaded(object sender, EventArgs e)
+    protected override void OnDisappearing()
     {
-        if (cameraView.NumCamerasDetected > 0)
+        base.OnDisappearing();
+        Barcode.CameraEnabled = false;
+    }
+
+    private void ContentPage_Unloaded(object sender, EventArgs e)
+    {
+        //Barcode.Handler?.DisconnectHandler();
+    }
+
+    private async void CameraView_OnDetectionFinished(object sender, OnDetectionFinishedEventArg e)
+    {
+        _drawable.barcodeResults = e.BarcodeResults;
+        Graphics.Invalidate();
+        if(e.BarcodeResults.Count > 0)
         {
-            if (cameraView.NumMicrophonesDetected > 0)
-                cameraView.Microphone = cameraView.Microphones.First();
-            cameraView.Camera = cameraView.Cameras.First();
-            MainThread.BeginInvokeOnMainThread(async () =>
+            var barcode = e.BarcodeResults.First().DisplayValue;
+            if(barcode != lastBarcode)
             {
-                if (await cameraView.StartCameraAsync() == CameraResult.Success)
+                lastBarcode = barcode;
+
+                var service = new OpenFoodFactsService();
+                var product = await service.GetProductAsync(barcode);
+
+                if (product == null)
                 {
-                   
+                    await Toast.Make("Product not found").Show();
+                    return;
                 }
-            });
+
+                await ShowProductPanel(product);
+
+            }
         }
     }
 
-    private async void ZxingCameraViewOnBarcodeDetected(object sender, BarcodeEventArgs args)
+    private async void BackButton_Clicked(object sender, EventArgs e)
     {
-     
+        await Shell.Current.GoToAsync("..");
+    }
+
+    private void CameraButton_Clicked(object sender, EventArgs e)
+    {
+        if (Barcode.CameraFacing == CameraFacing.Back)
+            Barcode.CameraFacing = CameraFacing.Front;
+        else
+            Barcode.CameraFacing = CameraFacing.Back;
+    }
+
+    private void TorchButton_Clicked(object sender, EventArgs e)
+    {
+        if (Barcode.TorchOn)
+            Barcode.TorchOn = false;
+        else
+            Barcode.TorchOn = true;
+    }
+
+    private class BarcodeDrawable : IDrawable
+    {
+        public IReadOnlySet<BarcodeResult>? barcodeResults;
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            if (barcodeResults is not null && barcodeResults.Count > 0)
+            {
+                canvas.StrokeSize = 15;
+                canvas.StrokeColor = Colors.Red;
+                var scale = 1 / canvas.DisplayScale;
+                canvas.Scale(scale, scale);
+
+                foreach (var barcode in barcodeResults)
+                {
+                    canvas.DrawRectangle(barcode.PreviewBoundingBox);
+                }
+            }
+        }
+    }
+
+    ProductInfo currentProduct;
+
+    private async Task ShowProductPanel(ProductInfo product)
+    {
+        ProductName.Text = product.Name;
+        ProductImage.Source = product.ImageUrl;
+        currentProduct = product;
+
+        ProductPanel.IsVisible = true;
+
+        // Animate width from 0 → 300 (or whatever you want)
+        await ProductPanel.WidthRequestTo(300, 250);
+
+        // Fade + slide up
+        await Task.WhenAll(
+            ProductPanel.FadeTo(1, 250),
+            ProductPanel.TranslateTo(0, 0, 250)
+        );
+    }
+
+    private async Task HideProductPanel()
+    {
+        await Task.WhenAll(
+            ProductPanel.FadeTo(0, 200),
+            ProductPanel.TranslateTo(0, 20, 200),
+            ProductPanel.WidthRequestTo(0, 200)
+        );
+
+        ProductPanel.IsVisible = false;
+    }
+
+    private void CancelButton_Clicked(object sender, EventArgs e)
+    {
+        lastBarcode = "";
+        HideProductPanel();
+    }
+
+    private async void AddButton_Clicked(object sender, EventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new ProductMessage(currentProduct));
+        await Shell.Current.GoToAsync("..");
     }
 }
+
+public class ProductMessage : ValueChangedMessage<ProductInfo>
+{
+    public ProductMessage(ProductInfo value) : base(value)
+    {
+    }
+}
+

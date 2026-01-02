@@ -1,4 +1,5 @@
-﻿using Camera.MAUI;
+﻿using BarcodeScanning;
+using Camera.MAUI;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Syncfusion.Maui.Core.Hosting;
@@ -23,7 +24,7 @@ public static partial class MauiProgram
                 fonts.AddFont("Roboto-Medium.ttf", "Roboto-Medium");
                 fonts.AddFont("Roboto-Regular.ttf", "Roboto-Regular");
             })
-         .UseMauiCameraView()
+         .UseBarcodeScanning()
             ;
 #if DEBUG
         builder.Logging.AddDebug();

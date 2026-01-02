@@ -55,6 +55,10 @@ public partial class ProductsViewModel : BaseViewModel
         this.activityService = activityService;
 
         WeakReferenceMessenger.Default.Register<PropertyChangedMessage<int>>(this, OnQuantityChanged);
+        WeakReferenceMessenger.Default.Register<ProductMessage>(this, (r, m) =>
+        {
+            AddItem(m.Value.Name, m.Value.Category);
+        });
 
         AddItemCommand = new Command(OnAddItem);
         BarcodeCommand = new Command(OnBarcodeCommand);
@@ -130,56 +134,61 @@ public partial class ProductsViewModel : BaseViewModel
 
     public void RefreshGrouping()
     {
-        // Build lookup of current groups from Products
-        var newGroups = Products
+        GroupedProducts.Clear();
+
+        var groups = Products
             .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category)
-            .ToDictionary(g => g.Key, g => g.ToList());
+            .OrderBy(g => g.Key);
 
-        // 1. REMOVE groups that no longer exist
-        for (int i = GroupedProducts.Count - 1; i >= 0; i--)
+        foreach (var group in groups)
         {
-            var existingGroup = GroupedProducts[i];
-
-            if (!newGroups.ContainsKey(existingGroup.FoodCategory))
-            {
-                GroupedProducts.RemoveAt(i);
-            }
-        }
-
-        // 2. UPDATE existing groups or ADD new ones
-        foreach (var kvp in newGroups)
-        {
-            var category = kvp.Key;
-            var items = kvp.Value;
-
-            var existingGroup = GroupedProducts
-                .FirstOrDefault(g => g.FoodCategory == category);
-
-            if (existingGroup == null)
-            {
-                // Add new group
-                GroupedProducts.Add(new ListViewFoodCategory(category, items));
-            }
-            else
-            {
-                // Update existing group items
-                existingGroup.FoodMenuCollection.Clear();
-                foreach (var item in items)
-                    existingGroup.FoodMenuCollection.Add(item);
-            }
-        }
-
-        // 3. Sort groups alphabetically
-        var sorted = GroupedProducts.OrderBy(g => g.FoodCategory).ToList();
-
-        for (int i = 0; i < sorted.Count; i++)
-        {
-            if (!ReferenceEquals(GroupedProducts[i], sorted[i]))
-            {
-                GroupedProducts.Move(GroupedProducts.IndexOf(sorted[i]), i);
-            }
+            GroupedProducts.Add(
+                new ListViewFoodCategory(group.Key, group.ToList())
+            );
         }
     }
+
+    private void AddProductToGroups(Product product)
+    {
+        var category = string.IsNullOrWhiteSpace(product.Category)
+            ? "Other"
+            : product.Category;
+
+        var group = GroupedProducts.FirstOrDefault(g => g.FoodCategory == category);
+
+        // Create the group if missing
+        if (group == null)
+        {
+            group = new ListViewFoodCategory(category, new List<Product>());
+            GroupedProducts.Add(group);
+
+            // keep ordering alphabetical
+            var ordered = GroupedProducts.OrderBy(g => g.FoodCategory).ToList();
+            GroupedProducts.Clear();
+            foreach (var g in ordered)
+                GroupedProducts.Add(g);
+        }
+
+        group.FoodMenuCollection.Add(product);
+    }
+
+    private void RemoveProductFromGroups(Product product)
+    {
+        var category = string.IsNullOrWhiteSpace(product.Category)
+            ? "Other"
+            : product.Category;
+
+        var group = GroupedProducts.FirstOrDefault(g => g.FoodCategory == category);
+        if (group == null)
+            return;
+
+        group.FoodMenuCollection.Remove(product);
+
+        // Remove empty groups to keep UI tidy
+        if (group.FoodMenuCollection.Count == 0)
+            GroupedProducts.Remove(group);
+    }
+
 
     public void OnAddItem()
     {
@@ -187,12 +196,12 @@ public partial class ProductsViewModel : BaseViewModel
         NewItemName = null;
     }
 
-    async void AddItem(string item)
+    async void AddItem(string name, string? category = null)
     {
-        if (string.IsNullOrEmpty(item))
+        if (string.IsNullOrEmpty(name))
             return;
 
-        var trimmed = item.Trim();
+        var trimmed = name.Trim();
 
         var existing = Products.FirstOrDefault(x =>
                 string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
@@ -202,15 +211,20 @@ public partial class ProductsViewModel : BaseViewModel
             return;
         }
 
-        var match = GrocerySuggestions
-            .FirstOrDefault(x =>
-                string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrEmpty(category))
+        {
+            var match = GrocerySuggestions
+                .FirstOrDefault(x =>
+                    string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
+            category = match?.Category;
+        }
 
-        var product = new Product(trimmed, match?.Category, 1);
+        var product = new Product(trimmed, category, 1);
 
         Products.Add(product);
-        GroupedProducts[0].FoodMenuCollection.Add(product);
-        //  await productService.AddOrUpdateQuantityAsync(product);
+        AddProductToGroups(product);
+
+         await productService.AddOrUpdateQuantityAsync(product);
     }
 
 
@@ -219,9 +233,9 @@ public partial class ProductsViewModel : BaseViewModel
         if (product == null) return;
 
         Products.Remove(product);
+        RemoveProductFromGroups(product);
+
         var success = await productService.DeleteProductAsync(product.RowId);
-        if(success)
-        {
-        }
+
     }
 }

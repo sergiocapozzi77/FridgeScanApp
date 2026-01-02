@@ -60,12 +60,18 @@
                 HorizontalTextAlignment="Center"
                 Text="barcode"
                 VerticalTextAlignment="Center"
-                WidthRequest="30">
+                WidthRequest="30"
+                ZIndex="10">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding BarcodeCommand}" CommandParameter="{Binding}" />
                 </Label.GestureRecognizers>
             </Label>
-            <Border Grid.Column="1" Stroke="Red" />
+            <Border
+                Grid.Column="1"
+                Margin="0,12,0,7"
+                HeightRequest="1"
+                Stroke="{DynamicResource SfAutocompleteNormalStroke}"
+                VerticalOptions="End" />
         </Grid>
 
         <Entry
