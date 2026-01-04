@@ -8,7 +8,7 @@ namespace FridgeScan.ViewModels;
 
 public partial class ProductsViewModel : BaseViewModel
 {
-    public ObservableCollection<Product> Products { get; set; }
+  
 
     public ObservableCollection<ListViewFoodCategory> GroupedProducts { get; } = new();
 
@@ -34,6 +34,7 @@ public partial class ProductsViewModel : BaseViewModel
     private string _newItemName;
     private readonly ProductService productService;
     private readonly ActivityService activityService;
+    private readonly ProductsManager productsManager;
 
     public string NewItemName
     {
@@ -49,10 +50,11 @@ public partial class ProductsViewModel : BaseViewModel
 
     public ICommand BarcodeCommand { get; }
 
-    public ProductsViewModel(ProductService productService, ActivityService activityService)
+    public ProductsViewModel(ProductService productService, ActivityService activityService, ProductsManager productsManager)
     {
         this.productService = productService;
         this.activityService = activityService;
+        this.productsManager = productsManager;
 
         WeakReferenceMessenger.Default.Register<PropertyChangedMessage<int>>(this, OnQuantityChanged);
         WeakReferenceMessenger.Default.Register<ProductMessage>(this, (r, m) =>
@@ -107,8 +109,7 @@ public partial class ProductsViewModel : BaseViewModel
     {
         var items = await productService.GetProductsAsync();
 
-        Products = new ObservableCollection<Product>(items);
-      //  Products.CollectionChanged += (s, e) => RefreshGrouping();
+        productsManager.Init(items);
 
         RefreshGrouping();
     }
@@ -136,7 +137,7 @@ public partial class ProductsViewModel : BaseViewModel
     {
         GroupedProducts.Clear();
 
-        var groups = Products
+        var groups = productsManager.Products
             .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category)
             .OrderBy(g => g.Key);
 
@@ -203,7 +204,7 @@ public partial class ProductsViewModel : BaseViewModel
 
         var trimmed = name.Trim();
 
-        var existing = Products.FirstOrDefault(x =>
+        var existing = productsManager.Products.FirstOrDefault(x =>
                 string.Equals(x.Name, trimmed, StringComparison.OrdinalIgnoreCase));
         if (existing != null)
         {
@@ -221,7 +222,7 @@ public partial class ProductsViewModel : BaseViewModel
 
         var product = new Product(trimmed, category, 1);
 
-        Products.Add(product);
+        productsManager.AddProduct(product);
         AddProductToGroups(product);
 
          await productService.AddOrUpdateQuantityAsync(product);
@@ -232,7 +233,7 @@ public partial class ProductsViewModel : BaseViewModel
     {
         if (product == null) return;
 
-        Products.Remove(product);
+        productsManager.RemoveProduct(product);
         RemoveProductFromGroups(product);
 
         var success = await productService.DeleteProductAsync(product.RowId);
