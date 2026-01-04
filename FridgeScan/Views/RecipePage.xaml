@@ -1,54 +1,78 @@
-
 <ContentPage
     x:Class="FridgeScan.Views.RecipePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
+    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-            <Label
-                FontAttributes="Bold"
-                FontSize="24"
-                HorizontalOptions="Center"
-                Text="Suggested Recipes" />
+        <Label
+                    FontAttributes="Bold"
+            Padding="5"
+                    FontSize="24"
+                    HorizontalOptions="Center"
+                    Text="Suggested Recipes" />
+        <!-- Main Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="16">
 
-            <CollectionView
-                ItemsSource="{Binding Suggestions}"
-                SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
-                SelectionMode="Single">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <sf:SfCardView
-                            Margin="0,10"
-                            BackgroundColor="{AppThemeBinding Light=#FFFFFF,
-                                                              Dark=#1E1E1E}"
-                            CornerRadius="12">
-                            <VerticalStackLayout Padding="12" Spacing="8">
 
-                                <Image
-                                    Margin="0,0,0,8"
-                                    Aspect="AspectFill"
-                                    HeightRequest="140"
-                                    Source="{Binding ImageUrl}" />
+                <CollectionView
+                    ItemsSource="{Binding Suggestions}"
+                    SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
+                    SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <sf:SfCardView
+                                Margin="0,10"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}"
+                                CornerRadius="12">
 
-                                <Label
-                                    FontAttributes="Bold"
-                                    FontSize="18"
-                                    Text="{Binding Name}" />
+                                <VerticalStackLayout Padding="12" Spacing="8">
 
-                                <Button
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipeViewModel}}, Path=OpenRecipeCommand}"
-                                    CommandParameter="{Binding}"
-                                    Text="View Recipe" />
-                            </VerticalStackLayout>
-                        </sf:SfCardView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                                    <Image
+                                        Margin="0,0,0,8"
+                                        Aspect="AspectFill"
+                                        HeightRequest="140"
+                                        Source="{Binding ImageUrl}" />
 
-        </VerticalStackLayout>
-    </ScrollView>
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="18"
+                                        Text="{Binding Name}" />
+
+                                    <Button
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipeViewModel}}, Path=OpenRecipeCommand}"
+                                        CommandParameter="{Binding}"
+                                        Text="View Recipe" />
+                                </VerticalStackLayout>
+
+                            </sf:SfCardView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Busy Indicator Overlay -->
+        <sfBusy:SfBusyIndicator
+            IsVisible="{Binding IsLoading}"
+            IsRunning="{Binding IsLoading}"
+            AnimationType="CircularMaterial"
+            Title="Loading recipes..."
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="120"
+            HeightRequest="90"
+            BackgroundColor="#80000000"
+            />
+
+    </Grid>
 </ContentPage>

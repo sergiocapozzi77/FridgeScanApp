@@ -9,12 +9,13 @@ using System.Windows.Input;
 
 namespace FridgeScan.ViewModels;
 
-public class RecipeViewModel : INotifyPropertyChanged
+public partial class RecipeViewModel : BaseViewModel
 {
     private readonly RecipeAiService _ai;
     private readonly ProductsManager productsManager;
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    [ObservableProperty]
+    public bool isLoading;
 
     public ObservableCollection<RecipeSuggestion> Suggestions { get; } = new();
 
@@ -37,6 +38,7 @@ public class RecipeViewModel : INotifyPropertyChanged
 
     public async Task LoadSuggestionsAsync()
     {
+        IsLoading = true;
         try
         {
 
@@ -68,6 +70,10 @@ public class RecipeViewModel : INotifyPropertyChanged
         {
             System.Diagnostics.Debug.WriteLine($"Error loading recipes: {ex}");
             await Toast.Make("Failed to load recipe suggestions. " + ex.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 
