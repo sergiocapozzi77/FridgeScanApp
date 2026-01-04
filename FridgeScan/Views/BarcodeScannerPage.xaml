@@ -27,7 +27,7 @@
             ColumnDefinitions="*, *, *, *, *, *"
             VerticalOptions="Start">
 
-            <Button
+            <button:SfButton
                 x:Name="BackButton"
                 Grid.Column="0"
                 Clicked="BackButton_Clicked"
@@ -35,7 +35,7 @@
                 FontSize="24"
                 HeightRequest="50"
                 WidthRequest="50" />
-            <Button
+            <button:SfButton
                 Grid.Column="1"
                 Clicked="CameraButton_Clicked"
                 CornerRadius="25"
@@ -44,7 +44,7 @@
                 HeightRequest="50"
                 Text="flip_camera_android"
                 WidthRequest="50" />
-            <Button
+            <button:SfButton
                 Grid.Column="2"
                 Clicked="TorchButton_Clicked"
                 CornerRadius="25"
@@ -59,7 +59,7 @@
         <Border
             x:Name="ProductPanel"
             Margin="0,0,0,20"
-            Padding="15"
+            Padding="10"
             BackgroundColor="#CCFFFFFF"
             HeightRequest="160"
             HorizontalOptions="Center"
@@ -82,7 +82,10 @@
                     <Label
                         x:Name="ProductName"
                         FontSize="18"
-                        TextColor="Black" />
+                        TextColor="Black" MaxLines="2" 
+                        LineBreakMode="WordWrap"
+
+                        />
 
                     <HorizontalStackLayout Spacing="10">
                         <button:SfButton
