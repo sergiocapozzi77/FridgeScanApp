@@ -1,0 +1,39 @@
+<ContentPage
+    x:Class="FridgeScan.Views.RecipeDetailsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Image
+                Aspect="AspectFill"
+                HeightRequest="220"
+                Source="{Binding Recipe.ImageUrl}" />
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="26"
+                Text="{Binding Recipe.Name}" />
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="20"
+                Text="Ingredients" />
+
+            <VerticalStackLayout>
+                <Label Text="{Binding IngredientsText}" />
+            </VerticalStackLayout>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="20"
+                Text="Steps" />
+
+            <VerticalStackLayout>
+                <Label Text="{Binding StepsText}" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

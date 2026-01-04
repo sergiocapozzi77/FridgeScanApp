@@ -10,6 +10,9 @@ public static class Secrets
     public static string AppWriteApiKey =>
         GetValue(nameof(AppWriteApiKey));
 
+    public static string OpenAiKey =>
+    GetValue(nameof(OpenAiKey));
+
     private static readonly JsonElement _config = LoadConfiguration("secrets.json");
 
     private static string GetValue(string key)

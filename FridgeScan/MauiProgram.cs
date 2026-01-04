@@ -1,9 +1,6 @@
 ﻿using BarcodeScanning;
-using Camera.MAUI;
 using CommunityToolkit.Maui;
-using Microsoft.Extensions.Configuration;
 using Syncfusion.Maui.Core.Hosting;
-using System.Reflection;
 
 namespace FridgeScan;
 
@@ -24,8 +21,7 @@ public static partial class MauiProgram
                 fonts.AddFont("Roboto-Medium.ttf", "Roboto-Medium");
                 fonts.AddFont("Roboto-Regular.ttf", "Roboto-Regular");
             })
-         .UseBarcodeScanning()
-            ;
+         .UseBarcodeScanning();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
@@ -33,11 +29,13 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<ProductsViewModel>();
         builder.Services.AddSingleton<ImportViewModel>();
         builder.Services.AddSingleton<ActivitiesViewModel>();
+        builder.Services.AddSingleton<RecipeViewModel>();
 
         builder.Services.AddSingleton<EmailService>();
 
         builder.Services.AddSingleton<ProductService>();
         builder.Services.AddSingleton<ActivityService>();
+        builder.Services.AddSingleton<ProductsManager>();
 
         // pages
         builder.Services.AddTransient<Views.ProductsPage>();
