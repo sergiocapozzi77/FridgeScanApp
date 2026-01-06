@@ -32,6 +32,7 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<RecipeViewModel>();
 
         builder.Services.AddSingleton<EmailService>();
+        builder.Services.AddSingleton<IRecipeService, RecipeGoodFoodService>();
 
         builder.Services.AddSingleton<ProductService>();
         builder.Services.AddSingleton<ActivityService>();

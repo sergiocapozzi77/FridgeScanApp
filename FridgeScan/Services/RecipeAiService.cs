@@ -12,7 +12,7 @@ namespace FridgeScan.Services
     using OpenAI;
     using OpenAI.Images;
 
-    public class RecipeAiService
+    public class RecipeAiService : IRecipeService
     {
         private readonly OpenAiProvider provider;
         private readonly OpenAiLatestFastChatModel llm;
@@ -46,7 +46,6 @@ namespace FridgeScan.Services
 
         public async Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(
             List<string> ingredients,
-            string cuisine,
             string dishType)
         {
             var template = @"
@@ -54,14 +53,15 @@ You are a recipe generator.
 
 Use the following inputs:
 - Ingredients: {ingredients}
-- Cuisine: {cuisine}
 - Dish type: {dishType}
 
-You must:
-- Use only the ingredients from the list above (plus common pantry items like salt, pepper, oil, water).
-- Return exactly 5 recipe suggestions.
-- For each recipe, generate an image prompt that describes the *visual appearance* of the finished dish in concrete detail (colors, textures, plating, setting). 
-- The image prompt must be suitable for searching on Pexels and must NOT mention AI, prompts, or instructions.
+Rules:
+- Prefer recipes that use as many of the listed ingredients as possible.
+- It is OK if the recipe uses extra ingredients.
+- Return exactly 5 recipes.
+- All recipes must come from https://www.bbcgoodfood.com/. But don't invent links, if the link doesn't exist, post the correct link even if it comes from another website
+- You may search the web to find real recipes and links.
+- For each recipe, extract the preparation time (in minutes) and difficulty, and normalize difficulty to: ""easy"", ""medium"", or ""hard"".
 
 Output ONLY valid JSON — no explanations, no text before or after.
 
@@ -69,16 +69,16 @@ Format:
 [
   {{
     ""name"": ""Dish name"",
-    ""imageprompt"": ""A vivid, photographic description of the dish for Pexels search""
+    ""url"": ""https://www.bbcgoodfood.com/…"",
+    ""prep_time"": 0,
+    ""difficulty"": ""easy""
   }}
-]
-";
+]";
 
             var prompt = PromptTemplate.FromTemplate(template);
             var finalPrompt = await prompt.FormatAsync(new InputValues(new Dictionary<string, object>
             {
                 { "ingredients", string.Join(',', ingredients) },
-                { "cuisine", cuisine },
                 { "dishType", dishType }
             }));
 

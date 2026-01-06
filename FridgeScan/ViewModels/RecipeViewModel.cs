@@ -1,18 +1,13 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace FridgeScan.ViewModels;
 
 public partial class RecipeViewModel : BaseViewModel
 {
-    private readonly RecipeAiService _ai;
     private readonly ProductsManager productsManager;
+    private readonly IRecipeService recipeService;
 
     [ObservableProperty]
     public bool isLoading;
@@ -24,12 +19,11 @@ public partial class RecipeViewModel : BaseViewModel
     public ICommand LoadSuggestionsCommand { get; }
     public ICommand OpenRecipeCommand { get; }
 
-    public RecipeViewModel(ProductsManager productsManager)
+
+    public RecipeViewModel(ProductsManager productsManager, IRecipeService recipeService)
     {
         this.productsManager = productsManager;
-
-        _ai = new RecipeAiService();
-
+        this.recipeService = recipeService;
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
         OpenRecipeCommand = new Command<RecipeSuggestion>(async (s) => await OpenRecipeAsync(s));
 
@@ -42,22 +36,21 @@ public partial class RecipeViewModel : BaseViewModel
         try
         {
 
-            var list = await _ai.GetRecipeSuggestionsAsync(
+            var list = await recipeService.GetRecipeSuggestionsAsync(
                 productsManager.Products.Select( x => x.Name).ToList(),
-                cuisine: "Italian",
-                dishType: "Main course"
+                dishType: "main-course"
             );
 
 
             //list[0].ImageUrl = image;
             var ps = new PexelService();
 
-            foreach (var recipe in list)
+         /*   foreach (var recipe in list)
             {
                 var image = recipe.ImagePrompt;
                 var url = await ps.GetFoodImageAsync(image);
                 recipe.ImageUrl = url;
-            }
+            }*/
 
             MainThread.BeginInvokeOnMainThread(() =>
             {

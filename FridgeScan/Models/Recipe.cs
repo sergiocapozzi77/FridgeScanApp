@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,13 @@ namespace FridgeScan.Models
     {
         public string Name { get; set; }
 
-        public string ImagePrompt { get; set; } // returned by GPT-
+        public string Url { get; set; }
 
-        public string ImageUrl { get; set; } // returned by GPT-4o
+        [JsonProperty("prep_time")]
+        public int PrepTime { get; set; } // returned by GPT-
+
+        public string Difficulty { get; set; }
+        public string ImageUrl { get; internal set; }
     }
 
     public class FullRecipe

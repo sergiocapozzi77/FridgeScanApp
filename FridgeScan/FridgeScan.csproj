@@ -59,6 +59,7 @@
 		<PackageReference Include="BarcodeScanning.Native.Maui" Version="2.2.1" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.3.0" />
 		<PackageReference Include="CommunityToolkit.MVVM" Version="8.4.0" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
 		<PackageReference Include="LangChain" Version="0.17.0" />
 		<PackageReference Include="LangChain.Providers.OpenAI" Version="0.17.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
@@ -68,7 +69,6 @@
 		<!-- Microsoft Graph and MSAL for email import -->
 		<PackageReference Include="Microsoft.Graph" Version="5.99.0" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.79.2" />
-		<PackageReference Include="OpenAI" Version="2.8.0" />
 		<PackageReference Include="Syncfusion.Maui.Cards" Version="32.1.20" />
 		<PackageReference Include="Syncfusion.Maui.Inputs" Version="32.1.20" />
 		<!-- Syncfusion MAUI components (exclude Windows to avoid PRI conflicts) -->

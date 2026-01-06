@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels">
 
     <Grid>
@@ -12,12 +13,25 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Label
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+                <Label
                     FontAttributes="Bold"
-            Padding="5"
+                    Padding="5"
                     FontSize="24"
                     HorizontalOptions="Center"
+                    VerticalTextAlignment="Center"
                     Text="Suggested Recipes" />
+            <button:SfButton
+                Grid.Column="1"
+                Command="{Binding LoadSuggestionsCommand}"
+                FontFamily="Material"
+                FontSize="24"
+                Text="refresh" />
+        </Grid>
         <!-- Main Content -->
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="16" Spacing="16">
@@ -62,7 +76,7 @@
         </ScrollView>
 
         <!-- Busy Indicator Overlay -->
-        <sfBusy:SfBusyIndicator
+        <sfBusy:SfBusyIndicator Grid.Row="1"
             IsVisible="{Binding IsLoading}"
             IsRunning="{Binding IsLoading}"
             AnimationType="CircularMaterial"
