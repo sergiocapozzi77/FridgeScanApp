@@ -109,58 +109,58 @@ public class RecipeGoodFoodService : IRecipeService
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
-            // 1. Estrazione dati principali da LD+JSON (come fatto prima)
-            var jsonNode = doc.DocumentNode.SelectSingleNode("//script[@type='application/ld+json']");
-            var jsonData = JToken.Parse(jsonNode.InnerText);
-            JObject recipeSchema = jsonData is JArray arr ? arr.FirstOrDefault(x => x["@type"]?.ToString() == "Recipe") as JObject : jsonData as JObject;
-
-            // 2. ESTRAZIONE DIFFICOLTÀ (Specifica per BBC Good Food)
-            // Proviamo tre strade in ordine di affidabilità:
-            string difficulty = "Easy"; // Default
-
-            // Strada A: Dal blocco __POST_CONTENT__ o __AD_SETTINGS__ (molto preciso)
+            // 1. Cerchiamo prima in __POST_CONTENT__ (il più completo per BBC Good Food)
             var postContentNode = doc.DocumentNode.SelectSingleNode("//script[@id='__POST_CONTENT__']");
-            if (postContentNode != null)
-            {
-                var postData = JObject.Parse(postContentNode.InnerText);
-                difficulty = postData["skillLevel"]?.ToString() ??
-                             postData["recipe"]?["skill_level"]?.ToString() ?? "Easy";
-            }
-            // Strada B: Dai meta-tag (se presente)
-            else
-            {
-                var diffMeta = doc.DocumentNode.SelectSingleNode("//meta[@property='article:section']");
-                if (diffMeta != null) difficulty = diffMeta.GetAttributeValue("content", "Easy");
-            }
+            var schemaNode = doc.DocumentNode.SelectSingleNode("//script[@type='application/ld+json']");
 
-            // 3. Mappatura finale
+            if (postContentNode == null && schemaNode == null) return null;
+
+            var postData = postContentNode != null ? JObject.Parse(postContentNode.InnerText) : null;
+            var schemaData = schemaNode != null ? JToken.Parse(schemaNode.InnerText) : null;
+
+            // Se lo schema è un array, prendiamo l'oggetto Recipe
+            JObject recipeSchema = schemaData is JArray arr
+                ? arr.FirstOrDefault(x => x["@type"]?.ToString() == "Recipe") as JObject
+                : schemaData as JObject;
+
             var details = new RecipeSuggestion
             {
-                Name = recipeSchema["name"]?.ToString(),
-                ImageUrl = ExtractImage(recipeSchema["image"]),
-                Serving = recipeSchema["recipeYield"]?.ToString() ?? "N/A",
-                Difficulty = char.ToUpper(difficulty[0]) + difficulty.Substring(1).ToLower(), // Formatta come "Easy"
+                // Fallback tra PostData e Schema
+                Name = postData?["title"]?.ToString() ?? recipeSchema?["name"]?.ToString(),
 
-                PrepTime = ParseIso8601Duration(recipeSchema["prepTime"]?.ToString()),
-                CookTime = ParseIso8601Duration(recipeSchema["cookTime"]?.ToString()),
+                ImageUrl = postData?["image"]?["url"]?.ToString() ?? recipeSchema?["image"]?[0]?.ToString(),
 
-                // Nel parsing degli Ingredienti
-                Ingredients = recipeSchema["recipeIngredient"]?
-    .Select(i => SanitizeText(i.ToString())) // Applica la pulizia qui
-    .ToList() ?? new List<string>(),
+                // In questa pagina 'servings' è null in postData, quindi usiamo recipeYield dallo schema
+                Serving = postData?["servings"]?.ToString() ?? recipeSchema?["recipeYield"]?.ToString() ?? "N/A",
 
-                // Nel parsing del Metodo
-                MethodSteps = ExtractSteps(recipeSchema["recipeInstructions"])
-    .Select(s => SanitizeText(s)) // Applica la pulizia qui
-    .ToList(),
-                Nutritions = ExtractNutrition(recipeSchema["nutrition"])
+                Difficulty = postData?["skillLevel"]?.ToString() ?? "Easy",
+
+                // Parsing tempi ISO8601 dallo Schema (più affidabile per pagine video)
+                PrepTime = ParseIso8601Duration(postData?["schema"]?["prepTime"]?.ToString()),
+                CookTime = ParseIso8601Duration(postData?["schema"]?["cookTime"]?.ToString()),
+
+                // Ingredienti (Sanitizzati per &frac12; etc)
+                Ingredients = postData?["ingredients"]?[0]?["ingredients"]?
+                    .Select(i => SanitizeText($"{i["quantityText"]} {i["ingredientText"]} {i["note"]}"))
+                    .ToList() ?? recipeSchema?["recipeIngredient"]?.Select(i => SanitizeText(i.ToString())).ToList() ?? new(),
+
+                // Metodo
+                MethodSteps = postData?["methodSteps"]?
+                    .Select(m => SanitizeText(m["content"]?[0]?["data"]?["value"]?.ToString()))
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToList() ?? new(),
+
+                // Nutrizione
+                Nutritions = postData?["nutritions"]?
+                    .Select(n => SanitizeText($"{n["label"]}: {n["value"]}{n["unit"]} {n["additionalText"]}"))
+                    .ToList() ?? new()
             };
 
             return details;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Errore: {ex.Message}");
+            Console.WriteLine($"Errore critico durante lo scraping: {ex.Message}");
             return null;
         }
     }

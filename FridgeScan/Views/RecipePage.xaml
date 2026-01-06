@@ -1,4 +1,4 @@
-<ContentPage
+﻿<ContentPage
     x:Class="FridgeScan.Views.RecipePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -106,30 +106,39 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <sf:SfCardView
-                                Margin="0,10"
-                                CornerRadius="12">
+                                Margin="0,0,0,10"
+                                CornerRadius="6">
                                 <sf:SfCardView.GestureRecognizers>
                                     <TapGestureRecognizer 
             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipeViewModel}}, Path=OpenRecipeCommand}"
             CommandParameter="{Binding}" />
                                 </sf:SfCardView.GestureRecognizers>
 
-                                <VerticalStackLayout Padding="12" Spacing="8">
+                                <VerticalStackLayout Padding="2" Spacing="0">
                                     <Image
-                                        Margin="0,0,0,8"
+                                        Margin="0,0,0,4"
                                         Aspect="AspectFill"
                                         HeightRequest="140"
                                         Source="{Binding ImageUrl}" />
 
                                     <Label
+                                        Margin="2,0,0,4"
                                         FontAttributes="Bold"
                                         FontSize="18"
-                                        Text="{Binding Name}" />
+                                        Text="{Binding Name}"
+                                        LineBreakMode="CharacterWrap"
+                                        MaxLines="1" />
 
-                                    <Button
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipeViewModel}}, Path=OpenRecipeCommand}"
-                                        CommandParameter="{Binding}"
-                                        Text="View Recipe" />
+                                    <HorizontalStackLayout Spacing="12" Margin="2,0,0,4">
+                                        <Label
+                                            FontSize="14"
+                                            TextColor="Gray"
+                                            Text="{Binding PrepTime, StringFormat='{0} minutes'}" />
+                                        <Label
+                                          FontSize="14"
+                                          TextColor="Gray"
+                                          Text="{Binding Difficulty}" />
+                                    </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </sf:SfCardView>
                         </DataTemplate>
