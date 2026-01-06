@@ -23,6 +23,11 @@ namespace FridgeScan.Services
             llm = new OpenAiLatestFastChatModel(provider);
         }
 
+        public Task<RecipeSuggestion> GetFullRecipeDetailsAsync(string url)
+        {
+            throw new NotImplementedException();
+        }
+
         //public async Task<string> GenerateDishImageAsync(string imagePrompt)
         //{
         //    // Create the image client

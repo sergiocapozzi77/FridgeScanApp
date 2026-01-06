@@ -1,39 +1,80 @@
-<ContentPage
+<ContentPage 
+xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfCards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
+             xmlns:sfTab="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
     x:Class="FridgeScan.Views.RecipeDetailsPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    Title="{Binding Recipe.Name}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
+        <VerticalStackLayout Spacing="0">
+            <Image Source="{Binding Recipe.ImageUrl}" 
+                   HeightRequest="250" 
+                   Aspect="AspectFill" />
 
-            <Image
-                Aspect="AspectFill"
-                HeightRequest="220"
-                Source="{Binding Recipe.ImageUrl}" />
+            <sfCards:SfCardView Margin="15,-30,15,15" 
+                                CornerRadius="10" 
+                                BackgroundColor="White"
+                                >
+                <Grid ColumnDefinitions="*,*,*,*" Padding="10">
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label Text="Serves" FontSize="10" HorizontalOptions="Center" TextColor="Black"/>
+                        <Label Text="{Binding Recipe.Serving}" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Level" FontSize="10" HorizontalOptions="Center" TextColor="Black"/>
+                        <Label Text="{Binding Recipe.Difficulty}" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2">
+                        <Label Text="Prep" FontSize="10" HorizontalOptions="Center" TextColor="Black"/>
+                        <Label Text="{Binding Recipe.PrepTime}" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="3">
+                        <Label Text="Cook" FontSize="10" HorizontalOptions="Center" TextColor="Black"/>
+                        <Label Text="{Binding Recipe.CookTime}" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </sfCards:SfCardView>
 
-            <Label
-                FontAttributes="Bold"
-                FontSize="26"
-                Text="{Binding Recipe.Name}" />
+            <sfTab:SfTabView HeightRequest="500">
+                <sfTab:SfTabView.Items>
+                    <sfTab:SfTabItem Header="Ingredients">
+                        <sfTab:SfTabItem.Content>
+                            <CollectionView ItemsSource="{Binding Recipe.Ingredients}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Text="{Binding .}" Padding="15,5" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </sfTab:SfTabItem.Content>
+                    </sfTab:SfTabItem>
 
-            <Label
-                FontAttributes="Bold"
-                FontSize="20"
-                Text="Ingredients" />
+                    <sfTab:SfTabItem Header="Method">
+                        <sfTab:SfTabItem.Content>
+                            <CollectionView ItemsSource="{Binding Recipe.MethodSteps}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Text="{Binding .}" Padding="15,10" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </sfTab:SfTabItem.Content>
+                    </sfTab:SfTabItem>
 
-            <VerticalStackLayout>
-                <Label Text="{Binding IngredientsText}" />
-            </VerticalStackLayout>
-
-            <Label
-                FontAttributes="Bold"
-                FontSize="20"
-                Text="Steps" />
-
-            <VerticalStackLayout>
-                <Label Text="{Binding StepsText}" />
-            </VerticalStackLayout>
-
+                    <sfTab:SfTabItem Header="Nutrition">
+                        <sfTab:SfTabItem.Content>
+                            <CollectionView ItemsSource="{Binding Recipe.Nutritions}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Text="{Binding .}" Padding="15,5" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </sfTab:SfTabItem.Content>
+                    </sfTab:SfTabItem>
+                </sfTab:SfTabView.Items>
+            </sfTab:SfTabView>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

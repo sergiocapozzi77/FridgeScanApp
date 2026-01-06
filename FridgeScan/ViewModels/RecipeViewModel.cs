@@ -36,10 +36,9 @@ public partial class RecipeViewModel : BaseViewModel
     private MealTypeModel selectedTotalTime;
 
 
-public RecipeSuggestion SelectedSuggestion { get; set; }
+    public RecipeSuggestion SelectedSuggestion { get; set; }
 
     public ICommand LoadSuggestionsCommand { get; }
-    public ICommand OpenRecipeCommand { get; }
 
 
     public RecipeViewModel(ProductsManager productsManager, IRecipeService recipeService)
@@ -54,7 +53,6 @@ public RecipeSuggestion SelectedSuggestion { get; set; }
         LoadSavedFilters();
 
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
-        OpenRecipeCommand = new Command<RecipeSuggestion>(async (s) => await OpenRecipeAsync(s));
 
         Task.Run(LoadSuggestionsAsync);
     }
@@ -172,14 +170,17 @@ public RecipeSuggestion SelectedSuggestion { get; set; }
         }
     }
 
-    private async Task OpenRecipeAsync(RecipeSuggestion suggestion)
+    [RelayCommand]
+    private async Task OpenRecipe(RecipeSuggestion selectedRecipe)
     {
-        //    var json = await _ai.GetFullRecipeAsync(suggestion.Name);
-        //    var full = JsonSerializer.Deserialize<FullRecipe>(json);
+        if (selectedRecipe == null) return;
 
-        //    await Shell.Current.GoToAsync(nameof(RecipeDetailsPage), true, new Dictionary<string, object>
-        //{
-        //    { "Recipe", full }
-        //});
+        var navigationParameter = new Dictionary<string, object>
+        {
+            { "RecipeUrl", selectedRecipe.Url } // Passiamo l'URL alla pagina dei dettagli
+        };
+
+        await Shell.Current.GoToAsync(nameof(RecipeDetailsPage), navigationParameter);
     }
+
 }

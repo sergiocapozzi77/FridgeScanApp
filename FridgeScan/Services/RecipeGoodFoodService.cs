@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace FridgeScan.Services;
 
@@ -77,7 +78,7 @@ public class RecipeGoodFoodService : IRecipeService
                         Name = item["title"]?.ToString() ?? "No Title",
                         Url = relativeUrl.StartsWith("http") ? relativeUrl : $"https://www.bbcgoodfood.com{relativeUrl}",
                         ImageUrl = item["image"]?["url"]?.ToString() ?? "",
-                        PrepTime = ParseMinutes(item["terms"]?.FirstOrDefault(t => t["slug"]?.ToString() == "time")?["display"]?.ToString()),
+                        PrepTime = ParseMinutes(item["terms"]?.FirstOrDefault(t => t["slug"]?.ToString() == "time")?["display"]?.ToString()).ToString(),
                         Difficulty = item["terms"]?.FirstOrDefault(t => t["slug"]?.ToString() == "skillLevel")?["display"]?.ToString() ?? "Easy"
                     });
                 }
@@ -96,4 +97,147 @@ public class RecipeGoodFoodService : IRecipeService
         var numbers = new string(timeInput.Where(char.IsDigit).ToArray());
         return int.TryParse(numbers, out int result) ? result : 0;
     }
+
+    public async Task<RecipeSuggestion> GetFullRecipeDetailsAsync(string url)
+    {
+        using HttpClient client = new HttpClient();
+        client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+
+        try
+        {
+            string html = await client.GetStringAsync(url);
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            // 1. Estrazione dati principali da LD+JSON (come fatto prima)
+            var jsonNode = doc.DocumentNode.SelectSingleNode("//script[@type='application/ld+json']");
+            var jsonData = JToken.Parse(jsonNode.InnerText);
+            JObject recipeSchema = jsonData is JArray arr ? arr.FirstOrDefault(x => x["@type"]?.ToString() == "Recipe") as JObject : jsonData as JObject;
+
+            // 2. ESTRAZIONE DIFFICOLTÀ (Specifica per BBC Good Food)
+            // Proviamo tre strade in ordine di affidabilità:
+            string difficulty = "Easy"; // Default
+
+            // Strada A: Dal blocco __POST_CONTENT__ o __AD_SETTINGS__ (molto preciso)
+            var postContentNode = doc.DocumentNode.SelectSingleNode("//script[@id='__POST_CONTENT__']");
+            if (postContentNode != null)
+            {
+                var postData = JObject.Parse(postContentNode.InnerText);
+                difficulty = postData["skillLevel"]?.ToString() ??
+                             postData["recipe"]?["skill_level"]?.ToString() ?? "Easy";
+            }
+            // Strada B: Dai meta-tag (se presente)
+            else
+            {
+                var diffMeta = doc.DocumentNode.SelectSingleNode("//meta[@property='article:section']");
+                if (diffMeta != null) difficulty = diffMeta.GetAttributeValue("content", "Easy");
+            }
+
+            // 3. Mappatura finale
+            var details = new RecipeSuggestion
+            {
+                Name = recipeSchema["name"]?.ToString(),
+                ImageUrl = ExtractImage(recipeSchema["image"]),
+                Serving = recipeSchema["recipeYield"]?.ToString() ?? "N/A",
+                Difficulty = char.ToUpper(difficulty[0]) + difficulty.Substring(1).ToLower(), // Formatta come "Easy"
+
+                PrepTime = ParseIso8601Duration(recipeSchema["prepTime"]?.ToString()),
+                CookTime = ParseIso8601Duration(recipeSchema["cookTime"]?.ToString()),
+
+                // Nel parsing degli Ingredienti
+                Ingredients = recipeSchema["recipeIngredient"]?
+    .Select(i => SanitizeText(i.ToString())) // Applica la pulizia qui
+    .ToList() ?? new List<string>(),
+
+                // Nel parsing del Metodo
+                MethodSteps = ExtractSteps(recipeSchema["recipeInstructions"])
+    .Select(s => SanitizeText(s)) // Applica la pulizia qui
+    .ToList(),
+                Nutritions = ExtractNutrition(recipeSchema["nutrition"])
+            };
+
+            return details;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Errore: {ex.Message}");
+            return null;
+        }
+    }
+
+    // Helpers per gestire le variazioni dello standard Schema.org
+    private string ExtractImage(JToken imageToken)
+{
+    if (imageToken == null) return "";
+    if (imageToken is JArray arr) return arr.FirstOrDefault()?["url"].ToString() ?? "";
+    if (imageToken is JObject obj) return obj["url"]?.ToString() ?? "";
+    return imageToken.ToString();
+}
+
+private List<string> ExtractSteps(JToken instructions)
+{
+    var steps = new List<string>();
+    if (instructions == null) return steps;
+
+    if (instructions is JArray arr)
+    {
+        foreach (var item in arr)
+        {
+            if (item["@type"]?.ToString() == "HowToStep")
+                steps.Add(item["text"]?.ToString());
+            else
+                steps.Add(item.ToString());
+        }
+    }
+    return steps.Where(s => !string.IsNullOrEmpty(s)).ToList();
+}
+
+private List<string> ExtractNutrition(JToken nutrition)
+{
+    var list = new List<string>();
+    if (nutrition == null) return list;
+
+    // Schema.org usa chiavi specifiche (calories, fatContent, ecc.)
+    void AddIfPresent(string label, string key)
+    {
+        var val = nutrition[key]?.ToString();
+        if (!string.IsNullOrEmpty(val)) list.Add($"{label}: {val}");
+    }
+
+    AddIfPresent("Calories", "calories");
+    AddIfPresent("Fat", "fatContent");
+    AddIfPresent("Saturated Fat", "saturatedFatContent");
+    AddIfPresent("Carbs", "carbohydrateContent");
+    AddIfPresent("Sugar", "sugarContent");
+    AddIfPresent("Fiber", "fiberContent");
+    AddIfPresent("Protein", "proteinContent");
+    AddIfPresent("Sodium", "sodiumContent");
+
+    return list;
+}
+
+    private string SanitizeText(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+
+        // 1. Decodifica le entità HTML (trasforma &frac12; in ½, &amp; in &, ecc.)
+        string decoded = WebUtility.HtmlDecode(input);
+
+        // 2. Rimuove eventuali tag HTML residui (es. <b> o <a>) tramite Regex
+        string cleanText = System.Text.RegularExpressions.Regex.Replace(decoded, "<.*?>", String.Empty);
+
+        return cleanText.Trim();
+    }
+
+    private string ParseIso8601Duration(string isoDuration)
+{
+    if (string.IsNullOrEmpty(isoDuration)) return "0 mins";
+    try
+    {
+        // Converte PT20M in "20 mins"
+        var duration = System.Xml.XmlConvert.ToTimeSpan(isoDuration);
+        return $"{(int)duration.TotalMinutes} mins";
+    }
+    catch { return isoDuration; }
+}
 }
