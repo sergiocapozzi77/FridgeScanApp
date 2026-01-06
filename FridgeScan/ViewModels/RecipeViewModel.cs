@@ -12,6 +12,11 @@ public partial class RecipeViewModel : BaseViewModel
     [ObservableProperty]
     public bool isLoading;
 
+    [ObservableProperty]
+    public MealTypeModel selectedMealType;
+
+    public ObservableCollection<MealTypeModel> MealTypes { get; set; }
+
     public ObservableCollection<RecipeSuggestion> Suggestions { get; } = new();
 
     public RecipeSuggestion SelectedSuggestion { get; set; }
@@ -24,10 +29,38 @@ public partial class RecipeViewModel : BaseViewModel
     {
         this.productsManager = productsManager;
         this.recipeService = recipeService;
+
+        MealTypes = new ObservableCollection<MealTypeModel>
+        {
+            new() { Label = "Breakfast", Value = "breakfast" },
+            new() { Label = "Brunch", Value = "brunch" },
+            new() { Label = "Dessert", Value = "dessert" },
+            new() { Label = "Dinner", Value = "dinner" },
+            new() { Label = "Fish Course", Value = "fish-course" },
+            new() { Label = "Lunch", Value = "lunch" },
+            new() { Label = "Main course", Value = "main-course" },
+            new() { Label = "Pasta", Value = "pasta" },
+            new() { Label = "Soup", Value = "soup" },
+            new() { Label = "Starter", Value = "starter" },
+            new() { Label = "Side", Value = "side" }
+        };
+
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
         OpenRecipeCommand = new Command<RecipeSuggestion>(async (s) => await OpenRecipeAsync(s));
 
+        // Imposta un default
+        selectedMealType = MealTypes.First(x => x.Value == "main-course");
+
         Task.Run(LoadSuggestionsAsync);
+    }
+
+    partial void OnSelectedMealTypeChanged(MealTypeModel value)
+    {
+        if (value != null)
+        {
+            // Esegue il refresh automatico quando cambia il filtro
+            LoadSuggestionsAsync();
+        }
     }
 
     public async Task LoadSuggestionsAsync()
@@ -38,7 +71,7 @@ public partial class RecipeViewModel : BaseViewModel
 
             var list = await recipeService.GetRecipeSuggestionsAsync(
                 productsManager.Products.Select( x => x.Name).ToList(),
-                dishType: "main-course"
+                SelectedMealType.Value
             );
 
 

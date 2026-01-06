@@ -43,7 +43,7 @@ public class RecipeGoodFoodService : IRecipeService
         var pageSuggestions = new List<RecipeSuggestion>();
         try
         {
-            string url = $"https://www.bbcgoodfood.com/search?q={query}&dish_type={dishType}&page={page}";
+            string url = $"https://www.bbcgoodfood.com/search?q={query}&mealType={dishType}&page={page}";
             string html = await _httpClient.GetStringAsync(url);
 
             var doc = new HtmlDocument();

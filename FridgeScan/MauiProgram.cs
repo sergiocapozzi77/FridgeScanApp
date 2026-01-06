@@ -1,6 +1,7 @@
 ﻿using BarcodeScanning;
 using CommunityToolkit.Maui;
 using Syncfusion.Maui.Core.Hosting;
+using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace FridgeScan;
 
@@ -13,6 +14,7 @@ public static partial class MauiProgram
             .UseMauiApp<App>()
             .ConfigureSyncfusionCore()
             .UseMauiCommunityToolkit()
+            .ConfigureSyncfusionToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

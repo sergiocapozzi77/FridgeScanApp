@@ -5,38 +5,72 @@
     xmlns:sf="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+    xmlns:expander="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
+    xmlns:chips="clr-namespace:Syncfusion.Maui.Toolkit.Chips;assembly=Syncfusion.Maui.Toolkit"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid>
+        <Grid Padding="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-                <Label
-                    FontAttributes="Bold"
-                    Padding="5"
-                    FontSize="24"
-                    HorizontalOptions="Center"
-                    VerticalTextAlignment="Center"
-                    Text="Suggested Recipes" />
+            <Label
+                FontAttributes="Bold"
+                FontSize="24"
+                HorizontalOptions="Start"
+                VerticalTextAlignment="Center"
+                Text="Suggested Recipes" />
             <button:SfButton
                 Grid.Column="1"
                 Command="{Binding LoadSuggestionsCommand}"
                 FontFamily="Material"
-                FontSize="24"
-                Text="refresh" />
+                FontSize="18"
+                Text="Refresh" />
         </Grid>
-        <!-- Main Content -->
-        <ScrollView Grid.Row="1">
+
+        <expander:SfExpander Grid.Row="1" Margin="10,0">
+            <expander:SfExpander.Header>
+                <Grid HeightRequest="40">
+                    <Label Text="Filters &amp; Meal Type" 
+                   VerticalTextAlignment="Center" 
+                   FontAttributes="Bold"
+                   />
+                </Grid>
+            </expander:SfExpander.Header>
+            <expander:SfExpander.Content>
+                <VerticalStackLayout Padding="10" Spacing="10" >
+                    <Label Text="Select Meal Type:" FontAttributes="Bold" Margin="0,5" />
+
+                    <chips:SfChipGroup 
+                        ItemsSource="{Binding MealTypes}" 
+                        SelectedItem="{Binding SelectedMealType, Mode=TwoWay}"
+                        DisplayMemberPath="Label"
+                        ChipType="Choice"
+                        SelectedChipBackground="{StaticResource Primary}"
+                        SelectedChipTextColor="White">
+
+                        <chips:SfChipGroup.ChipLayout>
+                            <FlexLayout 
+            Direction="Row" 
+            Wrap="Wrap" 
+            JustifyContent="Start" 
+            AlignContent="Start" 
+            AlignItems="Start" />
+                        </chips:SfChipGroup.ChipLayout>
+                    </chips:SfChipGroup>
+                </VerticalStackLayout>
+            </expander:SfExpander.Content>
+        </expander:SfExpander>
+
+        <ScrollView Grid.Row="2">
             <VerticalStackLayout Padding="16" Spacing="16">
-
-
                 <CollectionView
                     ItemsSource="{Binding Suggestions}"
                     SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
@@ -49,7 +83,6 @@
                                 CornerRadius="12">
 
                                 <VerticalStackLayout Padding="12" Spacing="8">
-
                                     <Image
                                         Margin="0,0,0,8"
                                         Aspect="AspectFill"
@@ -66,17 +99,14 @@
                                         CommandParameter="{Binding}"
                                         Text="View Recipe" />
                                 </VerticalStackLayout>
-
                             </sf:SfCardView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Busy Indicator Overlay -->
-        <sfBusy:SfBusyIndicator Grid.Row="1"
+        <sfBusy:SfBusyIndicator Grid.Row="2"
             IsVisible="{Binding IsLoading}"
             IsRunning="{Binding IsLoading}"
             AnimationType="CircularMaterial"
@@ -85,8 +115,6 @@
             VerticalOptions="Center"
             WidthRequest="120"
             HeightRequest="90"
-            BackgroundColor="#80000000"
-            />
-
+            BackgroundColor="#80000000" />
     </Grid>
 </ContentPage>
