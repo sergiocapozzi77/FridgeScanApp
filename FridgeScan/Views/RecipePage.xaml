@@ -53,7 +53,6 @@
                         SelectedItem="{Binding SelectedMealType, Mode=TwoWay}"
                         DisplayMemberPath="Label"
                         ChipType="Choice"
-                        SelectedChipBackground="{StaticResource Primary}"
                         SelectedChipTextColor="White">
 
                         <chips:SfChipGroup.ChipLayout>
@@ -74,8 +73,7 @@
                         SelectedItem="{Binding SelectedDifficulty, Mode=TwoWay}"
                         DisplayMemberPath="Label"
                         ChipType="Choice"
-                        ChoiceMode="SingleOrNone"
-                        SelectedChipBackground="{StaticResource Primary}">
+                        ChoiceMode="SingleOrNone">
                         <chips:SfChipGroup.ChipLayout>
                             <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignContent="Start" />
                         </chips:SfChipGroup.ChipLayout>
@@ -89,8 +87,7 @@
     SelectedItem="{Binding SelectedTotalTime, Mode=TwoWay}"
     DisplayMemberPath="Label"
     ChipType="Choice"
-                        ChoiceMode="SingleOrNone"
-    SelectedChipBackground="{StaticResource Primary}">
+                        ChoiceMode="SingleOrNone">
                         <chips:SfChipGroup.ChipLayout>
                             <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Center" />
                         </chips:SfChipGroup.ChipLayout>
