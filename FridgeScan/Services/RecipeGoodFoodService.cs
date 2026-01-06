@@ -14,7 +14,7 @@ public class RecipeGoodFoodService : IRecipeService
         _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
     }
 
-    public async Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(List<string> ingredients, string dishType)
+    public async Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(List<string> ingredients, string dishType, string? difficulty, string? totalTime)
     {
         // 1. Shuffle iniziale degli ingredienti per cambiare la query alla base
         var shuffledQuery = string.Join(" ", ingredients.OrderBy(a => _rng.Next()));
@@ -24,8 +24,8 @@ public class RecipeGoodFoodService : IRecipeService
         // 2. Prepariamo i Task per scaricare pagina 1 e pagina 2 in parallelo
         var pageTasks = new List<Task<List<RecipeSuggestion>>>
         {
-            FetchPageAsync(encodedQuery, encodedDishType, 1),
-            FetchPageAsync(encodedQuery, encodedDishType, 2)
+            FetchPageAsync(encodedQuery, encodedDishType, difficulty, totalTime, 1),
+            FetchPageAsync(encodedQuery, encodedDishType, difficulty, totalTime, 2)
         };
 
         // Attendiamo il completamento di entrambi
@@ -38,12 +38,24 @@ public class RecipeGoodFoodService : IRecipeService
                       .ToList();
     }
 
-    private async Task<List<RecipeSuggestion>> FetchPageAsync(string query, string dishType, int page)
+    private async Task<List<RecipeSuggestion>> FetchPageAsync(string query, string dishType, string? difficulty, string? totalTime, int page)
     {
         var pageSuggestions = new List<RecipeSuggestion>();
         try
         {
             string url = $"https://www.bbcgoodfood.com/search?q={query}&mealType={dishType}&page={page}";
+
+            // 2. Aggiungiamo il filtro difficoltà solo se non è nullo o vuoto
+            if (!string.IsNullOrWhiteSpace(difficulty))
+            {
+                url += $"&difficulty={Uri.EscapeDataString(difficulty)}";
+            }
+
+            if (!string.IsNullOrEmpty(totalTime))
+            {
+                url += $"&totalTime={Uri.EscapeDataString(totalTime)}";
+            }
+
             string html = await _httpClient.GetStringAsync(url);
 
             var doc = new HtmlDocument();

@@ -38,14 +38,14 @@
         <expander:SfExpander Grid.Row="1" Margin="10,0">
             <expander:SfExpander.Header>
                 <Grid HeightRequest="40">
-                    <Label Text="Filters &amp; Meal Type" 
+                    <Label Text="Filters" 
                    VerticalTextAlignment="Center" 
                    FontAttributes="Bold"
                    />
                 </Grid>
             </expander:SfExpander.Header>
             <expander:SfExpander.Content>
-                <VerticalStackLayout Padding="10" Spacing="10" >
+                <VerticalStackLayout Padding="10" >
                     <Label Text="Select Meal Type:" FontAttributes="Bold" Margin="0,5" />
 
                     <chips:SfChipGroup 
@@ -65,6 +65,36 @@
             AlignItems="Start" />
                         </chips:SfChipGroup.ChipLayout>
                     </chips:SfChipGroup>
+
+                    <BoxView HeightRequest="1" Color="LightGray" Margin="0,5" />
+
+                    <Label Text="Select Difficulty:" FontAttributes="Bold" Margin="0,0,0,20"/>
+                    <chips:SfChipGroup 
+                        ItemsSource="{Binding Difficulties}" 
+                        SelectedItem="{Binding SelectedDifficulty, Mode=TwoWay}"
+                        DisplayMemberPath="Label"
+                        ChipType="Choice"
+                        ChoiceMode="SingleOrNone"
+                        SelectedChipBackground="{StaticResource Primary}">
+                        <chips:SfChipGroup.ChipLayout>
+                            <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignContent="Start" />
+                        </chips:SfChipGroup.ChipLayout>
+                    </chips:SfChipGroup>
+
+                    <BoxView HeightRequest="1" Color="LightGray" Margin="0,5" />
+
+                    <Label Text="Total Time" FontAttributes="Bold" Margin="0,0,0,20" />
+                    <chips:SfChipGroup 
+    ItemsSource="{Binding TotalTimes}" 
+    SelectedItem="{Binding SelectedTotalTime, Mode=TwoWay}"
+    DisplayMemberPath="Label"
+    ChipType="Choice"
+                        ChoiceMode="SingleOrNone"
+    SelectedChipBackground="{StaticResource Primary}">
+                        <chips:SfChipGroup.ChipLayout>
+                            <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Center" />
+                        </chips:SfChipGroup.ChipLayout>
+                    </chips:SfChipGroup>
                 </VerticalStackLayout>
             </expander:SfExpander.Content>
         </expander:SfExpander>
@@ -74,7 +104,8 @@
                 <CollectionView
                     ItemsSource="{Binding Suggestions}"
                     SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
-                    SelectionMode="Single">
+                    SelectionMode="None"
+                    >
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <sf:SfCardView

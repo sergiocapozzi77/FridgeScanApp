@@ -3,6 +3,6 @@ namespace FridgeScan.Services
 {
     public interface IRecipeService
     {
-        Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(List<string> ingredients, string dishType);
+        Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(List<string> ingredients, string dishType, string? difficulty, string? totalTime);
     }
 }

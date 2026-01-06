@@ -6,6 +6,10 @@ namespace FridgeScan.ViewModels;
 
 public partial class RecipeViewModel : BaseViewModel
 {
+    private const string MealTypeKey = "selected_meal_type";
+    private const string DifficultyKey = "selected_difficulty";
+    private const string TotalTimeKey = "selected_total_time";
+
     private readonly ProductsManager productsManager;
     private readonly IRecipeService recipeService;
 
@@ -19,7 +23,20 @@ public partial class RecipeViewModel : BaseViewModel
 
     public ObservableCollection<RecipeSuggestion> Suggestions { get; } = new();
 
-    public RecipeSuggestion SelectedSuggestion { get; set; }
+    [ObservableProperty]
+    private ObservableCollection<MealTypeModel> difficulties;
+
+    [ObservableProperty]
+    private MealTypeModel selectedDifficulty;
+
+    [ObservableProperty]
+    private ObservableCollection<MealTypeModel> totalTimes;
+
+    [ObservableProperty]
+    private MealTypeModel selectedTotalTime;
+
+
+public RecipeSuggestion SelectedSuggestion { get; set; }
 
     public ICommand LoadSuggestionsCommand { get; }
     public ICommand OpenRecipeCommand { get; }
@@ -30,37 +47,87 @@ public partial class RecipeViewModel : BaseViewModel
         this.productsManager = productsManager;
         this.recipeService = recipeService;
 
-        MealTypes = new ObservableCollection<MealTypeModel>
-        {
-            new() { Label = "Breakfast", Value = "breakfast" },
-            new() { Label = "Brunch", Value = "brunch" },
-            new() { Label = "Dessert", Value = "dessert" },
-            new() { Label = "Dinner", Value = "dinner" },
-            new() { Label = "Fish Course", Value = "fish-course" },
-            new() { Label = "Lunch", Value = "lunch" },
-            new() { Label = "Main course", Value = "main-course" },
-            new() { Label = "Pasta", Value = "pasta" },
-            new() { Label = "Soup", Value = "soup" },
-            new() { Label = "Starter", Value = "starter" },
-            new() { Label = "Side", Value = "side" }
-        };
+        // 1. Inizializza le collezioni (come già facevi)
+        InitializeFilterCollections();
+
+        // 2. Carica le preferenze salvate
+        LoadSavedFilters();
 
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
         OpenRecipeCommand = new Command<RecipeSuggestion>(async (s) => await OpenRecipeAsync(s));
 
-        // Imposta un default
-        selectedMealType = MealTypes.First(x => x.Value == "main-course");
-
         Task.Run(LoadSuggestionsAsync);
     }
+
+    private void InitializeFilterCollections()
+    {
+        Difficulties = new ObservableCollection<MealTypeModel>
+    {
+        new () { Label = "Easy", Value = "easy" },
+        new () { Label = "More Effort", Value = "more-effort" },
+        new() { Label = "A Challenge", Value = "a-challenge" }
+    };
+
+        MealTypes = new ObservableCollection<MealTypeModel>
+    {
+        new() { Label = "Breakfast", Value = "breakfast" },
+        new() { Label = "Brunch", Value = "brunch" },
+        new() { Label = "Dessert", Value = "dessert" },
+        new() { Label = "Dinner", Value = "dinner" },
+        new() { Label = "Fish Course", Value = "fish-course" },
+        new() { Label = "Lunch", Value = "lunch" },
+        new() { Label = "Main course", Value = "main-course" },
+        new() { Label = "Pasta", Value = "pasta" },
+        new() { Label = "Soup", Value = "soup" },
+        new() { Label = "Starter", Value = "starter" },
+        new() { Label = "Side", Value = "side" }
+    };
+
+        TotalTimes = new ObservableCollection<MealTypeModel>
+    {
+        new () { Label = "Under 15 mins", Value = "lt-900" },
+        new() { Label = "Under 30 mins", Value = "lt-1800" },
+        new() { Label = "Under 45 mins", Value = "lt-2700" },
+        new() { Label = "Under 1 hour", Value = "lt-3600" },
+        new() { Label = "1 hour or more", Value = "gte-3600" }
+    };
+    }
+
+    private void LoadSavedFilters()
+    {
+        // Recupera i valori stringa. Se non esistono, usa il default.
+        var savedMeal = Preferences.Get(MealTypeKey, "main-course");
+        var savedDiff = Preferences.Get(DifficultyKey, null);
+        var savedTime = Preferences.Get(TotalTimeKey, null);
+
+        // Assegna l'oggetto corrispondente cercando nelle liste
+        SelectedMealType = MealTypes.FirstOrDefault(x => x.Value == savedMeal);
+        SelectedDifficulty = Difficulties.FirstOrDefault(x => x.Value == savedDiff);
+        SelectedTotalTime = TotalTimes.FirstOrDefault(x => x.Value == savedTime);
+    }
+
+    // 3. Salvataggio nei metodi partial (Triggerati da [ObservableProperty])
 
     partial void OnSelectedMealTypeChanged(MealTypeModel value)
     {
         if (value != null)
         {
-            // Esegue il refresh automatico quando cambia il filtro
-            LoadSuggestionsAsync();
+            Preferences.Set(MealTypeKey, value.Value);
+            _ = LoadSuggestionsAsync();
         }
+    }
+
+    partial void OnSelectedDifficultyChanged(MealTypeModel value)
+    {
+        // Salviamo il valore (anche se null)
+        Preferences.Set(DifficultyKey, value?.Value);
+        _ = LoadSuggestionsAsync();
+    }
+
+    partial void OnSelectedTotalTimeChanged(MealTypeModel value)
+    {
+        Preferences.Set(TotalTimeKey, value?.Value);
+        _ = LoadSuggestionsAsync();
     }
 
     public async Task LoadSuggestionsAsync()
@@ -71,7 +138,9 @@ public partial class RecipeViewModel : BaseViewModel
 
             var list = await recipeService.GetRecipeSuggestionsAsync(
                 productsManager.Products.Select( x => x.Name).ToList(),
-                SelectedMealType.Value
+                SelectedMealType.Value,
+                SelectedDifficulty?.Value,
+                SelectedTotalTime?.Value
             );
 
 

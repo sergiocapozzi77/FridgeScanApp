@@ -46,7 +46,7 @@ namespace FridgeScan.Services
 
         public async Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(
             List<string> ingredients,
-            string dishType)
+            string dishType, string? difficulty, string? totalTime)
         {
             var template = @"
 You are a recipe generator.
