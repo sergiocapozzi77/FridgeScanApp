@@ -138,6 +138,10 @@
                                           FontSize="14"
                                           TextColor="Gray"
                                           Text="{Binding Difficulty}" />
+                                        <Label
+                                           FontSize="14"
+                                           TextColor="Gray"
+                                           Text="{Binding RecipeSource}" />
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </sf:SfCardView>

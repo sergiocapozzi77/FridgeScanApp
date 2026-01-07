@@ -35,11 +35,28 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<RecipeDetailsViewModel>();
 
         builder.Services.AddSingleton<EmailService>();
+
+        builder.Services.AddSingleton<RecipeGoodFoodService>();
+        builder.Services.AddSingleton<GialloZafferanoService>();
+
         builder.Services.AddSingleton<IRecipeService, RecipeGoodFoodService>();
+        builder.Services.AddSingleton<IRecipeService, GialloZafferanoService>();
+        // Factory for named resolution
+        builder.Services.AddSingleton<Func<string, IRecipeService>>(sp => key =>
+        {
+            return key switch
+            {
+                "goodfood" => sp.GetRequiredService<RecipeGoodFoodService>(),
+                "giallozafferano" => sp.GetRequiredService<GialloZafferanoService>(),
+                _ => throw new ArgumentException("Unknown recipe provider")
+            };
+        });
+
 
         builder.Services.AddSingleton<ProductService>();
         builder.Services.AddSingleton<ActivityService>();
         builder.Services.AddSingleton<ProductsManager>();
+        builder.Services.AddSingleton<JsonLdParser>();
 
         // pages
         builder.Services.AddTransient<Views.ProductsPage>();

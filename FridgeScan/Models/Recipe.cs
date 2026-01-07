@@ -9,6 +9,8 @@ namespace FridgeScan.Models
 {
     public class RecipeSuggestion
     {
+        public string RecipeSource { get; set; }
+
         public string Name { get; set; }
 
         public string Url { get; set; }

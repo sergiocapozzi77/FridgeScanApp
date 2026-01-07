@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using Java.Time;
 using System.Windows.Input;
 
 namespace FridgeScan.ViewModels;
@@ -11,7 +12,7 @@ public partial class RecipeViewModel : BaseViewModel
     private const string TotalTimeKey = "selected_total_time";
 
     private readonly ProductsManager productsManager;
-    private readonly IRecipeService recipeService;
+    private readonly IEnumerable<IRecipeService> recipeServices;
 
     [ObservableProperty]
     public bool isLoading;
@@ -41,10 +42,10 @@ public partial class RecipeViewModel : BaseViewModel
     public ICommand LoadSuggestionsCommand { get; }
 
 
-    public RecipeViewModel(ProductsManager productsManager, IRecipeService recipeService)
+    public RecipeViewModel(ProductsManager productsManager, IEnumerable<IRecipeService> recipeServices)
     {
         this.productsManager = productsManager;
-        this.recipeService = recipeService;
+        this.recipeServices = recipeServices;
 
         // 1. Inizializza le collezioni (come già facevi)
         InitializeFilterCollections();
@@ -133,29 +134,37 @@ public partial class RecipeViewModel : BaseViewModel
         IsLoading = true;
         try
         {
+            var pageTasks = new List<Task<List<RecipeSuggestion>>>();
 
-            var list = await recipeService.GetRecipeSuggestionsAsync(
-                productsManager.Products.Select( x => x.Name).ToList(),
+            foreach (var service in recipeServices)
+            {
+                pageTasks.Add(
+                    service.GetRecipeSuggestionsAsync(productsManager.Products.Select(x => x.Name).ToList(),
                 SelectedMealType.Value,
                 SelectedDifficulty?.Value,
-                SelectedTotalTime?.Value
-            );
+                SelectedTotalTime?.Value)
+                    );
 
+            }
+
+
+            // Attendiamo il completamento di entrambi
+            var results = await Task.WhenAll(pageTasks);
 
             //list[0].ImageUrl = image;
-            var ps = new PexelService();
+            //var ps = new PexelService();
 
-         /*   foreach (var recipe in list)
-            {
-                var image = recipe.ImagePrompt;
-                var url = await ps.GetFoodImageAsync(image);
-                recipe.ImageUrl = url;
-            }*/
+            /*   foreach (var recipe in list)
+               {
+                   var image = recipe.ImagePrompt;
+                   var url = await ps.GetFoodImageAsync(image);
+                   recipe.ImageUrl = url;
+               }*/
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 Suggestions.Clear();
-                foreach (var item in list)
+                foreach (var item in results.SelectMany( x => x))
                     Suggestions.Add(item);
             });
         }
@@ -177,7 +186,8 @@ public partial class RecipeViewModel : BaseViewModel
 
         var navigationParameter = new Dictionary<string, object>
         {
-            { "RecipeUrl", selectedRecipe.Url } // Passiamo l'URL alla pagina dei dettagli
+            { "RecipeUrl", selectedRecipe.Url },
+            { "provider", selectedRecipe.RecipeSource } 
         };
 
         await Shell.Current.GoToAsync(nameof(RecipeDetailsPage), navigationParameter);

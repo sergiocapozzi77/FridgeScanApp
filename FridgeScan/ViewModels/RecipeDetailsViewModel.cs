@@ -8,29 +8,34 @@ namespace FridgeScan.ViewModels
 {
     public partial class RecipeDetailsViewModel : ObservableObject, IQueryAttributable
     {
-        private readonly IRecipeService recipeService;
+        private readonly Func<string, IRecipeService> _factory;
+
         [ObservableProperty] private RecipeSuggestion recipe;
         [ObservableProperty] private bool isBusy;
 
-        public RecipeDetailsViewModel(IRecipeService recipeService)
+        public RecipeDetailsViewModel(Func<string, IRecipeService> factory)
         {
-            this.recipeService = recipeService;
+            _factory = factory;
         }
 
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query.ContainsKey("RecipeUrl"))
+            if (query.ContainsKey("RecipeUrl") && query.ContainsKey("provider"))
             {
                 var url = query["RecipeUrl"].ToString();
-                await LoadRecipeDetails(url);
+                var provider = query["provider"].ToString();
+                await LoadRecipeDetails(provider, url);
             }
         }
 
-        private async Task LoadRecipeDetails(string url)
+        private async Task LoadRecipeDetails(string provider, string url)
         {
             IsBusy = true;
-            Recipe = await this.recipeService.GetFullRecipeDetailsAsync(url);
+
+            var recipeService = _factory(provider);
+
+            Recipe = await recipeService.GetFullRecipeDetailsAsync(url);
             IsBusy = false;
         }
     }
