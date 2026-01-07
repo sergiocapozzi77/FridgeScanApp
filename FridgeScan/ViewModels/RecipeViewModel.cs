@@ -166,20 +166,16 @@ public partial class RecipeViewModel : BaseViewModel
             // Attendiamo il completamento di entrambi
             var results = await Task.WhenAll(pageTasks);
 
-            //list[0].ImageUrl = image;
-            //var ps = new PexelService();
-
-            /*   foreach (var recipe in list)
-               {
-                   var image = recipe.ImagePrompt;
-                   var url = await ps.GetFoodImageAsync(image);
-                   recipe.ImageUrl = url;
-               }*/
-
             MainThread.BeginInvokeOnMainThread(() =>
             {
+                var shuffled = results
+                    .SelectMany(x => x)
+                    .OrderBy(_ => Guid.NewGuid())   // shuffle
+                    .ToList();
+
                 Suggestions.Clear();
-                foreach (var item in results.SelectMany( x => x))
+
+                foreach (var item in shuffled)
                     Suggestions.Add(item);
             });
         }
