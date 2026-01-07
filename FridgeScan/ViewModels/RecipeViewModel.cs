@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using Java.Time;
 using System.Windows.Input;
 
 namespace FridgeScan.ViewModels;
@@ -13,6 +12,10 @@ public partial class RecipeViewModel : BaseViewModel
 
     private readonly ProductsManager productsManager;
     private readonly IEnumerable<IRecipeService> recipeServices;
+
+    public ObservableCollection<Product> AvailableIngredients { get; }
+    public ObservableCollection<Product> SelectedIngredients { get; }
+
 
     [ObservableProperty]
     public bool isLoading;
@@ -47,6 +50,9 @@ public partial class RecipeViewModel : BaseViewModel
         this.productsManager = productsManager;
         this.recipeServices = recipeServices;
 
+        AvailableIngredients = new ObservableCollection<Product>(productsManager.Products);
+        SelectedIngredients = new ObservableCollection<Product>(productsManager.Products);
+
         // 1. Inizializza le collezioni (come già facevi)
         InitializeFilterCollections();
 
@@ -54,8 +60,6 @@ public partial class RecipeViewModel : BaseViewModel
         LoadSavedFilters();
 
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
-
-        Task.Run(LoadSuggestionsAsync);
     }
 
     private void InitializeFilterCollections()
@@ -100,9 +104,9 @@ public partial class RecipeViewModel : BaseViewModel
         var savedTime = Preferences.Get(TotalTimeKey, null);
 
         // Assegna l'oggetto corrispondente cercando nelle liste
-        SelectedMealType = MealTypes.FirstOrDefault(x => x.Value == savedMeal);
-        SelectedDifficulty = Difficulties.FirstOrDefault(x => x.Value == savedDiff);
-        SelectedTotalTime = TotalTimes.FirstOrDefault(x => x.Value == savedTime);
+        selectedMealType = MealTypes.FirstOrDefault(x => x.Value == savedMeal);
+        selectedDifficulty = Difficulties.FirstOrDefault(x => x.Value == savedDiff);
+        selectedTotalTime = TotalTimes.FirstOrDefault(x => x.Value == savedTime);
     }
 
     // 3. Salvataggio nei metodi partial (Triggerati da [ObservableProperty])
@@ -131,6 +135,18 @@ public partial class RecipeViewModel : BaseViewModel
 
     public async Task LoadSuggestionsAsync()
     {
+        if(SelectedIngredients.Count == 0)
+        {
+            await Toast.Make("Please add some ingredients to get recipe suggestions.", ToastDuration.Long).Show();
+            return;
+        }
+
+        if (SelectedMealType.Value == null)
+        {
+            await Toast.Make("Please select a mealt type to get recipe suggestions.", ToastDuration.Long).Show();
+            return;
+        }
+
         IsLoading = true;
         try
         {
@@ -139,14 +155,13 @@ public partial class RecipeViewModel : BaseViewModel
             foreach (var service in recipeServices)
             {
                 pageTasks.Add(
-                    service.GetRecipeSuggestionsAsync(productsManager.Products.Select(x => x.Name).ToList(),
-                SelectedMealType.Value,
-                SelectedDifficulty?.Value,
-                SelectedTotalTime?.Value)
+                    service.GetRecipeSuggestionsAsync(SelectedIngredients.Select(x => x.Name).ToList(),
+                        SelectedMealType.Value,
+                        SelectedDifficulty?.Value,
+                        SelectedTotalTime?.Value)
                     );
 
             }
-
 
             // Attendiamo il completamento di entrambi
             var results = await Task.WhenAll(pageTasks);

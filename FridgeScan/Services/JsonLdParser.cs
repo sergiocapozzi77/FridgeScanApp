@@ -35,8 +35,9 @@ public class JsonLdParser
                     ?? postData?["title"]?.ToString(),
 
                 ImageUrl =
-                    recipeSchema?["image"]?.FirstOrDefault()?["url"]?.ToString()
-                    ?? postData?["image"]?["url"]?.ToString(),
+                    ExtractImageUrl(recipeSchema?["image"])
+                    ?? ExtractImageUrl(postData?["image"])
+                    ?? null,
 
                 Serving =
                     recipeSchema?["recipeYield"]?.ToString()
@@ -66,7 +67,7 @@ public class JsonLdParser
 
                 MethodSteps =
                     recipeSchema?["recipeInstructions"]?
-                        .Select(step => SanitizeText(step["text"]?.ToString()))
+                        .Select(step => ExtractStepText(step))
                         .Where(s => !string.IsNullOrWhiteSpace(s))
                         .ToList()
                     ?? postData?["methodSteps"]?
@@ -93,6 +94,44 @@ public class JsonLdParser
             Console.WriteLine($"Errore critico durante lo scraping: {ex.Message}");
             return null;
         }
+    }
+
+    private string ExtractImageUrl(JToken imageToken)
+    {
+        if (imageToken == null)
+            return null;
+
+        // Case 1: image is an array
+        if (imageToken is JArray arr)
+        {
+            var first = arr.FirstOrDefault();
+            if (first == null)
+                return null;
+
+            // If it has a "url" property → use it
+            if (first["url"] != null)
+                return first["url"]?.ToString();
+
+            // Otherwise treat the element as a string
+            return first.ToString();
+        }
+
+        // Case 2: image is an object with "url"
+        if (imageToken is JObject obj && obj["url"] != null)
+            return obj["url"]?.ToString();
+
+        // Case 3: image is a plain string
+        return imageToken.ToString();
+    }
+
+    private string ExtractStepText(JToken step)
+    {
+        // Case 1: step is an object with a "text" field
+        if (step is JObject obj && obj.TryGetValue("text", out var textToken))
+            return SanitizeText(textToken?.ToString());
+
+        // Case 2: step is a string or something else
+        return SanitizeText(step?.ToString());
     }
 
     private JObject ExtractRecipeSchema(HtmlDocument doc)
