@@ -22,11 +22,12 @@ public class RecipeGoodFoodService : IRecipeService
         return await jsonLdParser.GetFullRecipeDetailsAsync(url);
     }
 
-    public async Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(List<string> ingredients, string dishType, string? difficulty, string? totalTime)
+    public async Task<List<RecipeSuggestion>> GetRecipeSuggestionsAsync(List<string> ingredients, string dishType, string[] keywords, string? difficulty, string? totalTime)
     {
         // 1. Shuffle iniziale degli ingredienti per cambiare la query alla base
         var shuffledQuery = string.Join(" ", ingredients.OrderBy(a => _rng.Next()));
-        string encodedQuery = Uri.EscapeDataString(shuffledQuery);
+        var keywordsQuery = string.Join("+", keywords.Select( x => x.Trim()));
+        string encodedQuery = Uri.EscapeDataString(keywordsQuery + "+" + shuffledQuery).TrimEnd('+');
         string encodedDishType = Uri.EscapeDataString(dishType.ToLower().Replace(" ", "-"));
 
         // 2. Prepariamo i Task per scaricare pagina 1 e pagina 2 in parallelo

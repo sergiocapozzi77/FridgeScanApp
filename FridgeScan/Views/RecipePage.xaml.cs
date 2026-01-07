@@ -13,4 +13,12 @@ public partial class RecipePage : ContentPage
         var vm = services.GetService<RecipeViewModel>();
         BindingContext = vm;
     }
+
+    private void Entry_Completed(object sender, EventArgs e)
+    {
+        var viewModel = this.BindingContext as RecipeViewModel;
+        var name = (sender as InputView).Text;
+        viewModel.Keywords.Add(name);
+        (sender as InputView).Text = "";
+    }
 }

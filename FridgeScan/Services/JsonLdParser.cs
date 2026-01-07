@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FridgeScan.Services;
 
@@ -170,6 +171,25 @@ public class JsonLdParser
         return null;
     }
 
+    private string DecodeFractions(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return text;
+
+        return text
+            .Replace("&frac12;", "½")
+            .Replace("&frac13;", "⅓")
+            .Replace("&frac14;", "¼")
+            .Replace("&frac15;", "⅕")
+            .Replace("&frac16;", "⅙")
+            .Replace("&frac18;", "⅛")
+            .Replace("&frac23;", "⅔")
+            .Replace("&frac34;", "¾")
+            .Replace("&frac38;", "⅜")
+            .Replace("&frac58;", "⅝")
+            .Replace("&frac78;", "⅞");
+    }
+
 
     private string SanitizeText(string input)
     {
@@ -179,9 +199,109 @@ public class JsonLdParser
         string decoded = WebUtility.HtmlDecode(input);
 
         // 2. Rimuove eventuali tag HTML residui (es. <b> o <a>) tramite Regex
-        string cleanText = System.Text.RegularExpressions.Regex.Replace(decoded, "<.*?>", String.Empty);
+        string cleanText = System.Text.RegularExpressions.Regex.Replace(decoded, "<.*?>", String.Empty).Trim();
+        cleanText = DecodeFractions(cleanText);
+        cleanText = ConvertImperialToMetric(cleanText);
 
         return cleanText.Trim();
+
+    }
+
+    private double ParseFraction(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return 0;
+
+        // Replace unicode fractions with decimal
+        input = input
+            .Replace("½", "1/2")
+            .Replace("⅓", "1/3")
+            .Replace("¼", "1/4")
+            .Replace("⅛", "1/8")
+            .Replace("⅔", "2/3")
+            .Replace("¾", "3/4")
+            .Replace("⅜", "3/8")
+            .Replace("⅝", "5/8")
+            .Replace("⅞", "7/8");
+
+        // Mixed number: "1 1/2"
+        if (input.Contains(" "))
+        {
+            var parts = input.Split(' ');
+            return ParseFraction(parts[0]) + ParseFraction(parts[1]);
+        }
+
+        // Fraction: "1/2"
+        if (input.Contains("/"))
+        {
+            var parts = input.Split('/');
+            if (double.TryParse(parts[0], out double n) &&
+                double.TryParse(parts[1], out double d))
+                return n / d;
+        }
+
+        // Normal number
+        if (double.TryParse(input, out double value))
+            return value;
+
+        return 0;
+    }
+
+    private readonly Dictionary<string, double> VolumeToMl = new()
+{
+    { "cup", 240 },
+    { "cups", 240 },
+    { "tbsp", 15 },
+    { "tablespoon", 15 },
+    { "tablespoons", 15 },
+    { "tbs", 15 },
+    { "tsp", 5 },
+    { "teaspoon", 5 },
+    { "teaspoons", 5 },
+    { "fl oz", 30 },
+    { "floz", 30 }
+};
+
+    private readonly Dictionary<string, double> WeightToGrams = new()
+{
+    { "oz", 28.35 },
+    { "ounce", 28.35 },
+    { "ounces", 28.35 },
+    { "lb", 453.6 },
+    { "lbs", 453.6 },
+    { "pound", 453.6 },
+    { "pounds", 453.6 }
+};
+
+
+    private string ConvertImperialToMetric(string ingredient)
+    {
+        if (string.IsNullOrWhiteSpace(ingredient))
+            return ingredient;
+
+        var parts = ingredient.Split(' ', 3); // quantity, unit, rest
+        if (parts.Length < 2)
+            return ingredient;
+
+        double quantity = ParseFraction(parts[0]);
+        string unit = parts[1].ToLower();
+        string rest = parts.Length > 2 ? parts[2] : "";
+
+        // Volume conversions
+        if (VolumeToMl.TryGetValue(unit, out double mlFactor))
+        {
+            double ml = quantity * mlFactor;
+            return $"{Math.Round(ml)} ml {rest}".Trim();
+        }
+
+        // Weight conversions
+        if (WeightToGrams.TryGetValue(unit, out double gFactor))
+        {
+            double grams = quantity * gFactor;
+            return $"{Math.Round(grams)} g {rest}".Trim();
+        }
+
+        return ingredient; // no conversion
     }
 
     private string ParseIso8601Duration(string isoDuration)

@@ -25,6 +25,8 @@ public partial class RecipeViewModel : BaseViewModel
 
     public ObservableCollection<MealTypeModel> MealTypes { get; set; }
 
+    public ObservableCollection<string> Keywords { get; } = new();
+
     public ObservableCollection<RecipeSuggestion> Suggestions { get; } = new();
 
     [ObservableProperty]
@@ -60,6 +62,20 @@ public partial class RecipeViewModel : BaseViewModel
         LoadSavedFilters();
 
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
+    }
+
+    [RelayCommand]
+    private void SelectAllIngredients()
+    {
+        SelectedIngredients.Clear();
+        foreach (var item in AvailableIngredients)
+            SelectedIngredients.Add(item);
+    }
+
+    [RelayCommand]
+    private void DeselectAllIngredients()
+    {
+        SelectedIngredients.Clear();
     }
 
     private void InitializeFilterCollections()
@@ -135,9 +151,9 @@ public partial class RecipeViewModel : BaseViewModel
 
     public async Task LoadSuggestionsAsync()
     {
-        if(SelectedIngredients.Count == 0)
+        if(SelectedIngredients.Count == 0 && Keywords.Count == 0)
         {
-            await Toast.Make("Please add some ingredients to get recipe suggestions.", ToastDuration.Long).Show();
+            await Toast.Make("Please add some ingredients or keywords to get recipe suggestions.", ToastDuration.Long).Show();
             return;
         }
 
@@ -157,6 +173,7 @@ public partial class RecipeViewModel : BaseViewModel
                 pageTasks.Add(
                     service.GetRecipeSuggestionsAsync(SelectedIngredients.Select(x => x.Name).ToList(),
                         SelectedMealType.Value,
+                        Keywords.ToArray(),
                         SelectedDifficulty?.Value,
                         SelectedTotalTime?.Value)
                     );

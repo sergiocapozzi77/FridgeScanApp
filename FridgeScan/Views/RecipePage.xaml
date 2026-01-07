@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -113,11 +114,31 @@
                    FontAttributes="Bold"
                    Margin="0,5" />
 
+                    <!-- Buttons Row -->
+                    <HorizontalStackLayout Spacing="10" Margin="0,0,0,10">
+
+                        <button:SfButton
+                    Text="Select All"
+                    Command="{Binding SelectAllIngredientsCommand}"
+                    WidthRequest="120"
+                    HeightRequest="36"
+                    CornerRadius="6" />
+
+                        <button:SfButton
+                    Text="Deselect All"
+                    Command="{Binding DeselectAllIngredientsCommand}"
+                    WidthRequest="120"
+                    HeightRequest="36"
+                    CornerRadius="6" />
+                    </HorizontalStackLayout>
+
+                    <!-- Chips -->
                     <chips:SfChipGroup
                 ItemsSource="{Binding AvailableIngredients}"
                 SelectedItem="{Binding SelectedIngredients, Mode=TwoWay}"
                 DisplayMemberPath="Name"
-                ChipType="Filter">
+                ChipType="Filter"
+                >
 
                         <chips:SfChipGroup.ChipLayout>
                             <FlexLayout Direction="Row"
@@ -132,7 +153,46 @@
             </expander:SfExpander.Content>
         </expander:SfExpander>
 
-        <ScrollView Grid.Row="3">
+        <expander:SfExpander Grid.Row="3" Margin="10,0,10,0">
+            <expander:SfExpander.Header>
+                <Grid HeightRequest="40">
+                    <Label Text="Keywords"
+                   VerticalTextAlignment="Center"
+                   FontAttributes="Bold" />
+                </Grid>
+            </expander:SfExpander.Header>
+
+            <expander:SfExpander.Content>
+                <VerticalStackLayout Padding="10">
+
+                    <Label Text="Add Keywords:"
+                   FontAttributes="Bold"
+                   Margin="0,5" />
+
+                    <chips:SfChipGroup x:Name="KeywordsEntry"
+                        ItemsSource="{Binding Keywords}"
+                        ChipType="Input"
+                        >
+                        <!-- This enables typing new keywords -->
+                        <chips:SfChipGroup.InputView>
+                            <Entry Placeholder="Type a keyword and press Enter"
+                           FontSize="14" Completed="Entry_Completed" />
+                        </chips:SfChipGroup.InputView>
+
+                        <chips:SfChipGroup.ChipLayout>
+                            <FlexLayout Direction="Row"
+                                Wrap="Wrap"
+                                JustifyContent="Start"
+                                AlignItems="Start" />
+                        </chips:SfChipGroup.ChipLayout>
+
+                    </chips:SfChipGroup>
+
+                </VerticalStackLayout>
+            </expander:SfExpander.Content>
+        </expander:SfExpander>
+        
+        <ScrollView Grid.Row="4">
             <VerticalStackLayout Padding="16" Spacing="16">
                 <CollectionView
                     ItemsSource="{Binding Suggestions}"
@@ -187,7 +247,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <sfBusy:SfBusyIndicator Grid.Row="3"
+        <sfBusy:SfBusyIndicator Grid.Row="4"
             IsVisible="{Binding IsLoading}"
             IsRunning="{Binding IsLoading}"
             AnimationType="CircularMaterial"
