@@ -174,7 +174,7 @@
                                                             <Label
                                                                 Grid.Column="0"
                                                                 FontFamily="Material"
-                                                                FontSize="20"
+                                                                FontSize="16"
                                                                 IsVisible="{Binding IsSelected}"
                                                                 Text="restaurant"
                                                                 VerticalOptions="Center" />

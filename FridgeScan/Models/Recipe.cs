@@ -26,14 +26,7 @@ namespace FridgeScan.Models
         public List<string> Ingredients { get; set; } = new();
         public List<string> MethodSteps { get; set; } = new();
         public List<string> Nutritions { get; set; } = new();
-
+        public string DishType { get; internal set; }
     }
 
-    public class FullRecipe
-    {
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
-        public List<string> Ingredients { get; set; }
-        public List<string> Steps { get; set; }
-    }
 }

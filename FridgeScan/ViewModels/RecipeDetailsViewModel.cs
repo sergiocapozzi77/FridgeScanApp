@@ -9,33 +9,42 @@ namespace FridgeScan.ViewModels
     public partial class RecipeDetailsViewModel : ObservableObject, IQueryAttributable
     {
         private readonly Func<string, IRecipeService> _factory;
-
+        private readonly RecipeAiService recipeAiService;
         [ObservableProperty] private RecipeSuggestion recipe;
         [ObservableProperty] private bool isBusy;
 
-        public RecipeDetailsViewModel(Func<string, IRecipeService> factory)
+        public RecipeDetailsViewModel(Func<string, IRecipeService> factory, RecipeAiService recipeAiService)
         {
             _factory = factory;
+            this.recipeAiService = recipeAiService;
         }
 
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query.ContainsKey("RecipeUrl") && query.ContainsKey("provider"))
+            if (query.ContainsKey("RecipeUrl") && query.ContainsKey("provider") && query.ContainsKey("Recipe"))
             {
                 var url = query["RecipeUrl"].ToString();
                 var provider = query["provider"].ToString();
-                await LoadRecipeDetails(provider, url);
+                var recipe = query["Recipe"] as RecipeSuggestion;
+               
+                await LoadRecipeDetails(provider, recipe);
             }
         }
 
-        private async Task LoadRecipeDetails(string provider, string url)
+        private async Task LoadRecipeDetails(string provider, RecipeSuggestion recipe)
         {
             IsBusy = true;
 
-            var recipeService = _factory(provider);
-
-            Recipe = await recipeService.GetFullRecipeDetailsAsync(url);
+            if (provider == "AI")
+            {
+                Recipe = await recipeAiService.GetFullRecipeDetailsAsync(recipe);
+            }
+            else
+            {
+                var recipeService = _factory(provider);
+                Recipe = await recipeService.GetFullRecipeDetailsAsync(recipe.Url);
+            }
             IsBusy = false;
         }
     }

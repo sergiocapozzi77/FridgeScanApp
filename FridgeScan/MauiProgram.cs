@@ -57,6 +57,7 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<ActivityService>();
         builder.Services.AddSingleton<ProductsManager>();
         builder.Services.AddSingleton<JsonLdParser>();
+        builder.Services.AddSingleton<RecipeAiService>();
 
         // pages
         builder.Services.AddTransient<Views.ProductsPage>();

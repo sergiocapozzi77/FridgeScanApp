@@ -2,11 +2,11 @@
     x:Class="FridgeScan.Views.RecipePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+    xmlns:chips="clr-namespace:Syncfusion.Maui.Toolkit.Chips;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:expander="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
-    xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
-    xmlns:expander="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
-    xmlns:chips="clr-namespace:Syncfusion.Maui.Toolkit.Chips;assembly=Syncfusion.Maui.Toolkit"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels">
 
     <Grid>
@@ -22,76 +22,107 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Label
                 FontAttributes="Bold"
                 FontSize="24"
                 HorizontalOptions="Start"
-                VerticalTextAlignment="Center"
-                Text="Suggested Recipes" />
+                Text="Suggested Recipes"
+                VerticalTextAlignment="Center" />
             <button:SfButton
                 Grid.Column="1"
+                Margin="1"
                 Command="{Binding LoadSuggestionsCommand}"
                 FontFamily="Material"
                 FontSize="18"
                 Text="Refresh" />
+            <button:SfButton
+                Grid.Column="2"
+                Margin="1"
+                Command="{Binding LoadAiSuggestionsCommand}"
+                FontFamily="Material"
+                FontSize="18"
+                Text="wand_stars" />
         </Grid>
 
         <expander:SfExpander Grid.Row="1" Margin="10,0">
             <expander:SfExpander.Header>
                 <Grid HeightRequest="40">
-                    <Label Text="Filters" 
-                   VerticalTextAlignment="Center" 
-                   FontAttributes="Bold"
-                   />
+                    <Label
+                        FontAttributes="Bold"
+                        Text="Filters"
+                        VerticalTextAlignment="Center" />
                 </Grid>
             </expander:SfExpander.Header>
             <expander:SfExpander.Content>
-                <VerticalStackLayout Padding="10" >
-                    <Label Text="Select Meal Type:" FontAttributes="Bold" Margin="0,5" />
+                <VerticalStackLayout Padding="10">
+                    <Label
+                        Margin="0,5"
+                        FontAttributes="Bold"
+                        Text="Select Meal Type:" />
 
-                    <chips:SfChipGroup 
-                        ItemsSource="{Binding MealTypes}" 
-                        SelectedItem="{Binding SelectedMealType, Mode=TwoWay}"
-                        DisplayMemberPath="Label"
+                    <chips:SfChipGroup
                         ChipType="Choice"
-                        SelectedChipTextColor="White">
+                        DisplayMemberPath="Label"
+                        ItemsSource="{Binding MealTypes}"
+                        SelectedItem="{Binding SelectedMealType, Mode=TwoWay}">
 
                         <chips:SfChipGroup.ChipLayout>
-                            <FlexLayout 
-                            Direction="Row" 
-                            Wrap="Wrap" 
-                            JustifyContent="Start" 
-                            AlignContent="Start" 
-                            AlignItems="Start" />
+                            <FlexLayout
+                                AlignContent="Start"
+                                AlignItems="Start"
+                                Direction="Row"
+                                JustifyContent="Start"
+                                Wrap="Wrap" />
                         </chips:SfChipGroup.ChipLayout>
                     </chips:SfChipGroup>
 
-                    <BoxView HeightRequest="1" Color="LightGray" Margin="0,5" />
+                    <BoxView
+                        Margin="0,5"
+                        HeightRequest="1"
+                        Color="LightGray" />
 
-                    <Label Text="Select Difficulty:" FontAttributes="Bold" Margin="0,0,0,20"/>
-                    <chips:SfChipGroup 
-                        ItemsSource="{Binding Difficulties}" 
-                        SelectedItem="{Binding SelectedDifficulty, Mode=TwoWay}"
-                        DisplayMemberPath="Label"
+                    <Label
+                        Margin="0,0,0,20"
+                        FontAttributes="Bold"
+                        Text="Select Difficulty:" />
+                    <chips:SfChipGroup
                         ChipType="Choice"
-                        ChoiceMode="SingleOrNone">
+                        ChoiceMode="SingleOrNone"
+                        DisplayMemberPath="Label"
+                        ItemsSource="{Binding Difficulties}"
+                        SelectedItem="{Binding SelectedDifficulty, Mode=TwoWay}">
                         <chips:SfChipGroup.ChipLayout>
-                            <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignContent="Start" />
+                            <FlexLayout
+                                AlignContent="Start"
+                                Direction="Row"
+                                JustifyContent="Start"
+                                Wrap="Wrap" />
                         </chips:SfChipGroup.ChipLayout>
                     </chips:SfChipGroup>
 
-                    <BoxView HeightRequest="1" Color="LightGray" Margin="0,5" />
+                    <BoxView
+                        Margin="0,5"
+                        HeightRequest="1"
+                        Color="LightGray" />
 
-                    <Label Text="Total Time" FontAttributes="Bold" Margin="0,0,0,20" />
-                    <chips:SfChipGroup 
-                        ItemsSource="{Binding TotalTimes}" 
-                        SelectedItem="{Binding SelectedTotalTime, Mode=TwoWay}"
-                        DisplayMemberPath="Label"
+                    <Label
+                        Margin="0,0,0,20"
+                        FontAttributes="Bold"
+                        Text="Total Time" />
+                    <chips:SfChipGroup
                         ChipType="Choice"
-                        ChoiceMode="SingleOrNone">
+                        ChoiceMode="SingleOrNone"
+                        DisplayMemberPath="Label"
+                        ItemsSource="{Binding TotalTimes}"
+                        SelectedItem="{Binding SelectedTotalTime, Mode=TwoWay}">
                         <chips:SfChipGroup.ChipLayout>
-                            <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" AlignItems="Center" />
+                            <FlexLayout
+                                AlignItems="Center"
+                                Direction="Row"
+                                JustifyContent="Start"
+                                Wrap="Wrap" />
                         </chips:SfChipGroup.ChipLayout>
                     </chips:SfChipGroup>
                 </VerticalStackLayout>
@@ -101,50 +132,52 @@
         <expander:SfExpander Grid.Row="2" Margin="10,0,10,0">
             <expander:SfExpander.Header>
                 <Grid HeightRequest="40">
-                    <Label Text="Ingredients"
-                   VerticalTextAlignment="Center"
-                   FontAttributes="Bold" />
+                    <Label
+                        FontAttributes="Bold"
+                        Text="Ingredients"
+                        VerticalTextAlignment="Center" />
                 </Grid>
             </expander:SfExpander.Header>
 
             <expander:SfExpander.Content>
                 <VerticalStackLayout Padding="10">
 
-                    <Label Text="Select Ingredients:"
-                   FontAttributes="Bold"
-                   Margin="0,5" />
+                    <Label
+                        Margin="0,5"
+                        FontAttributes="Bold"
+                        Text="Select Ingredients:" />
 
-                    <!-- Buttons Row -->
-                    <HorizontalStackLayout Spacing="10" Margin="0,0,0,10">
-
-                        <button:SfButton
-                    Text="Select All"
-                    Command="{Binding SelectAllIngredientsCommand}"
-                    WidthRequest="120"
-                    HeightRequest="36"
-                    CornerRadius="6" />
+                    <!--  Buttons Row  -->
+                    <HorizontalStackLayout Margin="0,0,0,10" Spacing="10">
 
                         <button:SfButton
-                    Text="Deselect All"
-                    Command="{Binding DeselectAllIngredientsCommand}"
-                    WidthRequest="120"
-                    HeightRequest="36"
-                    CornerRadius="6" />
+                            Command="{Binding SelectAllIngredientsCommand}"
+                            CornerRadius="6"
+                            HeightRequest="36"
+                            Text="Select All"
+                            WidthRequest="120" />
+
+                        <button:SfButton
+                            Command="{Binding DeselectAllIngredientsCommand}"
+                            CornerRadius="6"
+                            HeightRequest="36"
+                            Text="Deselect All"
+                            WidthRequest="120" />
                     </HorizontalStackLayout>
 
-                    <!-- Chips -->
+                    <!--  Chips  -->
                     <chips:SfChipGroup
-                ItemsSource="{Binding AvailableIngredients}"
-                SelectedItem="{Binding SelectedIngredients, Mode=TwoWay}"
-                DisplayMemberPath="Name"
-                ChipType="Filter"
-                >
+                        ChipType="Filter"
+                        DisplayMemberPath="Name"
+                        ItemsSource="{Binding AvailableIngredients}"
+                        SelectedItem="{Binding SelectedIngredients, Mode=TwoWay}">
 
                         <chips:SfChipGroup.ChipLayout>
-                            <FlexLayout Direction="Row"
-                                Wrap="Wrap"
+                            <FlexLayout
+                                AlignItems="Start"
+                                Direction="Row"
                                 JustifyContent="Start"
-                                AlignItems="Start" />
+                                Wrap="Wrap" />
                         </chips:SfChipGroup.ChipLayout>
 
                     </chips:SfChipGroup>
@@ -156,34 +189,39 @@
         <expander:SfExpander Grid.Row="3" Margin="10,0,10,0">
             <expander:SfExpander.Header>
                 <Grid HeightRequest="40">
-                    <Label Text="Keywords"
-                   VerticalTextAlignment="Center"
-                   FontAttributes="Bold" />
+                    <Label
+                        FontAttributes="Bold"
+                        Text="Keywords"
+                        VerticalTextAlignment="Center" />
                 </Grid>
             </expander:SfExpander.Header>
 
             <expander:SfExpander.Content>
                 <VerticalStackLayout Padding="10">
 
-                    <Label Text="Add Keywords:"
-                   FontAttributes="Bold"
-                   Margin="0,5" />
+                    <Label
+                        Margin="0,5"
+                        FontAttributes="Bold"
+                        Text="Add Keywords:" />
 
-                    <chips:SfChipGroup x:Name="KeywordsEntry"
-                        ItemsSource="{Binding Keywords}"
+                    <chips:SfChipGroup
+                        x:Name="KeywordsEntry"
                         ChipType="Input"
-                        >
-                        <!-- This enables typing new keywords -->
+                        ItemsSource="{Binding Keywords}">
+                        <!--  This enables typing new keywords  -->
                         <chips:SfChipGroup.InputView>
-                            <Entry Placeholder="Type a keyword and press Enter"
-                           FontSize="14" Completed="Entry_Completed" />
+                            <Entry
+                                Completed="Entry_Completed"
+                                FontSize="14"
+                                Placeholder="Type a keyword and press Enter" />
                         </chips:SfChipGroup.InputView>
 
                         <chips:SfChipGroup.ChipLayout>
-                            <FlexLayout Direction="Row"
-                                Wrap="Wrap"
+                            <FlexLayout
+                                AlignItems="Start"
+                                Direction="Row"
                                 JustifyContent="Start"
-                                AlignItems="Start" />
+                                Wrap="Wrap" />
                         </chips:SfChipGroup.ChipLayout>
 
                     </chips:SfChipGroup>
@@ -191,23 +229,18 @@
                 </VerticalStackLayout>
             </expander:SfExpander.Content>
         </expander:SfExpander>
-        
+
         <ScrollView Grid.Row="4">
             <VerticalStackLayout Padding="16" Spacing="16">
                 <CollectionView
                     ItemsSource="{Binding Suggestions}"
                     SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
-                    SelectionMode="None"
-                    >
+                    SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <sf:SfCardView
-                                Margin="0,0,0,10"
-                                CornerRadius="6">
+                            <sf:SfCardView Margin="0,0,0,10" CornerRadius="6">
                                 <sf:SfCardView.GestureRecognizers>
-                                    <TapGestureRecognizer 
-            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipeViewModel}}, Path=OpenRecipeCommand}"
-            CommandParameter="{Binding}" />
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipeViewModel}}, Path=OpenRecipeCommand}" CommandParameter="{Binding}" />
                                 </sf:SfCardView.GestureRecognizers>
 
                                 <VerticalStackLayout Padding="2" Spacing="0">
@@ -221,23 +254,23 @@
                                         Margin="2,0,0,4"
                                         FontAttributes="Bold"
                                         FontSize="18"
-                                        Text="{Binding Name}"
                                         LineBreakMode="CharacterWrap"
-                                        MaxLines="1" />
+                                        MaxLines="1"
+                                        Text="{Binding Name}" />
 
-                                    <HorizontalStackLayout Spacing="12" Margin="2,0,0,4">
+                                    <HorizontalStackLayout Margin="2,0,0,4" Spacing="12">
                                         <Label
                                             FontSize="14"
-                                            TextColor="Gray"
-                                            Text="{Binding PrepTime, StringFormat='{0} minutes'}" />
+                                            Text="{Binding PrepTime, StringFormat='{0} minutes'}"
+                                            TextColor="Gray" />
                                         <Label
-                                          FontSize="14"
-                                          TextColor="Gray"
-                                          Text="{Binding Difficulty}" />
+                                            FontSize="14"
+                                            Text="{Binding Difficulty}"
+                                            TextColor="Gray" />
                                         <Label
-                                           FontSize="14"
-                                           TextColor="Gray"
-                                           Text="{Binding RecipeSource}" />
+                                            FontSize="14"
+                                            Text="{Binding RecipeSource}"
+                                            TextColor="Gray" />
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </sf:SfCardView>
@@ -247,15 +280,16 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <sfBusy:SfBusyIndicator Grid.Row="4"
-            IsVisible="{Binding IsLoading}"
-            IsRunning="{Binding IsLoading}"
-            AnimationType="CircularMaterial"
+        <sfBusy:SfBusyIndicator
             Title="Loading recipes..."
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            WidthRequest="120"
+            Grid.Row="4"
+            AnimationType="CircularMaterial"
+            BackgroundColor="#80000000"
             HeightRequest="90"
-            BackgroundColor="#80000000" />
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            VerticalOptions="Center"
+            WidthRequest="120" />
     </Grid>
 </ContentPage>

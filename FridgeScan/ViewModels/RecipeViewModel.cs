@@ -12,6 +12,7 @@ public partial class RecipeViewModel : BaseViewModel
 
     private readonly ProductsManager productsManager;
     private readonly IEnumerable<IRecipeService> recipeServices;
+    private readonly RecipeAiService recipeAiService;
 
     public ObservableCollection<Product> AvailableIngredients { get; }
     public ObservableCollection<Product> SelectedIngredients { get; }
@@ -40,18 +41,17 @@ public partial class RecipeViewModel : BaseViewModel
 
     [ObservableProperty]
     private MealTypeModel selectedTotalTime;
-
-
-    public RecipeSuggestion SelectedSuggestion { get; set; }
+    private bool isUsingAi;
 
     public ICommand LoadSuggestionsCommand { get; }
+    public ICommand LoadAiSuggestionsCommand { get; }
 
 
-    public RecipeViewModel(ProductsManager productsManager, IEnumerable<IRecipeService> recipeServices)
+    public RecipeViewModel(ProductsManager productsManager, IEnumerable<IRecipeService> recipeServices, RecipeAiService recipeAiService)
     {
         this.productsManager = productsManager;
         this.recipeServices = recipeServices;
-
+        this.recipeAiService = recipeAiService;
         AvailableIngredients = new ObservableCollection<Product>(productsManager.Products);
         SelectedIngredients = new ObservableCollection<Product>(productsManager.Products);
 
@@ -62,6 +62,7 @@ public partial class RecipeViewModel : BaseViewModel
         LoadSavedFilters();
 
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
+    LoadAiSuggestionsCommand = new Command(async () => await LoadAiSuggestionsAsync());
     }
 
     [RelayCommand]
@@ -151,17 +152,19 @@ public partial class RecipeViewModel : BaseViewModel
 
     public async Task LoadSuggestionsAsync()
     {
-        if(SelectedIngredients.Count == 0 && Keywords.Count == 0)
+        if (SelectedIngredients.Count == 0 && Keywords.Count == 0)
         {
             await Toast.Make("Please add some ingredients or keywords to get recipe suggestions.", ToastDuration.Long).Show();
             return;
         }
 
-        if (SelectedMealType.Value == null)
-        {
-            await Toast.Make("Please select a mealt type to get recipe suggestions.", ToastDuration.Long).Show();
-            return;
-        }
+        isUsingAi = false;
+
+        //if (SelectedMealType.Value == null)
+        //{
+        //    await Toast.Make("Please select a mealt type to get recipe suggestions.", ToastDuration.Long).Show();
+        //    return;
+        //}
 
         IsLoading = true;
         try
@@ -207,6 +210,56 @@ public partial class RecipeViewModel : BaseViewModel
         }
     }
 
+    public async Task LoadAiSuggestionsAsync()
+    {
+        if (SelectedIngredients.Count == 0 && Keywords.Count == 0)
+        {
+            await Toast.Make("Please add some ingredients or keywords to get recipe suggestions.", ToastDuration.Long).Show();
+            return;
+        }
+
+        isUsingAi = true;
+
+        //if (SelectedMealType.Value == null)
+        //{
+        //    await Toast.Make("Please select a mealt type to get recipe suggestions.", ToastDuration.Long).Show();
+        //    return;
+        //}
+
+        IsLoading = true;
+        try
+        {
+            var pageTasks = new List<Task<List<RecipeSuggestion>>>();
+
+            var results = await recipeAiService.GetRecipeSuggestionsAsync(SelectedIngredients.Select(x => x.Name).ToList(),
+                        SelectedMealType.Value,
+                        Keywords.ToArray(),
+                        SelectedDifficulty?.Value,
+                        SelectedTotalTime?.Value
+                    );
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var shuffled = results
+                    .ToList();
+
+                Suggestions.Clear();
+
+                foreach (var item in shuffled)
+                    Suggestions.Add(item);
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading recipes: {ex}");
+            await Toast.Make("Failed to load recipe suggestions. " + ex.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
     [RelayCommand]
     private async Task OpenRecipe(RecipeSuggestion selectedRecipe)
     {
@@ -215,6 +268,7 @@ public partial class RecipeViewModel : BaseViewModel
         var navigationParameter = new Dictionary<string, object>
         {
             { "RecipeUrl", selectedRecipe.Url },
+             { "Recipe", selectedRecipe },
             { "provider", selectedRecipe.RecipeSource } 
         };
 

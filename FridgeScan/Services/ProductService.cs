@@ -28,25 +28,64 @@ namespace FridgeScan.Services
             {
                 var baseUrl = $"{Endpoint}/tablesdb/{DatabaseId}/tables/{CollectionId}/rows";
 
-                string queryString = string.Empty;
+                List<string> baseEncodedQueries = new();
 
                 if (queries is { Length: > 0 })
                 {
-                    var encoded = queries
-                        .Select((q, index) =>
-                            $"queries[{index}]={Uri.EscapeDataString(q)}");
-
-                    queryString = "?" + string.Join("&", encoded);
+                    baseEncodedQueries.AddRange(queries
+                        .Select((q, index) => $"queries[{index}]={Uri.EscapeDataString(q)}"));
                 }
 
-                var url = baseUrl + queryString;
+                var allRows = new List<AppwriteRow>();
 
-                var response = await _http.GetFromJsonAsync<AppwriteRowsResponse>(url);
+                // Use a reasonable page size for Appwrite; adjust if needed
+                const int perPage = 100;
+                int offset = 0;
+                int total = int.MaxValue;
 
-                return response?.Rows?.Select((Func<AppwriteRow, Product>)(r => new Product(r.Name, r.Category, r.Quantity)
+                while (allRows.Count < total)
+                {
+                    // Build per-request queries[] entries including limit and offset as JSON
+                    var encoded = new List<string>(baseEncodedQueries);
+
+                    var nextIndex = encoded.Count;
+                    var limitJson = $"{{\"method\":\"limit\",\"values\":[{perPage}]}}";
+                    var offsetJson = $"{{\"method\":\"offset\",\"values\":[{offset}]}}";
+
+                    encoded.Add($"queries[{nextIndex}]={Uri.EscapeDataString(limitJson)}");
+                    encoded.Add($"queries[{nextIndex + 1}]={Uri.EscapeDataString(offsetJson)}");
+
+                    var queryString = "?" + string.Join("&", encoded);
+
+                    var url = baseUrl + queryString;
+
+                    var response = await _http.GetFromJsonAsync<AppwriteRowsResponse>(url);
+
+                    if (response == null || response.Rows == null || response.Rows.Count == 0)
+                    {
+                        // nothing more to fetch or an error occurred
+                        break;
+                    }
+
+                    if (total == int.MaxValue)
+                    {
+                        total = response.Total;
+                    }
+
+                    allRows.AddRange(response.Rows);
+
+                    // advance offset
+                    offset = allRows.Count;
+
+                    // safety: if API returns fewer rows than requested but total is unknown, break to avoid infinite loop
+                    if (allRows.Count >= total)
+                        break;
+                }
+
+                return allRows.Select(r => new Product(r.Name, r.Category, r.Quantity)
                 {
                     RowId = r.Id
-                })).ToList() ?? new();
+                }).ToList();
             }
             catch (Exception ex)
             {
