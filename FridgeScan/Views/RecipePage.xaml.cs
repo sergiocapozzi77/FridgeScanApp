@@ -2,8 +2,6 @@ namespace FridgeScan.Views;
 
 public partial class RecipePage : ContentPage
 {
-    private readonly ProductsViewModel _vm;
-
     public RecipePage()
     {
         InitializeComponent();
@@ -12,7 +10,10 @@ public partial class RecipePage : ContentPage
 
         var vm = services.GetService<RecipeViewModel>();
         BindingContext = vm;
+        _viewModel = vm;
     }
+
+    private readonly RecipeViewModel? _viewModel;
 
     private void Entry_Completed(object sender, EventArgs e)
     {
@@ -20,5 +21,11 @@ public partial class RecipePage : ContentPage
         var name = (sender as InputView).Text;
         viewModel.Keywords.Add(name);
         (sender as InputView).Text = "";
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _viewModel?.RefreshSelectedIngredients();
     }
 }

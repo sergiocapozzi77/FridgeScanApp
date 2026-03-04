@@ -4,7 +4,6 @@ using LangChain.Providers.OpenAI;
 
 namespace FridgeScan.Services
 {
-    using Java.Time;
     using LangChain.Prompts;
     using LangChain.Providers;
     using LangChain.Providers.OpenAI;
@@ -36,15 +35,15 @@ You are a recipe generator.
 
 Given a recipe name and (optionally) a URL, return a JSON object with the following properties only:
 
-{
+{{
   ""name"": ""..."",
   ""ingredients"": [ ... ],
-  ""method_steps"": [ ... ],
+  ""methodSteps"": [ ... ],
   ""prep_time"": ""..."",      // optional, human-friendly
-  ""cook_time"": ""..."",      // optional, human-friendly
-  ""servings"": ""..."",       // optional
+  ""cookTime"": ""..."",      // optional, human-friendly
+  ""serving"": ""..."",       // optional
   ""difficulty"": ""easy|medium|hard""
-}
+}}
 
 Use the following inputs:
 - Recipe name: {name}

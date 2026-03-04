@@ -181,8 +181,8 @@
 
                                                             <!--  PRODUCT NAME  -->
                                                             <Label
-                                                                Grid.Column="0"
-                                                                Margin="16,0,0,0"
+                                                                Grid.Column="1"
+                                                                Margin="0,0,0,0"
                                                                 CharacterSpacing="0.25"
                                                                 FontFamily="Roboto-Regular"
                                                                 FontSize="14"
@@ -192,7 +192,7 @@
 
                                                             <!--  MINUS BUTTON  -->
                                                             <Label
-                                                                Grid.Column="1"
+                                                                Grid.Column="2"
                                                                 FontFamily="Material"
                                                                 FontSize="20"
                                                                 HorizontalTextAlignment="Center"
@@ -207,7 +207,7 @@
 
                                                             <!--  QUANTITY  -->
                                                             <Label
-                                                                Grid.Column="2"
+                                                                Grid.Column="3"
                                                                 FontFamily="Roboto-Medium"
                                                                 FontSize="14"
                                                                 HorizontalOptions="Center"
@@ -216,7 +216,7 @@
 
                                                             <!--  PLUS BUTTON  -->
                                                             <Label
-                                                                Grid.Column="3"
+                                                                Grid.Column="4"
                                                                 FontFamily="Material"
                                                                 FontSize="20"
                                                                 HorizontalTextAlignment="Center"
@@ -231,7 +231,7 @@
 
                                                             <!--  DELETE BUTTON  -->
                                                             <Label
-                                                                Grid.Column="4"
+                                                                Grid.Column="5"
                                                                 FontFamily="Material"
                                                                 FontSize="20"
                                                                 HorizontalTextAlignment="Center"

@@ -53,7 +53,7 @@ public partial class RecipeViewModel : BaseViewModel
         this.recipeServices = recipeServices;
         this.recipeAiService = recipeAiService;
         AvailableIngredients = new ObservableCollection<Product>(productsManager.Products);
-        SelectedIngredients = new ObservableCollection<Product>(productsManager.Products);
+        SelectedIngredients = new ObservableCollection<Product>(productsManager.Products.Where(x => x.IsSelected));
 
         // 1. Inizializza le collezioni (come già facevi)
         InitializeFilterCollections();
@@ -62,7 +62,21 @@ public partial class RecipeViewModel : BaseViewModel
         LoadSavedFilters();
 
         LoadSuggestionsCommand = new Command(async () => await LoadSuggestionsAsync());
-    LoadAiSuggestionsCommand = new Command(async () => await LoadAiSuggestionsAsync());
+        LoadAiSuggestionsCommand = new Command(async () => await LoadAiSuggestionsAsync());
+    }
+
+    // Refresh the SelectedIngredients collection from the ProductsManager.
+    // Call this from the view when the page appears to ensure the selection is up-to-date.
+    public void RefreshSelectedIngredients()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            SelectedIngredients.Clear();
+            foreach (var item in productsManager.Products.Where(x => x.IsSelected))
+            {
+                SelectedIngredients.Add(item);
+            }
+        });
     }
 
     [RelayCommand]

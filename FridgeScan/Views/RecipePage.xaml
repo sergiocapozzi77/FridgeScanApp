@@ -7,7 +7,8 @@
     xmlns:expander="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
-    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels">
+    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
+    xmlns:models="clr-namespace:FridgeScan.Models">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -166,21 +167,27 @@
                     </HorizontalStackLayout>
 
                     <!--  Chips  -->
-                    <chips:SfChipGroup
-                        ChipType="Filter"
-                        DisplayMemberPath="Name"
-                        ItemsSource="{Binding AvailableIngredients}"
-                        SelectedItem="{Binding SelectedIngredients, Mode=TwoWay}">
+                    <!--  Limit the visible height and allow scrolling when there are many chips  -->
+                    <ScrollView
+                        HeightRequest="250"
+                        Orientation="Vertical"
+                        VerticalScrollBarVisibility="Always">
+                        <chips:SfChipGroup
+                            ChipType="Filter"
+                            DisplayMemberPath="Name"
+                            ItemsSource="{Binding AvailableIngredients}"
+                            SelectedItem="{Binding SelectedIngredients, Mode=TwoWay}">
 
-                        <chips:SfChipGroup.ChipLayout>
-                            <FlexLayout
-                                AlignItems="Start"
-                                Direction="Row"
-                                JustifyContent="Start"
-                                Wrap="Wrap" />
-                        </chips:SfChipGroup.ChipLayout>
+                            <chips:SfChipGroup.ChipLayout>
+                                <FlexLayout
+                                    AlignItems="Start"
+                                    Direction="Row"
+                                    JustifyContent="Start"
+                                    Wrap="Wrap" />
+                            </chips:SfChipGroup.ChipLayout>
 
-                    </chips:SfChipGroup>
+                        </chips:SfChipGroup>
+                    </ScrollView>
 
                 </VerticalStackLayout>
             </expander:SfExpander.Content>
@@ -235,7 +242,13 @@
                 <CollectionView
                     ItemsSource="{Binding Suggestions}"
                     SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
-                    SelectionMode="None">
+                    SelectionMode="None"
+                    ItemsUpdatingScrollMode="KeepScrollOffset"
+                    RemainingItemsThreshold="5">
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <sf:SfCardView Margin="0,0,0,10" CornerRadius="6">
