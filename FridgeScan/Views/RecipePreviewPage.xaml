@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FridgeScan.Views.RecipePreviewPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
+    Title="Imported Recipe">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="0" Padding="0">
+                <Image Source="{Binding Recipe.ImageUrl}" Aspect="AspectFill" HeightRequest="200" />
+                <VerticalStackLayout Padding="16" Spacing="8">
+                    <Label Text="{Binding Recipe.Name}" FontSize="22" FontAttributes="Bold" />
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="{Binding Recipe.RecipeSource}" FontSize="13" TextColor="Gray" />
+                        <Label Text="{Binding Recipe.TotalTime}" FontSize="13" TextColor="Gray" />
+                        <Label Text="{Binding Recipe.Difficulty}" FontSize="13" TextColor="Gray" />
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding Recipe.Description}" FontSize="14" LineBreakMode="WordWrap" Margin="0,4,0,0" />
+                    <Label Text="Ingredients" FontSize="16" FontAttributes="Bold" Margin="0,12,0,6" />
+                    <Frame BackgroundColor="#252525" BorderColor="Transparent" CornerRadius="10" Padding="0" HasShadow="False">
+                        <CollectionView ItemsSource="{Binding Recipe.Ingredients}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Grid Padding="14,10" ColumnDefinitions="Auto,*">
+                                        <Label Grid.Column="1" Text="{Binding .}" FontSize="14" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
+                    <Label Text="Method" FontSize="16" FontAttributes="Bold" Margin="0,12,0,6" />
+                    <Frame BackgroundColor="#252525" BorderColor="Transparent" CornerRadius="10" Padding="0" HasShadow="False">
+                        <CollectionView ItemsSource="{Binding Recipe.MethodSteps}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Grid Padding="14,8" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Label Grid.Column="1" Text="{Binding .}" FontSize="14" LineBreakMode="WordWrap" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Frame Grid.Row="1" BackgroundColor="#1e1e1e" BorderColor="#333" CornerRadius="0" Padding="16" HasShadow="False">
+            <VerticalStackLayout Spacing="12">
+                <Label Text="Save to Cookbook" FontSize="15" FontAttributes="Bold" />
+                <CollectionView ItemsSource="{Binding AllCookbooks}" SelectionMode="None" HeightRequest="44">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Cookbook">
+                            <Frame Padding="10,8" CornerRadius="20" BorderColor="#555"
+                                   BackgroundColor="Transparent" HasShadow="False">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipePreviewViewModel}}, Path=ToggleCookbookSelectionCommand}"
+                                        CommandParameter="{Binding}" />
+                                </Frame.GestureRecognizers>
+                                <Label Text="{Binding Name}" FontSize="13" />
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Frame Padding="10,8" CornerRadius="20" BorderColor="#555"
+                       BackgroundColor="Transparent" HasShadow="False" HorizontalOptions="Start">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CreateAndAddCookbookCommand}" />
+                    </Frame.GestureRecognizers>
+                    <Label Text="+ New Cookbook" FontSize="13" TextColor="Gray" />
+                </Frame>
+                <Button Text="Save Recipe" BackgroundColor="#4a90d9" TextColor="White"
+                        CornerRadius="8" HeightRequest="48" FontSize="15"
+                        Command="{Binding SaveCommand}" />
+            </VerticalStackLayout>
+        </Frame>
+        <sfBusy:SfBusyIndicator Grid.RowSpan="2" AnimationType="CircularMaterial"
+                                 IsRunning="{Binding IsSaving}" IsVisible="{Binding IsSaving}"
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 HeightRequest="60" WidthRequest="60" />
+    </Grid>
+</ContentPage>

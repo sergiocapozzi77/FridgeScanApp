@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FridgeScan.Views.SavedRecipeDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    Title="{Binding Recipe.Name}">
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Spacing="0">
+                <Image Source="{Binding Recipe.ImageUrlBig}" Aspect="AspectFill" HeightRequest="250" />
+                <VerticalStackLayout Padding="16" Spacing="8">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="{Binding Recipe.RecipeSource}" FontSize="13" TextColor="Gray" />
+                        <Label Text="{Binding Recipe.TotalTime}" FontSize="13" TextColor="Gray" />
+                        <Label Text="{Binding Recipe.Difficulty}" FontSize="13" TextColor="Gray" />
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding Recipe.Description}" FontSize="14" LineBreakMode="WordWrap" />
+                    <Label Text="Ingredients" FontSize="16" FontAttributes="Bold" Margin="0,12,0,6" />
+                    <Frame BackgroundColor="#252525" BorderColor="Transparent" CornerRadius="10" Padding="0" HasShadow="False">
+                        <CollectionView ItemsSource="{Binding Recipe.Ingredients}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Grid Padding="14,10" ColumnDefinitions="Auto,*">
+                                        <Label Grid.Column="1" Text="{Binding .}" FontSize="14" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
+                    <Label Text="Method" FontSize="16" FontAttributes="Bold" Margin="0,12,0,6" />
+                    <Frame BackgroundColor="#252525" BorderColor="Transparent" CornerRadius="10" Padding="0" HasShadow="False">
+                        <CollectionView ItemsSource="{Binding Recipe.MethodSteps}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Grid Padding="14,8" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Label Grid.Column="1" Text="{Binding .}" FontSize="14" LineBreakMode="WordWrap" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <sfBusy:SfBusyIndicator AnimationType="CircularMaterial"
+                                 IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 HeightRequest="60" WidthRequest="60" />
+    </Grid>
+</ContentPage>

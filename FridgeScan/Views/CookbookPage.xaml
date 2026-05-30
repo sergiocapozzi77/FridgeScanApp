@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FridgeScan.Views.CookbookPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfCards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
+    xmlns:sfPull="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
+    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:views="clr-namespace:FridgeScan.Views"
+    xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
+    Title="Cookbooks">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Padding="16,12" ColumnDefinitions="*,Auto">
+            <Label Text="Cookbooks" FontSize="24" FontAttributes="Bold" VerticalOptions="Center" />
+            <Button Grid.Column="1"
+                    Text="+"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    BackgroundColor="#4a90d9"
+                    TextColor="White"
+                    CornerRadius="20"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    Padding="0"
+                    Command="{Binding CreateCookbookCommand}" />
+        </Grid>
+        <sfPull:SfPullToRefresh Grid.Row="1"
+                                 IsRefreshing="{Binding IsLoading}"
+                                 RefreshCommand="{Binding LoadCookbooksCommand}">
+            <sfPull:SfPullToRefresh.PullableContent>
+                <CollectionView ItemsSource="{Binding Cookbooks}"
+                                ItemsLayout="VerticalGrid, 2"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Cookbook">
+                            <sfCards:SfCardView Margin="6" CornerRadius="10" Padding="0">
+                                <sfCards:SfCardView.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CookbookViewModel}}, Path=OpenCookbookCommand}"
+                                        CommandParameter="{Binding}" />
+                                </sfCards:SfCardView.GestureRecognizers>
+                                <VerticalStackLayout Padding="0" Spacing="0">
+                                    <views:CookbookMosaic ImageUrls="{Binding PreviewImageUrls}" HeightRequest="140" />
+                                    <VerticalStackLayout Padding="10,8">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2" />
+                                        <Label FontSize="12" TextColor="Gray">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} recipes">
+                                                    <Binding Path="RecipeCount" />
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </sfCards:SfCardView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </sfPull:SfPullToRefresh.PullableContent>
+        </sfPull:SfPullToRefresh>
+        <sfBusy:SfBusyIndicator Grid.Row="1"
+                                 AnimationType="CircularMaterial"
+                                 IsRunning="{Binding IsLoading}"
+                                 IsVisible="{Binding IsLoading}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 HeightRequest="60"
+                                 WidthRequest="60" />
+    </Grid>
+</ContentPage>
