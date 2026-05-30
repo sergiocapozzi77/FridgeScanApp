@@ -9,7 +9,7 @@
     <Grid>
         <ScrollView>
             <VerticalStackLayout Spacing="0">
-                <Image Source="{Binding Recipe.ImageUrlBig}" Aspect="AspectFill" HeightRequest="250" />
+                <Image Source="{Binding Recipe.ImageUrl}" Aspect="AspectFill" HeightRequest="250" />
                 <VerticalStackLayout Padding="16" Spacing="8">
                     <HorizontalStackLayout Spacing="12">
                         <Label Text="{Binding Recipe.RecipeSource}" FontSize="13" TextColor="Gray" />

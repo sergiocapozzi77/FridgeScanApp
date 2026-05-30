@@ -9,6 +9,7 @@ namespace FridgeScan.ViewModels;
 public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
 {
     private readonly CookbookService _cookbookService;
+    private readonly FavouriteService _favouriteService;
 
     [ObservableProperty]
     private SavedRecipe? recipe;
@@ -25,9 +26,10 @@ public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
     [ObservableProperty]
     private bool isSaving;
 
-    public RecipePreviewViewModel(CookbookService cookbookService)
+    public RecipePreviewViewModel(CookbookService cookbookService, FavouriteService favouriteService)
     {
         _cookbookService = cookbookService;
+        _favouriteService = favouriteService;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -96,7 +98,7 @@ public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
             IsSaving = true;
             Recipe.CookbookIds = SelectedCookbooks.Select(c => c.RowId).ToList();
 
-            var saved = await _cookbookService.SaveRecipeAsync(Recipe);
+            var saved = await _favouriteService.SaveFavouriteAsync(Recipe);
             if (saved != null)
             {
                 await Shell.Current.GoToAsync("../..");

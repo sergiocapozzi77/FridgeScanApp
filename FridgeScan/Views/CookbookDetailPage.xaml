@@ -31,15 +31,11 @@
             </HorizontalStackLayout>
         </VerticalStackLayout>
         <BoxView Grid.Row="1" HeightRequest="1" Color="#333" Margin="16,0" />
-        <CollectionView Grid.Row="2" ItemsSource="{Binding Recipes}" SelectionMode="None" Margin="8,8,8,0">
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Recipes}" SelectionMode="Single"
+                        SelectionChanged="OnRecipeSelected" Margin="8,8,8,0">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:SavedRecipe">
                     <sfCards:SfCardView Margin="4,4" CornerRadius="10" Padding="0">
-                        <sfCards:SfCardView.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CookbookDetailViewModel}}, Path=OpenRecipeCommand}"
-                                CommandParameter="{Binding}" />
-                        </sfCards:SfCardView.GestureRecognizers>
                         <Grid ColumnDefinitions="110,*" HeightRequest="100">
                             <Image Grid.Column="0" Source="{Binding ImageUrl}"
                                    Aspect="AspectFill" WidthRequest="110" HeightRequest="100" />

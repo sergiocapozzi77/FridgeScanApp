@@ -9,6 +9,7 @@ namespace FridgeScan.ViewModels;
 public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
 {
     private readonly CookbookService _cookbookService;
+    private readonly FavouriteService _favouriteService;
 
     [ObservableProperty]
     private Cookbook? cookbook;
@@ -21,9 +22,10 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
 
     private string _cookbookId = string.Empty;
 
-    public CookbookDetailViewModel(CookbookService cookbookService)
+    public CookbookDetailViewModel(CookbookService cookbookService, FavouriteService favouriteService)
     {
         _cookbookService = cookbookService;
+        _favouriteService = favouriteService;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -55,10 +57,13 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
         try
         {
             IsLoading = true;
-            var list = await _cookbookService.GetRecipesByCookbookIdAsync(_cookbookId);
+            var list = await _favouriteService.GetFavouritesByCookbookIdAsync(_cookbookId);
             Recipes = new ObservableCollection<SavedRecipe>(list);
             if (Cookbook != null)
+            {
                 Cookbook.RecipeCount = list.Count;
+                OnPropertyChanged(nameof(Cookbook));
+            }
         }
         catch (Exception ex)
         {
@@ -105,7 +110,7 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
         if (!confirmed) return;
 
         recipe.CookbookIds.Remove(_cookbookId);
-        var success = await _cookbookService.UpdateRecipeCookbooksAsync(recipe.RowId, recipe.CookbookIds);
+        var success = await _favouriteService.UpdateFavouriteCookbooksAsync(recipe.RowId, recipe.CookbookIds);
         if (success)
         {
             Recipes.Remove(recipe);
@@ -136,7 +141,7 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
         if (!recipe.CookbookIds.Contains(target.RowId))
             recipe.CookbookIds.Add(target.RowId);
 
-        var success = await _cookbookService.UpdateRecipeCookbooksAsync(recipe.RowId, recipe.CookbookIds);
+        var success = await _favouriteService.UpdateFavouriteCookbooksAsync(recipe.RowId, recipe.CookbookIds);
         if (success)
         {
             Recipes.Remove(recipe);

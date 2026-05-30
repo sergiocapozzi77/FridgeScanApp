@@ -9,6 +9,7 @@ namespace FridgeScan.ViewModels;
 public partial class CookbookViewModel : BaseViewModel
 {
     private readonly CookbookService _cookbookService;
+    private readonly FavouriteService _favouriteService;
 
     [ObservableProperty]
     private ObservableCollection<Cookbook> cookbooks = new();
@@ -16,9 +17,10 @@ public partial class CookbookViewModel : BaseViewModel
     [ObservableProperty]
     private bool isLoading;
 
-    public CookbookViewModel(CookbookService cookbookService)
+    public CookbookViewModel(CookbookService cookbookService, FavouriteService favouriteService)
     {
         _cookbookService = cookbookService;
+        _favouriteService = favouriteService;
     }
 
     [RelayCommand]
@@ -29,15 +31,15 @@ public partial class CookbookViewModel : BaseViewModel
         {
             IsLoading = true;
             var allCookbooks = await _cookbookService.GetCookbooksAsync();
-            var allRecipes = await _cookbookService.GetAllSavedRecipesAsync();
+            var allFavourites = await _favouriteService.GetAllFavouritesAsync();
 
             foreach (var cookbook in allCookbooks)
             {
-                var cookbookRecipes = allRecipes
+                var cookbookFavourites = allFavourites
                     .Where(r => r.CookbookIds.Contains(cookbook.RowId))
                     .ToList();
-                cookbook.RecipeCount = cookbookRecipes.Count;
-                cookbook.PreviewImageUrls = cookbookRecipes
+                cookbook.RecipeCount = cookbookFavourites.Count;
+                cookbook.PreviewImageUrls = cookbookFavourites
                     .Select(r => r.ImageUrl)
                     .Where(url => !string.IsNullOrWhiteSpace(url))
                     .Take(4)

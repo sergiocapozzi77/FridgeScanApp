@@ -1,0 +1,146 @@
+<h2>Cookbook Detail — 3 Recipe List Layouts</h2>
+<p class="subtitle">Same content, different card styles. Click to select your preferred layout.</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Horizontal Cards</h3>
+      <p>Image on left, text on right. Compact, good for scanning many recipes quickly. Shows 3-4 recipes on screen at once.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Full-Width Image Cards</h3>
+      <p>Large image on top, text below. Matches the existing recipe card style in the Recipe tab. More visual impact, shows 2 at a time.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Two-Column Grid</h3>
+      <p>Square-ish cards in a 2-column grid. More visual density, matches the cookbook tab grid style. Good for browsing.</p>
+    </div>
+  </div>
+</div>
+
+<hr style="margin:30px 0;border-color:#333">
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Option A — Horizontal Cards</div>
+    <div class="mockup-body" style="padding:8px;background:#1a1a1a;max-height:500px;overflow-y:auto">
+      <div style="display:flex;background:#252525;border-radius:10px;margin-bottom:8px;overflow:hidden;height:100px">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=120&h=100&fit=crop" style="width:110px;object-fit:cover" />
+        <div style="padding:12px;display:flex;flex-direction:column;justify-content:center;flex:1">
+          <div style="color:#fff;font-weight:600;font-size:15px">Spaghetti Carbonara</div>
+          <div style="color:#999;font-size:12px;margin-top:2px">GialloZafferano</div>
+          <div style="display:flex;gap:12px;margin-top:4px">
+            <span style="color:#aaa;font-size:12px">25 min</span>
+            <span style="color:#aaa;font-size:12px">Easy</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;padding-right:12px;color:#ff6b6b;font-size:18px">×</div>
+      </div>
+      <div style="display:flex;background:#252525;border-radius:10px;margin-bottom:8px;overflow:hidden;height:100px">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&h=100&fit=crop" style="width:110px;object-fit:cover" />
+        <div style="padding:12px;display:flex;flex-direction:column;justify-content:center;flex:1">
+          <div style="color:#fff;font-weight:600;font-size:15px">Margherita Pizza</div>
+          <div style="color:#999;font-size:12px;margin-top:2px">BBC Good Food</div>
+          <div style="display:flex;gap:12px;margin-top:4px">
+            <span style="color:#aaa;font-size:12px">40 min</span>
+            <span style="color:#aaa;font-size:12px">Medium</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;padding-right:12px;color:#ff6b6b;font-size:18px">×</div>
+      </div>
+      <div style="display:flex;background:#252525;border-radius:10px;margin-bottom:8px;overflow:hidden;height:100px">
+        <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=120&h=100&fit=crop" style="width:110px;object-fit:cover" />
+        <div style="padding:12px;display:flex;flex-direction:column;justify-content:center;flex:1">
+          <div style="color:#fff;font-weight:600;font-size:15px">Tiramisu</div>
+          <div style="color:#999;font-size:12px;margin-top:2px">GialloZafferano</div>
+          <div style="display:flex;gap:12px;margin-top:4px">
+            <span style="color:#aaa;font-size:12px">30 min</span>
+            <span style="color:#aaa;font-size:12px">Medium</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;padding-right:12px;color:#ff6b6b;font-size:18px">×</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Option B — Full-Width Image Cards</div>
+    <div class="mockup-body" style="padding:8px;background:#1a1a1a;max-height:500px;overflow-y:auto">
+      <div style="background:#252525;border-radius:10px;margin-bottom:8px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=160&fit=crop" style="width:100%;height:140px;object-fit:cover" />
+        <div style="padding:10px 12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="color:#fff;font-weight:600;font-size:15px">Spaghetti Carbonara</div>
+              <div style="color:#999;font-size:12px;margin-top:2px">GialloZafferano</div>
+            </div>
+            <div style="color:#ff6b6b;font-size:16px;padding:4px">×</div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:6px">
+            <span style="color:#aaa;font-size:12px">25 min</span>
+            <span style="color:#aaa;font-size:12px">Easy</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#252525;border-radius:10px;margin-bottom:8px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=160&fit=crop" style="width:100%;height:140px;object-fit:cover" />
+        <div style="padding:10px 12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="color:#fff;font-weight:600;font-size:15px">Margherita Pizza</div>
+              <div style="color:#999;font-size:12px;margin-top:2px">BBC Good Food</div>
+            </div>
+            <div style="color:#ff6b6b;font-size:16px;padding:4px">×</div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:6px">
+            <span style="color:#aaa;font-size:12px">40 min</span>
+            <span style="color:#aaa;font-size:12px">Medium</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="max-width:420px;margin-top:20px">
+  <div class="mockup-header">Option C — Two-Column Grid</div>
+  <div class="mockup-body" style="padding:8px;background:#1a1a1a">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=130&fit=crop" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
+        <div style="padding:8px">
+          <div style="color:#fff;font-weight:600;font-size:13px">Spaghetti Carbonara</div>
+          <div style="color:#999;font-size:11px">GialloZafferano · 25m</div>
+        </div>
+      </div>
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=130&fit=crop" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
+        <div style="padding:8px">
+          <div style="color:#fff;font-weight:600;font-size:13px">Margherita Pizza</div>
+          <div style="color:#999;font-size:11px">BBC Good Food · 40m</div>
+        </div>
+      </div>
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=200&h=130&fit=crop" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
+        <div style="padding:8px">
+          <div style="color:#fff;font-weight:600;font-size:13px">Tiramisu</div>
+          <div style="color:#999;font-size:11px">GialloZafferano · 30m</div>
+        </div>
+      </div>
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=200&h=130&fit=crop" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
+        <div style="padding:8px">
+          <div style="color:#fff;font-weight:600;font-size:13px">Focaccia</div>
+          <div style="color:#999;font-size:11px">GialloZafferano · 60m</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

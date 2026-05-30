@@ -75,6 +75,7 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<RecipeAiService>();
 
         builder.Services.AddSingleton<CookbookService>();
+        builder.Services.AddSingleton<FavouriteService>();
 
         // pages
         builder.Services.AddTransient<Views.ProductsPage>();

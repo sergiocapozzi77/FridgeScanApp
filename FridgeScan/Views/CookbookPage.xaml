@@ -32,15 +32,11 @@
             <sfPull:SfPullToRefresh.PullableContent>
                 <CollectionView ItemsSource="{Binding Cookbooks}"
                                 ItemsLayout="VerticalGrid, 2"
-                                SelectionMode="None">
+                                SelectionMode="Single"
+                                SelectionChanged="OnCookbookSelected">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Cookbook">
                             <sfCards:SfCardView Margin="6" CornerRadius="10" Padding="0">
-                                <sfCards:SfCardView.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CookbookViewModel}}, Path=OpenCookbookCommand}"
-                                        CommandParameter="{Binding}" />
-                                </sfCards:SfCardView.GestureRecognizers>
                                 <VerticalStackLayout Padding="0" Spacing="0">
                                     <views:CookbookMosaic ImageUrls="{Binding PreviewImageUrls}" HeightRequest="140" />
                                     <VerticalStackLayout Padding="10,8">
@@ -64,13 +60,5 @@
                 </CollectionView>
             </sfPull:SfPullToRefresh.PullableContent>
         </sfPull:SfPullToRefresh>
-        <sfBusy:SfBusyIndicator Grid.Row="1"
-                                 AnimationType="CircularMaterial"
-                                 IsRunning="{Binding IsLoading}"
-                                 IsVisible="{Binding IsLoading}"
-                                 HorizontalOptions="Center"
-                                 VerticalOptions="Center"
-                                 HeightRequest="60"
-                                 WidthRequest="60" />
     </Grid>
 </ContentPage>

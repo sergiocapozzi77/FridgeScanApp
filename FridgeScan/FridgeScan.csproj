@@ -56,6 +56,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="secrets.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BarcodeScanning.Native.Maui" Version="2.2.1" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.3.0" />
 		<PackageReference Include="CommunityToolkit.MVVM" Version="8.4.0" />
@@ -101,6 +105,12 @@
 	  <Compile Update="Views\SavedRecipeDetailPage.xaml.cs">
 	    <DependentUpon>SavedRecipeDetailPage.xaml</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiAsset Update="Resources\Raw\secrets.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiAsset>
 	</ItemGroup>
 
 	<ItemGroup>

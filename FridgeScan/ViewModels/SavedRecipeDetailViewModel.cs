@@ -8,6 +8,7 @@ namespace FridgeScan.ViewModels;
 public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributable
 {
     private readonly CookbookService _cookbookService;
+    private readonly FavouriteService _favouriteService;
 
     [ObservableProperty]
     private SavedRecipe? recipe;
@@ -15,9 +16,10 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     [ObservableProperty]
     private bool isLoading;
 
-    public SavedRecipeDetailViewModel(CookbookService cookbookService)
+    public SavedRecipeDetailViewModel(CookbookService cookbookService, FavouriteService favouriteService)
     {
         _cookbookService = cookbookService;
+        _favouriteService = favouriteService;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -34,7 +36,7 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         try
         {
             IsLoading = true;
-            Recipe = await _cookbookService.GetRecipeByIdAsync(recipeId);
+            Recipe = await _favouriteService.GetFavouriteByIdAsync(recipeId);
         }
         finally
         {
@@ -61,7 +63,7 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         var target = allCookbooks.First(c => c.Name == selected);
         Recipe.CookbookIds.Remove(target.RowId);
 
-        var success = await _cookbookService.UpdateRecipeCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
+        var success = await _favouriteService.UpdateFavouriteCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
         if (success && Recipe.CookbookIds.Count == 0)
         {
             await Shell.Current.GoToAsync("..");
@@ -91,6 +93,6 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
 
         var target = available.First(c => c.Name == selected);
         Recipe.CookbookIds.Add(target.RowId);
-        await _cookbookService.UpdateRecipeCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
+        await _favouriteService.UpdateFavouriteCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
     }
 }
