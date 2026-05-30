@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace FridgeScan.Models;
 
 public class SavedRecipe
