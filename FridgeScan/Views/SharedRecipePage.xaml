@@ -1,0 +1,54 @@
+<ContentPage
+    x:Class="FridgeScan.Views.SharedRecipePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons">
+
+    <Shell.NavBarIsVisible>True</Shell.NavBarIsVisible>
+
+    <Grid RowDefinitions="Auto,*" Padding="20">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Spacing="10">
+            <Label
+                FontAttributes="Bold"
+                FontSize="24"
+                Text="{Binding PageTitle}" />
+
+            <Label
+                FontSize="14"
+                Text="A recipe link was shared to FridgeScan."
+                TextColor="Gray" />
+
+            <BoxView HeightRequest="1" Color="LightGray" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <VerticalStackLayout Grid.Row="1" Spacing="16" VerticalOptions="Center">
+
+            <Label
+                FontSize="16"
+                Text="Shared URL:" />
+            <Label
+                FontSize="14"
+                Text="{Binding SharedUrl}"
+                TextColor="Gray"
+                LineBreakMode="CharacterWrap" />
+
+            <Label
+                FontSize="14"
+                Text="Import steps will be configured in a future update."
+                FontAttributes="Italic"
+                TextColor="Gray" />
+
+            <button:SfButton
+                Command="{Binding CloseCommand}"
+                CornerRadius="6"
+                HeightRequest="44"
+                HorizontalOptions="Center"
+                Text="Close"
+                WidthRequest="120" />
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>
