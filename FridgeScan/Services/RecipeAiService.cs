@@ -31,35 +31,35 @@ namespace FridgeScan.Services
         private async Task<RecipeSuggestion> GetFullRecipeDetailsInternalAsync(RecipeSuggestion recipe)
         {
             var template = @"
-You are a recipe generator.
+    You are a recipe generator.
 
-Given a recipe name and (optionally) a URL, return a JSON object with the following properties only:
+    Given a recipe name and (optionally) a URL, return a JSON object with the following properties only:
 
-{{
-  ""name"": ""..."",
-  ""ingredients"": [ ... ],
-  ""methodSteps"": [ ... ],
-  ""prep_time"": ""..."",      // optional, human-friendly
-  ""cookTime"": ""..."",      // optional, human-friendly
-  ""serving"": ""..."",       // optional
-  ""difficulty"": ""easy|medium|hard""
-}}
+    {{
+      ""name"": ""..."",
+      ""ingredients"": [ ... ],
+      ""methodSteps"": [ ... ],
+      ""prep_time"": ""..."",      // optional, human-friendly
+      ""cookTime"": ""..."",      // optional, human-friendly
+      ""serving"": ""..."",       // optional
+      ""difficulty"": ""easy|medium|hard""
+    }}
 
-Use the following inputs:
-- Recipe name: {name}
-- Ingredients: {ingredients}
-- URL: {url}
-- Dish type: {dishType}
-- Difficulty: {difficulty}
-- Total time: {totalTime}
+    Use the following inputs:
+    - Recipe name: {name}
+    - Ingredients: {ingredients}
+    - URL: {url}
+    - Dish type: {dishType}
+    - Difficulty: {difficulty}
+    - Total time: {totalTime}
 
-If the URL is provided, you may use it as context to infer accurate ingredients and steps. If not, infer a plausible full recipe based on the name and ingredients.
+    If the URL is provided, you may use it as context to infer accurate ingredients and steps. If not, infer a plausible full recipe based on the name and ingredients.
 
-Return only valid JSON with the fields above. Do not include any extra text.
+    Return only valid JSON with the fields above. Do not include any extra text.
 
-Rules:
-- Prefer recipes that use as many of the listed ingredients as possible.
-- It is OK if the recipe uses extra ingredients.
+    Rules:
+    - Prefer recipes that use as many of the listed ingredients as possible.
+    - It is OK if the recipe uses extra ingredients.
 ";
 
             var prompt = PromptTemplate.FromTemplate(template);

@@ -11,6 +11,9 @@ namespace FridgeScan;
     Categories = new[] { Android.Content.Intent.CategoryDefault, Android.Content.Intent.CategoryBrowsable },
     DataSchemes = new[] { "msalf6c0b2ba-e930-44c0-97e3-00ca28a3cdf3" },
     DataHosts = new[] { "auth" })]
+[IntentFilter(new[] { Android.Content.Intent.ActionSend },
+    Categories = new[] { Android.Content.Intent.CategoryDefault },
+    DataMimeType = "text/plain")]
 public class MainActivity : MauiAppCompatActivity
 {
     protected override void OnCreate(Bundle savedInstanceState)
@@ -18,6 +21,24 @@ public class MainActivity : MauiAppCompatActivity
         base.OnCreate(savedInstanceState);
         // Ensure MAUI platform is initialized so Platform.CurrentActivity is available for MSAL
         Microsoft.Maui.ApplicationModel.Platform.Init(this, savedInstanceState);
+
+        // Handle cold-start share intent
+        HandleShareIntent(Intent);
+    }
+
+    private void HandleShareIntent(Android.Content.Intent intent)
+    {
+        if (intent?.Action == Android.Content.Intent.ActionSend && intent?.Type == "text/plain")
+        {
+            var sharedText = intent.GetStringExtra(Android.Content.Intent.ExtraText);
+            if (!string.IsNullOrWhiteSpace(sharedText))
+            {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await Shell.Current.GoToAsync($"SharedRecipe?url={Uri.EscapeDataString(sharedText)}");
+                });
+            }
+        }
     }
 
     protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Android.Content.Intent data)
@@ -30,18 +51,15 @@ public class MainActivity : MauiAppCompatActivity
     protected override void OnNewIntent(Android.Content.Intent intent)
     {
         base.OnNewIntent(intent);
-        try
+
+        if (intent?.Action == Android.Content.Intent.ActionSend && intent?.Type == "text/plain")
         {
-            // Let MAUI handle the intent and log the incoming data for debugging
-            Microsoft.Maui.ApplicationModel.Platform.OnNewIntent(intent);
-            var data = intent?.DataString ?? "<no-data>";
-            Android.Util.Log.Debug("FridgeScan", "OnNewIntent received: " + data);
-            AuthenticationContinuationHelper.SetAuthenticationContinuationEventArgs(0, Result.Ok, intent);
-            // Notify the shared app that a redirect was received so awaiting flows can resume
+            HandleShareIntent(intent);
         }
-        catch (Exception ex)
+        else
         {
-            Android.Util.Log.Error("FridgeScan", "OnNewIntent error: " + ex);
+            // Existing MSAL auth redirect handling
+            AuthenticationContinuationHelper.SetAuthenticationContinuationEventArgs(0, Result.Ok, intent);
         }
     }
 }

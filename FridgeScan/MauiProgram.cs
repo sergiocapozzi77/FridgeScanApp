@@ -33,6 +33,7 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<ActivitiesViewModel>();
         builder.Services.AddSingleton<RecipeViewModel>();
         builder.Services.AddSingleton<RecipeDetailsViewModel>();
+        builder.Services.AddSingleton<SharedRecipeViewModel>();
 
         builder.Services.AddSingleton<EmailService>();
 
@@ -64,6 +65,7 @@ public static partial class MauiProgram
         builder.Services.AddTransient<Views.ImportPage>();
         builder.Services.AddTransient<Views.RecipePage>();
         builder.Services.AddTransient<Views.RecipeDetailsPage>();
+        builder.Services.AddTransient<Views.SharedRecipePage>();
 
 #if ANDROID || IOS || MACCATALYST
         // Initialize Syncfusion license (replace with your license key)
