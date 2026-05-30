@@ -2,7 +2,8 @@
     x:Class="FridgeScan.Views.SharedRecipePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons">
+    xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core">
 
     <Shell.NavBarIsVisible>True</Shell.NavBarIsVisible>
 
@@ -17,38 +18,84 @@
 
             <Label
                 FontSize="14"
-                Text="A recipe link was shared to FridgeScan."
-                TextColor="Gray" />
+                Text="{Binding SharedUrl}"
+                TextColor="Gray"
+                LineBreakMode="TailTruncation" />
 
             <BoxView HeightRequest="1" Color="LightGray" />
         </VerticalStackLayout>
 
         <!-- Content -->
-        <VerticalStackLayout Grid.Row="1" Spacing="16" VerticalOptions="Center">
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="12">
 
-            <Label
-                FontSize="16"
-                Text="Shared URL:" />
-            <Label
-                FontSize="14"
-                Text="{Binding SharedUrl}"
-                TextColor="Gray"
-                LineBreakMode="CharacterWrap" />
+                <!-- Loading -->
+                <VerticalStackLayout IsVisible="{Binding IsLoading}" Spacing="8" VerticalOptions="Center" HorizontalOptions="Center" Padding="0,40">
+                    <sfBusy:SfBusyIndicator
+                        AnimationType="CircularMaterial"
+                        IsRunning="{Binding IsLoading}"
+                        HorizontalOptions="Center"
+                        HeightRequest="60"
+                        WidthRequest="60" />
+                    <Label Text="Importing recipe..." HorizontalOptions="Center" TextColor="Gray" />
+                </VerticalStackLayout>
 
-            <Label
-                FontSize="14"
-                Text="Import steps will be configured in a future update."
-                FontAttributes="Italic"
-                TextColor="Gray" />
+                <!-- Imported recipe -->
+                <VerticalStackLayout IsVisible="{Binding HasRecipe}" Spacing="12">
 
-            <button:SfButton
-                Command="{Binding CloseCommand}"
-                CornerRadius="6"
-                HeightRequest="44"
-                HorizontalOptions="Center"
-                Text="Close"
-                WidthRequest="120" />
-        </VerticalStackLayout>
+                    <Label FontSize="20" FontAttributes="Bold" Text="{Binding ImportedRecipe.Name}" />
 
+                    <Image
+                        Source="{Binding ImportedRecipe.ImageUrl}"
+                        Aspect="AspectFill"
+                        HeightRequest="200" />
+
+                    <HorizontalStackLayout Spacing="16">
+                        <Label FontSize="14" Text="{Binding ImportedRecipe.PrepTime, StringFormat='Prep: {0}'}" TextColor="Gray" />
+                        <Label FontSize="14" Text="{Binding ImportedRecipe.CookTime, StringFormat='Cook: {0}'}" TextColor="Gray" />
+                        <Label FontSize="14" Text="{Binding ImportedRecipe.Difficulty}" TextColor="Gray" />
+                        <Label FontSize="14" Text="{Binding ImportedRecipe.Serving, StringFormat='Serves: {0}'}" TextColor="Gray" />
+                    </HorizontalStackLayout>
+
+                    <Label FontSize="16" FontAttributes="Bold" Text="Ingredients" Margin="0,8,0,0" />
+                    <CollectionView ItemsSource="{Binding ImportedRecipe.Ingredients}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Label FontSize="14" Text="{Binding .}" Padding="4,2" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label FontSize="16" FontAttributes="Bold" Text="Method" Margin="0,8,0,0" />
+                    <CollectionView ItemsSource="{Binding ImportedRecipe.MethodSteps}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <HorizontalStackLayout Padding="4,4" Spacing="8">
+                                    <Label FontSize="14" Text="&#x2022;" />
+                                    <Label FontSize="14" Text="{Binding .}" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Error state -->
+                <Label
+                    IsVisible="{Binding HasError}"
+                    FontSize="14"
+                    Text="Could not import recipe from this URL."
+                    TextColor="Gray"
+                    HorizontalOptions="Center"
+                    Padding="0,40" />
+
+                <button:SfButton
+                    Command="{Binding CloseCommand}"
+                    CornerRadius="6"
+                    HeightRequest="44"
+                    HorizontalOptions="Center"
+                    Text="Close"
+                    WidthRequest="120" />
+            </VerticalStackLayout>
+        </ScrollView>
     </Grid>
 </ContentPage>

@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
+using FridgeScan.Services.RecipeImport;
 
 namespace FridgeScan;
 
@@ -34,6 +35,15 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<RecipeViewModel>();
         builder.Services.AddSingleton<RecipeDetailsViewModel>();
         builder.Services.AddSingleton<SharedRecipeViewModel>();
+
+        // Recipe import pipeline
+        builder.Services.AddSingleton<IRecipeImageExtractor, RecipeImageExtractor>();
+        builder.Services.AddSingleton<IRecipeIngredientParser, RecipeIngredientParser>();
+        builder.Services.AddSingleton<IRecipeExtractor, JsonLdRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeExtractor, NextDataRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeExtractor, PostContentRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeExtractor, MicrodataRecipeExtractor>();
+        builder.Services.AddSingleton<RecipeImportService>();
 
         builder.Services.AddSingleton<EmailService>();
 
