@@ -1,0 +1,177 @@
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FridgeScan.Models;
+using FridgeScan.Services;
+
+namespace FridgeScan.ViewModels;
+
+public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
+{
+    private readonly CookbookService _cookbookService;
+
+    [ObservableProperty]
+    private Cookbook? cookbook;
+
+    [ObservableProperty]
+    private ObservableCollection<SavedRecipe> recipes = new();
+
+    [ObservableProperty]
+    private bool isLoading;
+
+    private string _cookbookId = string.Empty;
+
+    public CookbookDetailViewModel(CookbookService cookbookService)
+    {
+        _cookbookService = cookbookService;
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("CookbookId", out var id))
+        {
+            _cookbookId = id?.ToString() ?? string.Empty;
+        }
+        if (query.TryGetValue("CookbookName", out var name))
+        {
+            Cookbook = new Cookbook
+            {
+                RowId = _cookbookId,
+                Name = name?.ToString() ?? string.Empty
+            };
+        }
+        _ = LoadRecipesAsync();
+    }
+
+    [RelayCommand]
+    private async Task LoadRecipes()
+    {
+        if (IsLoading || string.IsNullOrEmpty(_cookbookId)) return;
+        await LoadRecipesAsync();
+    }
+
+    private async Task LoadRecipesAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            var list = await _cookbookService.GetRecipesByCookbookIdAsync(_cookbookId);
+            Recipes = new ObservableCollection<SavedRecipe>(list);
+            if (Cookbook != null)
+                Cookbook.RecipeCount = list.Count;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading recipes: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenRecipe(SavedRecipe recipe)
+    {
+        var parameters = new Dictionary<string, object>
+        {
+            { "RecipeId", recipe.RowId }
+        };
+        await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
+    }
+
+    [RelayCommand]
+    private async Task EditRecipe(SavedRecipe recipe)
+    {
+        var action = await Shell.Current.DisplayActionSheet(
+            recipe.Name ?? "Recipe", "Cancel", null,
+            "Remove from cookbook", "Move to another cookbook");
+
+        switch (action)
+        {
+            case "Remove from cookbook":
+                await RemoveRecipeFromCookbook(recipe);
+                break;
+            case "Move to another cookbook":
+                await MoveRecipeToCookbook(recipe);
+                break;
+        }
+    }
+
+    private async Task RemoveRecipeFromCookbook(SavedRecipe recipe)
+    {
+        var confirmed = await Shell.Current.DisplayAlert("Remove",
+            $"Remove \"{recipe.Name}\" from {Cookbook?.Name}?", "Remove", "Cancel");
+        if (!confirmed) return;
+
+        recipe.CookbookIds.Remove(_cookbookId);
+        var success = await _cookbookService.UpdateRecipeCookbooksAsync(recipe.RowId, recipe.CookbookIds);
+        if (success)
+        {
+            Recipes.Remove(recipe);
+            if (Cookbook != null) Cookbook.RecipeCount = Recipes.Count;
+        }
+    }
+
+    private async Task MoveRecipeToCookbook(SavedRecipe recipe)
+    {
+        var allCookbooks = await _cookbookService.GetCookbooksAsync();
+        var targetNames = allCookbooks
+            .Where(c => c.RowId != _cookbookId)
+            .Select(c => c.Name)
+            .ToArray();
+
+        if (targetNames.Length == 0)
+        {
+            await Shell.Current.DisplayAlert("Info", "No other cookbooks exist.", "OK");
+            return;
+        }
+
+        var selected = await Shell.Current.DisplayActionSheet("Move to...", "Cancel", null, targetNames);
+        if (selected == null || selected == "Cancel") return;
+
+        var target = allCookbooks.First(c => c.Name == selected);
+
+        recipe.CookbookIds.Remove(_cookbookId);
+        if (!recipe.CookbookIds.Contains(target.RowId))
+            recipe.CookbookIds.Add(target.RowId);
+
+        var success = await _cookbookService.UpdateRecipeCookbooksAsync(recipe.RowId, recipe.CookbookIds);
+        if (success)
+        {
+            Recipes.Remove(recipe);
+            if (Cookbook != null) Cookbook.RecipeCount = Recipes.Count;
+        }
+    }
+
+    [RelayCommand]
+    private async Task RenameCookbook()
+    {
+        if (Cookbook == null) return;
+        var newName = await Shell.Current.DisplayPromptAsync("Rename",
+            "Enter new name:", "Rename", "Cancel", initialValue: Cookbook.Name);
+        if (string.IsNullOrWhiteSpace(newName)) return;
+
+        var success = await _cookbookService.RenameCookbookAsync(Cookbook.RowId, newName.Trim());
+        if (success)
+        {
+            Cookbook.Name = newName.Trim();
+            OnPropertyChanged(nameof(Cookbook));
+        }
+    }
+
+    [RelayCommand]
+    private async Task DeleteCookbook()
+    {
+        if (Cookbook == null) return;
+        var confirmed = await Shell.Current.DisplayAlert("Delete",
+            $"Delete \"{Cookbook.Name}\"? Recipes will be kept.", "Delete", "Cancel");
+        if (!confirmed) return;
+
+        var success = await _cookbookService.DeleteCookbookAsync(Cookbook.RowId);
+        if (success)
+        {
+            await Shell.Current.GoToAsync("..");
+        }
+    }
+}
