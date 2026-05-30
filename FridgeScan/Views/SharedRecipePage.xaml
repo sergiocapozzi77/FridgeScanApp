@@ -88,13 +88,25 @@
                     HorizontalOptions="Center"
                     Padding="0,40" />
 
-                <button:SfButton
-                    Command="{Binding CloseCommand}"
-                    CornerRadius="6"
-                    HeightRequest="44"
-                    HorizontalOptions="Center"
-                    Text="Close"
-                    WidthRequest="120" />
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <button:SfButton
+                        Command="{Binding CloseCommand}"
+                        CornerRadius="6"
+                        HeightRequest="44"
+                        HorizontalOptions="Center"
+                        Text="Close"
+                        WidthRequest="120" />
+                    <button:SfButton
+                        Command="{Binding SaveToCookbookCommand}"
+                        CornerRadius="6"
+                        HeightRequest="44"
+                        HorizontalOptions="Center"
+                        Text="Save to Cookbook"
+                        IsVisible="{Binding HasRecipe}"
+                        BackgroundColor="#4a90d9"
+                        TextColor="White"
+                        WidthRequest="160" />
+                </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

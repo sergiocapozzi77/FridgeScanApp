@@ -41,5 +41,14 @@
             </ShellContent.Icon>
 
         </ShellContent>
+        <ShellContent
+            Title="Cookbooks"
+            ContentTemplate="{DataTemplate views:CookbookPage}">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="Material"
+                    Glyph="&#xe86d;" />
+            </ShellContent.Icon>
+        </ShellContent>
     </TabBar>
 </Shell>

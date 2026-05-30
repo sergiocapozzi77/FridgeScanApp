@@ -80,4 +80,35 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
     {
         await Shell.Current.GoToAsync("..");
     }
+
+    [RelayCommand]
+    private async Task SaveToCookbook()
+    {
+        if (ImportedRecipe == null) return;
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "Name", ImportedRecipe.Name ?? string.Empty },
+            { "Url", ImportedRecipe.Url ?? string.Empty },
+            { "ImageUrl", ImportedRecipe.ImageUrl ?? string.Empty },
+            { "Description", GetDescription(ImportedRecipe) },
+            { "Difficulty", ImportedRecipe.Difficulty ?? string.Empty },
+            { "TotalTime", ImportedRecipe.CookTime ?? ImportedRecipe.PrepTime ?? string.Empty },
+            { "RecipeSource", ImportedRecipe.RecipeSource ?? string.Empty },
+            { "Ingredients", ImportedRecipe.Ingredients },
+            { "MethodSteps", ImportedRecipe.MethodSteps }
+        };
+
+        await Shell.Current.GoToAsync($"../{"RecipePreviewPage"}", parameters);
+    }
+
+    private static string GetDescription(RecipeSuggestion recipe)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(recipe.DishType))
+            parts.Add(recipe.DishType);
+        if (!string.IsNullOrWhiteSpace(recipe.Serving))
+            parts.Add($"Serves {recipe.Serving}");
+        return string.Join(" \u00b7 ", parts);
+    }
 }
