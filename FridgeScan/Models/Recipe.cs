@@ -23,7 +23,6 @@ namespace FridgeScan.Models
         public List<string> MethodSteps { get; set; } = new();
         public List<string> Nutritions { get; set; } = new();
         public string DishType { get; internal set; }
-        public List<ParsedIngredient>? ParsedIngredients { get; set; }
     }
 
 }

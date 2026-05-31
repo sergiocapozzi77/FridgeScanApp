@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using CommunityToolkit.Maui.Alerts;
 using FridgeScan.Models;
 using FridgeScan.Services;
 using FridgeScan.Services.RecipeImport;
@@ -16,10 +17,10 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
     private string sharedUrl = string.Empty;
 
     [ObservableProperty]
-    private string pageTitle = "Import Recipe";
+    private string pageTitle = "Importing...";
 
     [ObservableProperty]
-    private bool isLoading;
+    private bool isLoading = true;
 
     [ObservableProperty]
     private RecipeSuggestion? importedRecipe;
@@ -41,6 +42,22 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
 
     [ObservableProperty]
     private bool isSaving;
+
+    [ObservableProperty]
+    private Cookbook? selectedCookbook;
+
+    partial void OnSelectedCookbookChanged(Cookbook? value)
+    {
+        if (value == null) return;
+
+        value.IsSelected = !value.IsSelected;
+        if (value.IsSelected)
+            SelectedCookbooks.Add(value);
+        else
+            SelectedCookbooks.Remove(value);
+
+        SelectedCookbook = null;
+    }
 
     public bool HasPrepTime => !string.IsNullOrWhiteSpace(ImportedRecipe?.PrepTime);
     public bool HasCookTime => !string.IsNullOrWhiteSpace(ImportedRecipe?.CookTime);
@@ -74,7 +91,16 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
         {
             var decoded = Uri.UnescapeDataString(url?.ToString() ?? string.Empty);
             SharedUrl = decoded;
+            IsLoading = true;
+            HasError = false;
+            PageTitle = "Importing...";
             _ = ImportRecipeAsync(decoded);
+        }
+        else
+        {
+            IsLoading = false;
+            HasError = true;
+            PageTitle = "Import Failed";
         }
     }
 
@@ -140,16 +166,6 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
     }
 
     [RelayCommand]
-    private void ToggleCookbookSelection(Cookbook cookbook)
-    {
-        cookbook.IsSelected = !cookbook.IsSelected;
-        if (cookbook.IsSelected)
-            SelectedCookbooks.Add(cookbook);
-        else
-            SelectedCookbooks.Remove(cookbook);
-    }
-
-    [RelayCommand]
     private async Task CreateAndAddCookbook()
     {
         var name = await Shell.Current.DisplayPromptAsync("New Cookbook",
@@ -191,14 +207,19 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
                 RecipeSource = ImportedRecipe.RecipeSource ?? string.Empty,
                 Ingredients = ImportedRecipe.Ingredients,
                 MethodSteps = ImportedRecipe.MethodSteps,
-                ParsedIngredients = GetSavedIngredients(ImportedRecipe.ParsedIngredients),
                 CookbookIds = SelectedCookbooks.Select(c => c.RowId).ToList()
             };
 
             var saved = await _favouriteService.SaveFavouriteAsync(recipe);
             if (saved != null)
             {
+                var toast = Toast.Make("Recipe saved!");
+                await toast.Show();
                 await Shell.Current.GoToAsync("..");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to save recipe. Check the debug log for details.", "OK");
             }
         }
         catch (Exception ex)
@@ -228,16 +249,4 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
         return string.Join(" \u00b7 ", parts);
     }
 
-    private static List<SavedIngredient> GetSavedIngredients(List<ParsedIngredient>? ingredients)
-    {
-        if (ingredients == null || ingredients.Count == 0) return new();
-        return ingredients.Select(i => new SavedIngredient
-        {
-            Quantity = i.Quantity,
-            Unit = i.Unit,
-            Name = i.Name,
-            Notes = i.Notes,
-            Original = i.Original
-        }).ToList();
-    }
 }

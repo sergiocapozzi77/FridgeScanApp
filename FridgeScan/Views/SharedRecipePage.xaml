@@ -117,28 +117,30 @@
             <!-- Cookbook selection panel -->
             <VerticalStackLayout Spacing="12" IsVisible="{Binding IsCookbookPanelVisible}">
                 <Label Text="Save to Cookbook" FontSize="15" FontAttributes="Bold" />
-                <CollectionView ItemsSource="{Binding AllCookbooks}" SelectionMode="None" HeightRequest="44">
+                <CollectionView ItemsSource="{Binding AllCookbooks}"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedCookbook}"
+                                HeightRequest="44">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Cookbook">
-                            <Frame Padding="14,8" CornerRadius="20" BorderColor="#555"
-                                   BackgroundColor="Transparent" HasShadow="False"
-                                   VerticalOptions="Center">
-                                <Frame.Triggers>
-                                    <DataTrigger TargetType="Frame" Binding="{Binding IsSelected}" Value="True">
+                        <DataTemplate>
+                            <Border StrokeShape="RoundRectangle 20"
+                                    Stroke="#555"
+                                    StrokeThickness="1"
+                                    BackgroundColor="Transparent"
+                                    Padding="16,8"
+                                    HeightRequest="36">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
                                         <Setter Property="BackgroundColor" Value="#4a90d9" />
-                                        <Setter Property="BorderColor" Value="#4a90d9" />
+                                        <Setter Property="Stroke" Value="#4a90d9" />
                                     </DataTrigger>
-                                </Frame.Triggers>
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={x:Reference thisPage}, Path=BindingContext.ToggleCookbookSelectionCommand}"
-                                        CommandParameter="{Binding}" />
-                                </Frame.GestureRecognizers>
-                                <Label Text="{Binding Name}" FontSize="13" VerticalOptions="Center" HorizontalOptions="Center" />
-                            </Frame>
+                                </Border.Triggers>
+                                <Label Text="{Binding Name}" FontSize="13"
+                                       VerticalOptions="Center" HorizontalOptions="Center" />
+                            </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -161,8 +163,7 @@
                         Command="{Binding SaveCommand}"
                         CornerRadius="6"
                         HeightRequest="44"
-                        Text="Save Recipe"
-                        BackgroundColor="#4a90d9" />
+                        Text="Save Recipe"/>
                 </Grid>
             </VerticalStackLayout>
         </Grid>

@@ -4,16 +4,13 @@ public class RecipeImportService
 {
     private readonly IReadOnlyList<IRecipeExtractor> _extractors;
     private readonly IRecipeImageExtractor _imageExtractor;
-    private readonly IRecipeIngredientParser _ingredientParser;
 
     public RecipeImportService(
         IEnumerable<IRecipeExtractor> extractors,
-        IRecipeImageExtractor imageExtractor,
-        IRecipeIngredientParser ingredientParser)
+        IRecipeImageExtractor imageExtractor)
     {
         _extractors = extractors.OrderByDescending(e => e.Priority).ToList();
         _imageExtractor = imageExtractor;
-        _ingredientParser = ingredientParser;
     }
 
     public async Task<RecipeSuggestion?> ImportFromUrlAsync(string url)
@@ -42,16 +39,6 @@ public class RecipeImportService
         if (!merged.Success)
             return null;
 
-        List<ParsedIngredient> parsedIngredients = new();
-        if (merged.Ingredients is { Count: > 0 })
-        {
-            parsedIngredients = _ingredientParser.Parse(merged.Ingredients);
-            for (int i = 0; i < parsedIngredients.Count && i < merged.Ingredients.Count; i++)
-            {
-                parsedIngredients[i].Original = merged.Ingredients[i];
-            }
-        }
-
         var images = await _imageExtractor.ExtractImagesAsync(html, baseUrl);
 
         var recipe = new RecipeSuggestion
@@ -67,7 +54,6 @@ public class RecipeImportService
             ImageUrl = merged.ImageUrl ?? (images.FirstOrDefault()?.Url ?? string.Empty),
             RecipeSource = merged.RecipeSource ?? "import",
             Nutritions = merged.Nutritions ?? new List<string>(),
-            ParsedIngredients = parsedIngredients,
         };
 
         return recipe;
