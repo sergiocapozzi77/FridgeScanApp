@@ -35,21 +35,21 @@ public class NextDataRecipeExtractor : RecipeExtractor
         if (schema is JArray schemaArr)
         {
             schema = schemaArr.FirstOrDefault(x =>
-                string.Equals((string?)x["@type"], "Recipe", StringComparison.OrdinalIgnoreCase));
+                string.Equals(SafeString(x?["@type"]), "Recipe", StringComparison.OrdinalIgnoreCase));
         }
 
         result.Success = true;
         result.RecipeSource = "next-data";
 
-        result.Name = SanitizeText((string?)pp["title"]);
-        result.Servings = SanitizeText((string?)pp["servings"]);
-        result.Difficulty = SanitizeText((string?)pp["skillLevel"]);
+        result.Name = SanitizeText(SafeString(pp["title"]));
+        result.Servings = SanitizeText(SafeString(pp["servings"]));
+        result.Difficulty = SanitizeText(SafeString(pp["skillLevel"]));
 
         if (schema is JObject schemaObj)
         {
-            result.PrepTime = ParseIso8601Duration((string?)schemaObj["prepTime"]);
-            result.CookTime = ParseIso8601Duration((string?)schemaObj["cookTime"]);
-            result.Name ??= SanitizeText((string?)schemaObj["name"]);
+            result.PrepTime = ParseIso8601Duration(SafeString(schemaObj["prepTime"]));
+            result.CookTime = ParseIso8601Duration(SafeString(schemaObj["cookTime"]));
+            result.Name ??= SanitizeText(SafeString(schemaObj["name"]));
 
             if (schemaObj["recipeIngredient"] is JArray ingredients)
                 result.Ingredients = ingredients
@@ -78,9 +78,9 @@ public class NextDataRecipeExtractor : RecipeExtractor
 
             foreach (var item in items)
             {
-                var qty = (string?)item["quantityText"] ?? "";
-                var ing = (string?)item["ingredientText"] ?? "";
-                var note = (string?)item["note"] ?? "";
+                var qty = SafeString(item["quantityText"]) ?? "";
+                var ing = SafeString(item["ingredientText"]) ?? "";
+                var note = SafeString(item["note"]) ?? "";
                 var line = string.IsNullOrEmpty(qty) ? ing : $"{qty} {ing}";
                 if (!string.IsNullOrEmpty(note)) line = $"{line}, {note}";
                 line = SanitizeText(line);
@@ -102,7 +102,7 @@ public class NextDataRecipeExtractor : RecipeExtractor
             if (section["steps"] is not JArray steps) continue;
             foreach (var step in steps)
             {
-                var text = SanitizeText((string?)step["description"] ?? (string?)step["text"]);
+                var text = SanitizeText(SafeString(step["description"]) ?? SafeString(step["text"]));
                 if (!string.IsNullOrWhiteSpace(text))
                     result.Add(text);
             }

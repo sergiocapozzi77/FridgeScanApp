@@ -16,6 +16,12 @@ namespace FridgeScan;
     DataMimeType = "text/plain")]
 public class MainActivity : MauiAppCompatActivity
 {
+    /// <summary>
+    /// Holds a pending share URL until Shell is ready for navigation.
+    /// Set during HandleShareIntent, consumed in ProcessPendingShareUrl.
+    /// </summary>
+    private static string? _pendingShareUrl;
+
     protected override void OnCreate(Bundle savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
@@ -26,6 +32,13 @@ public class MainActivity : MauiAppCompatActivity
         HandleShareIntent(Intent);
     }
 
+    protected override void OnResume()
+    {
+        base.OnResume();
+        // Shell is guaranteed to be initialised by the time OnResume fires.
+        ProcessPendingShareUrl();
+    }
+
     private void HandleShareIntent(Android.Content.Intent intent)
     {
         if (intent?.Action == Android.Content.Intent.ActionSend && intent?.Type == "text/plain")
@@ -33,11 +46,34 @@ public class MainActivity : MauiAppCompatActivity
             var sharedText = intent.GetStringExtra(Android.Content.Intent.ExtraText);
             if (!string.IsNullOrWhiteSpace(sharedText))
             {
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    await Shell.Current.GoToAsync($"SharedRecipe?url={Uri.EscapeDataString(sharedText)}");
-                });
+                _pendingShareUrl = Uri.EscapeDataString(sharedText);
+                // Try now in case Shell is already available (warm start via OnNewIntent)
+                ProcessPendingShareUrl();
             }
+        }
+    }
+
+    private void ProcessPendingShareUrl()
+    {
+        if (_pendingShareUrl == null) return;
+        if (Shell.Current == null) return; // still too early — OnResume will retry
+
+        var url = _pendingShareUrl;
+        _pendingShareUrl = null;          // consume the URL
+
+        MainThread.BeginInvokeOnMainThread(() =>
+            _ = NavigateToSharedRecipeAsync(url));
+    }
+
+    private static async Task NavigateToSharedRecipeAsync(string escapedUrl)
+    {
+        try
+        {
+            await Shell.Current.GoToAsync($"SharedRecipePage?url={escapedUrl}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ShareIntent navigation failed: {ex}");
         }
     }
 

@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:models="clr-namespace:FridgeScan.Models"
     Title="{Binding Recipe.Name}">
 
     <Grid>
@@ -19,11 +20,11 @@
                     <Label Text="{Binding Recipe.Description}" FontSize="14" LineBreakMode="WordWrap" />
                     <Label Text="Ingredients" FontSize="16" FontAttributes="Bold" Margin="0,12,0,6" />
                     <Frame BackgroundColor="#252525" BorderColor="Transparent" CornerRadius="10" Padding="0" HasShadow="False">
-                        <CollectionView ItemsSource="{Binding Recipe.Ingredients}" SelectionMode="None">
+                        <CollectionView ItemsSource="{Binding Recipe.DisplayIngredients}" SelectionMode="None">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
+                                <DataTemplate x:DataType="models:SavedIngredient">
                                     <Grid Padding="14,10" ColumnDefinitions="Auto,*">
-                                        <Label Grid.Column="1" Text="{Binding .}" FontSize="14" />
+                                        <Label Grid.Column="1" Text="{Binding DisplayText}" FontSize="14" />
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

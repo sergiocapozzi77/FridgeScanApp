@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace FridgeScan.Models;
 
 public class SavedRecipe
@@ -14,4 +16,15 @@ public class SavedRecipe
     public List<string> CookbookIds { get; set; } = new();
     public List<string> Ingredients { get; set; } = new();
     public List<string> MethodSteps { get; set; } = new();
+    public List<SavedIngredient> ParsedIngredients { get; set; } = new();
+
+    [JsonIgnore]
+    public List<SavedIngredient> DisplayIngredients =>
+        ParsedIngredients.Count > 0
+            ? ParsedIngredients
+            : LegacyFallbackIngredients;
+
+    [JsonIgnore]
+    private List<SavedIngredient> LegacyFallbackIngredients =>
+        Ingredients.Select(i => new SavedIngredient { Name = i, Original = i }).ToList();
 }

@@ -20,18 +20,18 @@ public class JsonLdRecipeExtractor : RecipeExtractor
         result.Success = true;
         result.RecipeSource = "json-ld";
 
-        result.Name = SanitizeText((string?)schema["name"]);
-        result.Description = SanitizeText((string?)schema["description"]);
-        result.PrepTime = ParseIso8601Duration((string?)schema["prepTime"]);
-        result.CookTime = ParseIso8601Duration((string?)schema["cookTime"]);
-        result.Servings = SanitizeText((string?)schema["recipeYield"]);
+        result.Name = SanitizeText(SafeString(schema["name"]));
+        result.Description = SanitizeText(SafeString(schema["description"]));
+        result.PrepTime = ParseIso8601Duration(SafeString(schema["prepTime"]));
+        result.CookTime = ParseIso8601Duration(SafeString(schema["cookTime"]));
+        result.Servings = SanitizeText(SafeString(schema["recipeYield"]));
 
         result.ImageUrl = ExtractImageUrl(schema["image"]);
 
         if (schema["author"] is JObject author)
-            result.Author = SanitizeText((string?)author["name"]);
+            result.Author = SanitizeText(SafeString(author["name"]));
         else
-            result.Author = SanitizeText((string?)schema["author"]);
+            result.Author = SanitizeText(SafeString(schema["author"]));
 
         if (schema["recipeIngredient"] is JArray ingredients)
         {
@@ -93,20 +93,20 @@ public class JsonLdRecipeExtractor : RecipeExtractor
 
     private static JObject? FindRecipeInNode(JToken node)
     {
-        if (node is JObject obj && string.Equals((string?)obj["@type"], "Recipe", StringComparison.OrdinalIgnoreCase))
+        if (node is JObject obj && string.Equals(SafeString(obj["@type"]), "Recipe", StringComparison.OrdinalIgnoreCase))
             return obj;
 
         if (node is JObject root && root["@graph"] is JArray graph)
         {
             foreach (var item in graph)
             {
-                if (item is JObject go && string.Equals((string?)go["@type"], "Recipe", StringComparison.OrdinalIgnoreCase))
+                if (item is JObject go && string.Equals(SafeString(go["@type"]), "Recipe", StringComparison.OrdinalIgnoreCase))
                     return go;
             }
         }
 
         if (node is JObject root2 && root2["mainEntity"] is JObject me &&
-            string.Equals((string?)me["@type"], "Recipe", StringComparison.OrdinalIgnoreCase))
+            string.Equals(SafeString(me["@type"]), "Recipe", StringComparison.OrdinalIgnoreCase))
             return me;
 
         return null;
@@ -133,11 +133,11 @@ public class JsonLdRecipeExtractor : RecipeExtractor
     private static string ExtractInstructionText(JToken step)
     {
         if (step is JObject obj && obj.TryGetValue("text", out var textToken))
-            return SanitizeText(textToken?.ToString());
+            return SanitizeText(SafeString(textToken));
 
         if (step is JValue jv)
             return SanitizeText(jv.ToString());
 
         return SanitizeText(step?.ToString());
-    }
+}
 }

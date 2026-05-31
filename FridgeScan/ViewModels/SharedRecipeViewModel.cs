@@ -1,3 +1,7 @@
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using FridgeScan.Models;
+using FridgeScan.Services;
 using FridgeScan.Services.RecipeImport;
 
 namespace FridgeScan.ViewModels;
@@ -5,6 +9,8 @@ namespace FridgeScan.ViewModels;
 public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
 {
     private readonly RecipeImportService _importService;
+    private readonly CookbookService _cookbookService;
+    private readonly FavouriteService _favouriteService;
 
     [ObservableProperty]
     private string sharedUrl = string.Empty;
@@ -24,9 +30,42 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
     [ObservableProperty]
     private bool hasError;
 
-    public SharedRecipeViewModel(RecipeImportService importService)
+    [ObservableProperty]
+    private ObservableCollection<Cookbook> allCookbooks = new();
+
+    [ObservableProperty]
+    private ObservableCollection<Cookbook> selectedCookbooks = new();
+
+    [ObservableProperty]
+    private bool isCookbookPanelVisible;
+
+    [ObservableProperty]
+    private bool isSaving;
+
+    public bool HasPrepTime => !string.IsNullOrWhiteSpace(ImportedRecipe?.PrepTime);
+    public bool HasCookTime => !string.IsNullOrWhiteSpace(ImportedRecipe?.CookTime);
+    public bool HasServing => !string.IsNullOrWhiteSpace(ImportedRecipe?.Serving);
+    public bool ShowDefaultButtons => !IsCookbookPanelVisible;
+
+    partial void OnImportedRecipeChanged(RecipeSuggestion? value)
+    {
+        OnPropertyChanged(nameof(HasPrepTime));
+        OnPropertyChanged(nameof(HasCookTime));
+        OnPropertyChanged(nameof(HasServing));
+        if (value != null)
+            _ = LoadCookbooksAsync();
+    }
+
+    partial void OnIsCookbookPanelVisibleChanged(bool value)
+    {
+        OnPropertyChanged(nameof(ShowDefaultButtons));
+    }
+
+    public SharedRecipeViewModel(RecipeImportService importService, CookbookService cookbookService, FavouriteService favouriteService)
     {
         _importService = importService;
+        _cookbookService = cookbookService;
+        _favouriteService = favouriteService;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -75,31 +114,108 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
         }
     }
 
+    private async Task LoadCookbooksAsync()
+    {
+        try
+        {
+            var cookbooks = await _cookbookService.GetCookbooksAsync();
+            AllCookbooks = new ObservableCollection<Cookbook>(cookbooks);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading cookbooks: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void ShowCookbookPanel()
+    {
+        IsCookbookPanelVisible = true;
+    }
+
+    [RelayCommand]
+    private void HideCookbookPanel()
+    {
+        IsCookbookPanelVisible = false;
+    }
+
+    [RelayCommand]
+    private void ToggleCookbookSelection(Cookbook cookbook)
+    {
+        cookbook.IsSelected = !cookbook.IsSelected;
+        if (cookbook.IsSelected)
+            SelectedCookbooks.Add(cookbook);
+        else
+            SelectedCookbooks.Remove(cookbook);
+    }
+
+    [RelayCommand]
+    private async Task CreateAndAddCookbook()
+    {
+        var name = await Shell.Current.DisplayPromptAsync("New Cookbook",
+            "Enter a name:", "Create", "Cancel");
+        if (string.IsNullOrWhiteSpace(name)) return;
+
+        var created = await _cookbookService.CreateCookbookAsync(name.Trim());
+        if (created != null)
+        {
+            AllCookbooks.Add(created);
+            SelectedCookbooks.Add(created);
+        }
+    }
+
+    [RelayCommand]
+    private async Task Save()
+    {
+        if (ImportedRecipe == null) return;
+
+        if (SelectedCookbooks.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Select a Cookbook", "Please select at least one cookbook to save to.", "OK");
+            return;
+        }
+
+        try
+        {
+            IsSaving = true;
+
+            var recipe = new SavedRecipe
+            {
+                Name = ImportedRecipe.Name ?? string.Empty,
+                Url = ImportedRecipe.Url ?? string.Empty,
+                ImageUrl = ImportedRecipe.ImageUrl ?? string.Empty,
+                ImageUrlBig = ImportedRecipe.ImageUrl ?? string.Empty,
+                Description = GetDescription(ImportedRecipe),
+                Difficulty = ImportedRecipe.Difficulty ?? string.Empty,
+                TotalTime = ImportedRecipe.CookTime ?? ImportedRecipe.PrepTime ?? string.Empty,
+                RecipeSource = ImportedRecipe.RecipeSource ?? string.Empty,
+                Ingredients = ImportedRecipe.Ingredients,
+                MethodSteps = ImportedRecipe.MethodSteps,
+                ParsedIngredients = GetSavedIngredients(ImportedRecipe.ParsedIngredients),
+                CookbookIds = SelectedCookbooks.Select(c => c.RowId).ToList()
+            };
+
+            var saved = await _favouriteService.SaveFavouriteAsync(recipe);
+            if (saved != null)
+            {
+                await Shell.Current.GoToAsync("..");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error saving: {ex.Message}");
+            await Shell.Current.DisplayAlert("Error", "Failed to save recipe.", "OK");
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
     [RelayCommand]
     private async Task Close()
     {
         await Shell.Current.GoToAsync("..");
-    }
-
-    [RelayCommand]
-    private async Task SaveToCookbook()
-    {
-        if (ImportedRecipe == null) return;
-
-        var parameters = new Dictionary<string, object>
-        {
-            { "Name", ImportedRecipe.Name ?? string.Empty },
-            { "Url", ImportedRecipe.Url ?? string.Empty },
-            { "ImageUrl", ImportedRecipe.ImageUrl ?? string.Empty },
-            { "Description", GetDescription(ImportedRecipe) },
-            { "Difficulty", ImportedRecipe.Difficulty ?? string.Empty },
-            { "TotalTime", ImportedRecipe.CookTime ?? ImportedRecipe.PrepTime ?? string.Empty },
-            { "RecipeSource", ImportedRecipe.RecipeSource ?? string.Empty },
-            { "Ingredients", ImportedRecipe.Ingredients },
-            { "MethodSteps", ImportedRecipe.MethodSteps }
-        };
-
-        await Shell.Current.GoToAsync($"../{"RecipePreviewPage"}", parameters);
     }
 
     private static string GetDescription(RecipeSuggestion recipe)
@@ -110,5 +226,18 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
         if (!string.IsNullOrWhiteSpace(recipe.Serving))
             parts.Add($"Serves {recipe.Serving}");
         return string.Join(" \u00b7 ", parts);
+    }
+
+    private static List<SavedIngredient> GetSavedIngredients(List<ParsedIngredient>? ingredients)
+    {
+        if (ingredients == null || ingredients.Count == 0) return new();
+        return ingredients.Select(i => new SavedIngredient
+        {
+            Quantity = i.Quantity,
+            Unit = i.Unit,
+            Name = i.Name,
+            Notes = i.Notes,
+            Original = i.Original
+        }).ToList();
     }
 }

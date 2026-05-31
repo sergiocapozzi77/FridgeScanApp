@@ -2,15 +2,13 @@ namespace FridgeScan.Views;
 
 public partial class SharedRecipePage : ContentPage
 {
-    public SharedRecipePage()
+    public SharedRecipePage(SharedRecipeViewModel viewModel)
     {
         InitializeComponent();
 
         // Present as modal on top of tabs
         Shell.SetPresentationMode(this, PresentationMode.ModalAnimated);
 
-        var services = Application.Current?.Handler?.MauiContext?.Services;
-        var vm = services.GetService<SharedRecipeViewModel>();
-        BindingContext = vm;
+        BindingContext = viewModel;
     }
 }

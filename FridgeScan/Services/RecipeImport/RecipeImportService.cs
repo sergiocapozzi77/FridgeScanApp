@@ -46,6 +46,10 @@ public class RecipeImportService
         if (merged.Ingredients is { Count: > 0 })
         {
             parsedIngredients = _ingredientParser.Parse(merged.Ingredients);
+            for (int i = 0; i < parsedIngredients.Count && i < merged.Ingredients.Count; i++)
+            {
+                parsedIngredients[i].Original = merged.Ingredients[i];
+            }
         }
 
         var images = await _imageExtractor.ExtractImagesAsync(html, baseUrl);
@@ -63,6 +67,7 @@ public class RecipeImportService
             ImageUrl = merged.ImageUrl ?? (images.FirstOrDefault()?.Url ?? string.Empty),
             RecipeSource = merged.RecipeSource ?? "import",
             Nutritions = merged.Nutritions ?? new List<string>(),
+            ParsedIngredients = parsedIngredients,
         };
 
         return recipe;

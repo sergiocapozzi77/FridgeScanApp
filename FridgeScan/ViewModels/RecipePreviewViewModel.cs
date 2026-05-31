@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FridgeScan.Models;
@@ -45,6 +46,7 @@ public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
             TotalTime = GetString(query, "TotalTime"),
             RecipeSource = GetString(query, "RecipeSource"),
             Ingredients = GetStringList(query, "Ingredients"),
+            ParsedIngredients = GetParsedIngredients(query),
             MethodSteps = GetStringList(query, "MethodSteps")
         };
         _ = LoadCookbooksAsync();
@@ -131,5 +133,21 @@ public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
         if (query.TryGetValue(key, out var val) && val is List<string> list)
             return list;
         return new List<string>();
+    }
+
+    private static List<SavedIngredient> GetParsedIngredients(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("ParsedIngredients", out var val) && val is string json && json != "[]")
+        {
+            try
+            {
+                return JsonSerializer.Deserialize<List<SavedIngredient>>(json) ?? new();
+            }
+            catch
+            {
+                // fall through to empty list
+            }
+        }
+        return new List<SavedIngredient>();
     }
 }

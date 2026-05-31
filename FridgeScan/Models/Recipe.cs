@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FridgeScan.Services.RecipeImport;
+using Newtonsoft.Json;
 
 namespace FridgeScan.Models
 {
@@ -27,6 +23,7 @@ namespace FridgeScan.Models
         public List<string> MethodSteps { get; set; } = new();
         public List<string> Nutritions { get; set; } = new();
         public string DishType { get; internal set; }
+        public List<ParsedIngredient>? ParsedIngredients { get; set; }
     }
 
 }

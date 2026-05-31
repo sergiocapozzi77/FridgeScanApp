@@ -30,14 +30,14 @@ public class PostContentRecipeExtractor : RecipeExtractor
         result.Success = true;
         result.RecipeSource = "post-content";
 
-        result.Name = SanitizeText((string?)root["title"]);
-        result.Servings = SanitizeText((string?)root["servings"]);
-        result.Difficulty = SanitizeText((string?)root["skillLevel"]);
+        result.Name = SanitizeText(SafeString(root["title"]));
+        result.Servings = SanitizeText(SafeString(root["servings"]));
+        result.Difficulty = SanitizeText(SafeString(root["skillLevel"]));
 
         if (root["schema"] is JObject schema)
         {
-            result.PrepTime = ParseIso8601Duration((string?)schema["prepTime"]);
-            result.CookTime = ParseIso8601Duration((string?)schema["cookTime"]);
+            result.PrepTime = ParseIso8601Duration(SafeString(schema["prepTime"]));
+            result.CookTime = ParseIso8601Duration(SafeString(schema["cookTime"]));
         }
 
         if (root["ingredients"] is JArray ingredientSections)
@@ -48,9 +48,9 @@ public class PostContentRecipeExtractor : RecipeExtractor
                 if (section["ingredients"] is not JArray items) continue;
                 foreach (var item in items)
                 {
-                    var qty = (string?)item["quantityText"] ?? "";
-                    var ing = (string?)item["ingredientText"] ?? "";
-                    var note = (string?)item["note"] ?? "";
+                    var qty = SafeString(item["quantityText"]) ?? "";
+                    var ing = SafeString(item["ingredientText"]) ?? "";
+                    var note = SafeString(item["note"]) ?? "";
                     var line = string.IsNullOrEmpty(qty) ? ing : $"{qty} {ing}";
                     if (!string.IsNullOrEmpty(note)) line = $"{line}, {note}";
                     line = SanitizeText(line);
@@ -69,7 +69,7 @@ public class PostContentRecipeExtractor : RecipeExtractor
                 if (section["steps"] is not JArray stepItems) continue;
                 foreach (var step in stepItems)
                 {
-                    var text = SanitizeText((string?)step["description"] ?? (string?)step["text"]);
+                    var text = SanitizeText(SafeString(step["description"]) ?? SafeString(step["text"]));
                     if (!string.IsNullOrWhiteSpace(text))
                         steps.Add(text);
                 }

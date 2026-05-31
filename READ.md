@@ -1,0 +1,4 @@
+﻿# to test the import intent
+"C:/Program Files (x86)/Android/android-sdk/platform-tools/adb.exe" -s emulator-5554 shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "https://www.bbcgoodfood.com/recipes/chicken-curry" com.racingsolutions.fridgescan/crc64c7a6a133fdc61b6c.MainActivity
+adb -s adb-R5CY54KQ3PT-1tvj5S._adb-tls-connect._tcp shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "https://www.bbcgoodfood.com/recipes/chicken-gyros"  com.racingsolutions.fridgescan/crc64c7a6a133fdc61b6c.MainActivity
+"C:/Program Files (x86)/Android/android-sdk/platform-tools/adb.exe" -s adb-R5CY54KQ3PT-1tvj5S._adb-tls-connect._tcp shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "https://www.bbcgoodfood.com/recipes/easy-chicken-curry" com.racingsolutions.fridgescan/crc64c7a6a133fdc61b6c.MainActivity

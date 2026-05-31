@@ -84,6 +84,7 @@ public class FavouriteService
                     totalTime = favourite.TotalTime ?? string.Empty,
                     recipeSource = favourite.RecipeSource ?? string.Empty,
                     ingredients = favourite.Ingredients,
+                    parsedIngredients = favourite.ParsedIngredients,
                     methodSteps = favourite.MethodSteps,
                     imageUrlBig = favourite.ImageUrlBig ?? string.Empty
                 }
@@ -180,6 +181,7 @@ public class FavouriteService
             RecipeSource = GetStringOrNull(row, "recipeSource"),
             CookbookIds = GetStringList(row, "cookbookIds"),
             Ingredients = GetStringList(row, "ingredients"),
+            ParsedIngredients = GetSavedIngredientList(row, "parsedIngredients"),
             MethodSteps = GetStringList(row, "methodSteps")
         };
     }
@@ -204,6 +206,15 @@ public class FavouriteService
             return list;
         }
         return new List<string>();
+    }
+
+    private static List<SavedIngredient> GetSavedIngredientList(AppwriteRow row, string key)
+    {
+        if (row.Data.TryGetValue(key, out var el) && el.ValueKind == System.Text.Json.JsonValueKind.Array)
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<List<SavedIngredient>>(el.GetRawText()) ?? new();
+        }
+        return new List<SavedIngredient>();
     }
 
     private static string GenerateId(int length = 20)

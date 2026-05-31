@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace FridgeScan.Services.RecipeImport;
 
@@ -144,5 +145,16 @@ public abstract class RecipeExtractor : IRecipeExtractor
         {
             return isoDuration;
         }
+    }
+
+    /// <summary>
+    /// Safely extracts a string value from a JToken without throwing on arrays, objects, or nulls.
+    /// Only returns a value when the token is a string-type JValue.
+    /// </summary>
+    protected static string? SafeString(JToken? token)
+    {
+        if (token is JValue jv && jv.Value is string s)
+            return s;
+        return null;
     }
 }

@@ -5,7 +5,16 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(bash *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Read(//c/Users/sergi/source/repos/**)",
+      "Bash(where adb *)",
+      "Read(//c/Program Files \\(x86\\)/Android/android-sdk/platform-tools/**)",
+      "Read(//c/Program Files \\(x86\\)/Android/android-sdk/**)",
+      "Bash(C:/Program Files \\(x86\\)/Android/android-sdk/platform-tools/adb.exe devices *)",
+      "Bash(\"C:/Program Files \\(x86\\)/Android/android-sdk/platform-tools/adb.exe\" -s emulator-5554 shell pm list packages)",
+      "Bash(\"C:/Program Files \\(x86\\)/Android/android-sdk/platform-tools/adb.exe\" -s emulator-5554 shell dumpsys package com.racingsolutions.fridgescan)",
+      "WebFetch(domain:www.bbcgoodfood.com)",
+      "WebSearch"
     ]
   }
 }
