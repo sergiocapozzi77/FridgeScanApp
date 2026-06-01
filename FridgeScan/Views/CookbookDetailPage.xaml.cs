@@ -15,6 +15,11 @@ public partial class CookbookDetailPage : ContentPage
         BindingContext = _vm;
     }
 
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
     private async void OnRecipeSelected(object? sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is SavedRecipe recipe)

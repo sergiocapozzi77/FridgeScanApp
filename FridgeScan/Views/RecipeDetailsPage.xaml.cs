@@ -12,6 +12,11 @@ public partial class RecipeDetailsPage : ContentPage
         BindingContext = vm;
     }
 
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
     protected override void OnAppearing()
     {
         base.OnAppearing();

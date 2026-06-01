@@ -8,8 +8,6 @@
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels">
 
-    <Shell.NavBarIsVisible>True</Shell.NavBarIsVisible>
-
     <Grid RowDefinitions="Auto,*,Auto" Padding="20">
 
         <!-- Header -->

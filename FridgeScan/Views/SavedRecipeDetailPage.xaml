@@ -4,10 +4,12 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:sfButtons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
     Title="{Binding Recipe.Name}">
 
     <Grid>
-        <ScrollView>
+        <Grid>
+            <ScrollView>
             <VerticalStackLayout Spacing="0">
                 <Image Source="{Binding Recipe.ImageUrl}" Aspect="AspectFill" HeightRequest="250" />
                 <VerticalStackLayout Padding="16" Spacing="8">
@@ -46,5 +48,17 @@
                                  IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
                                  HorizontalOptions="Center" VerticalOptions="Center"
                                  HeightRequest="60" WidthRequest="60" />
+        </Grid>
+
+        <sfButtons:SfButton x:Name="BackButton"
+            Text="←"
+            FontSize="22"
+            HeightRequest="44"
+            WidthRequest="44"
+            CornerRadius="22"
+            Margin="8,12,0,0"
+            HorizontalOptions="Start"
+            VerticalOptions="Start"
+            Clicked="OnBackClicked" />
     </Grid>
 </ContentPage>

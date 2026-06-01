@@ -5,11 +5,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:sfButtons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
     Title="Imported Recipe">
 
-    <Grid RowDefinitions="*,Auto">
-        <ScrollView Grid.Row="0">
+    <Grid>
+        <Grid RowDefinitions="*,Auto">
+            <ScrollView Grid.Row="0">
             <VerticalStackLayout Spacing="0" Padding="0">
                 <Image Source="{Binding Recipe.ImageUrl}" Aspect="AspectFill" HeightRequest="200" />
                 <VerticalStackLayout Padding="16" Spacing="8">
@@ -82,5 +84,17 @@
                                  IsRunning="{Binding IsSaving}" IsVisible="{Binding IsSaving}"
                                  HorizontalOptions="Center" VerticalOptions="Center"
                                  HeightRequest="60" WidthRequest="60" />
+        </Grid>
+
+        <sfButtons:SfButton x:Name="BackButton"
+            Text="←"
+            FontSize="22"
+            HeightRequest="44"
+            WidthRequest="44"
+            CornerRadius="22"
+            Margin="8,12,0,0"
+            HorizontalOptions="Start"
+            VerticalOptions="Start"
+            Clicked="OnBackClicked" />
     </Grid>
 </ContentPage>

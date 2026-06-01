@@ -5,12 +5,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sfCards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:sfButtons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
     Title="{Binding Cookbook.Name}">
 
     <Grid RowDefinitions="Auto,Auto,*">
         <VerticalStackLayout Grid.Row="0" Padding="16,12" Spacing="4">
+            <sfButtons:SfButton x:Name="BackButton"
+                Text="← Cookbooks"
+                FontSize="14"
+                HeightRequest="36"
+                CornerRadius="18"
+                Padding="12,0"
+                Margin="0,0,0,8"
+                HorizontalOptions="Start"
+                Clicked="OnBackClicked" />
             <Label Text="{Binding Cookbook.Name}" FontSize="22" FontAttributes="Bold" />
             <Label FontSize="14" TextColor="Gray">
                 <Label.Text>

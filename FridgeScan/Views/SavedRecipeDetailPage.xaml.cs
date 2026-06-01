@@ -10,4 +10,9 @@ public partial class SavedRecipeDetailPage : ContentPage
         var services = Application.Current?.Handler?.MauiContext?.Services;
         BindingContext = services?.GetService<SavedRecipeDetailViewModel>();
     }
+
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
 }
