@@ -24,7 +24,7 @@ public class MicrodataRecipeExtractor : RecipeExtractor
             return Task.FromResult(result);
 
         result.Success = true;
-        result.RecipeSource = "microdata";
+        result.RecipeSource = baseUrl.Host;
         result.Name = SanitizeText(name);
 
         var prepMeta = recipeNode.SelectSingleNode(".//meta[@itemprop='prepTime']");

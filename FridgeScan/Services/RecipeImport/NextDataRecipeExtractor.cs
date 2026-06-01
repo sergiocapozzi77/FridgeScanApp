@@ -39,7 +39,7 @@ public class NextDataRecipeExtractor : RecipeExtractor
         }
 
         result.Success = true;
-        result.RecipeSource = "next-data";
+        result.RecipeSource = baseUrl.Host;
 
         result.Name = SanitizeText(SafeString(pp["title"]));
         result.Servings = SanitizeText(SafeString(pp["servings"]));

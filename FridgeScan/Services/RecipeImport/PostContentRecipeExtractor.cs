@@ -28,7 +28,7 @@ public class PostContentRecipeExtractor : RecipeExtractor
         }
 
         result.Success = true;
-        result.RecipeSource = "post-content";
+        result.RecipeSource = baseUrl.Host;
 
         result.Name = SanitizeText(SafeString(root["title"]));
         result.Servings = SanitizeText(SafeString(root["servings"]));

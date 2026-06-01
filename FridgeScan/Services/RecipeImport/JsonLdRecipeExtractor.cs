@@ -18,7 +18,7 @@ public class JsonLdRecipeExtractor : RecipeExtractor
             return Task.FromResult(result);
 
         result.Success = true;
-        result.RecipeSource = "json-ld";
+        result.RecipeSource = baseUrl.Host;
 
         result.Name = SanitizeText(SafeString(schema["name"]));
         result.Description = SanitizeText(SafeString(schema["description"]));
