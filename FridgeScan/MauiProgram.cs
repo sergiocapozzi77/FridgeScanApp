@@ -46,6 +46,7 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<IRecipeExtractor, NextDataRecipeExtractor>();
         builder.Services.AddSingleton<IRecipeExtractor, PostContentRecipeExtractor>();
         builder.Services.AddSingleton<IRecipeExtractor, MicrodataRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeHtmlFetcher, WebViewHtmlFetcher>();
         builder.Services.AddSingleton<RecipeImportService>();
 
         builder.Services.AddSingleton<EmailService>();

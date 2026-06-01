@@ -93,23 +93,39 @@ public class JsonLdRecipeExtractor : RecipeExtractor
 
     private static JObject? FindRecipeInNode(JToken node)
     {
-        if (node is JObject obj && string.Equals(SafeString(obj["@type"]), "Recipe", StringComparison.OrdinalIgnoreCase))
+        if (node is JObject obj && IsRecipeType(obj["@type"]))
             return obj;
 
         if (node is JObject root && root["@graph"] is JArray graph)
         {
             foreach (var item in graph)
             {
-                if (item is JObject go && string.Equals(SafeString(go["@type"]), "Recipe", StringComparison.OrdinalIgnoreCase))
+                if (item is JObject go && IsRecipeType(go["@type"]))
                     return go;
             }
         }
 
         if (node is JObject root2 && root2["mainEntity"] is JObject me &&
-            string.Equals(SafeString(me["@type"]), "Recipe", StringComparison.OrdinalIgnoreCase))
+            IsRecipeType(me["@type"]))
             return me;
 
         return null;
+    }
+
+    /// <summary>
+    /// Checks whether a JSON-LD @type value indicates a Recipe.
+    /// Handles both string form ("Recipe") and array form (["Recipe", "NewsArticle"]).
+    /// </summary>
+    private static bool IsRecipeType(JToken? typeToken)
+    {
+        if (typeToken is JValue jv && jv.Value is string s)
+            return string.Equals(s, "Recipe", StringComparison.OrdinalIgnoreCase);
+
+        if (typeToken is JArray arr)
+            return arr.Values<string>().Any(v =>
+                string.Equals(v, "Recipe", StringComparison.OrdinalIgnoreCase));
+
+        return false;
     }
 
     private static string ExtractImageUrl(JToken? imageToken)

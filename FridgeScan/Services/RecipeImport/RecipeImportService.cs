@@ -4,31 +4,29 @@ public class RecipeImportService
 {
     private readonly IReadOnlyList<IRecipeExtractor> _extractors;
     private readonly IRecipeImageExtractor _imageExtractor;
+    private readonly IRecipeHtmlFetcher? _webViewFetcher;
+
+    /// <summary>Holds the user-facing error message from the last failed import attempt.</summary>
+    public string? LastErrorMessage { get; private set; }
 
     public RecipeImportService(
         IEnumerable<IRecipeExtractor> extractors,
-        IRecipeImageExtractor imageExtractor)
+        IRecipeImageExtractor imageExtractor,
+        IRecipeHtmlFetcher? webViewFetcher = null)
     {
         _extractors = extractors.OrderByDescending(e => e.Priority).ToList();
         _imageExtractor = imageExtractor;
+        _webViewFetcher = webViewFetcher;
     }
+
+    private static readonly HttpClient _httpClient = CreateHttpClient();
 
     public async Task<RecipeSuggestion?> ImportFromUrlAsync(string url)
     {
-        string html;
-        try
-        {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36");
-            client.Timeout = TimeSpan.FromSeconds(15);
-            html = await client.GetStringAsync(url);
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"RecipeImportService: fetch failed: {ex.Message}");
+        LastErrorMessage = null;
+        var html = await FetchHtmlAsync(url);
+        if (html == null)
             return null;
-        }
 
         var baseUrl = new Uri(url);
 
@@ -96,4 +94,94 @@ public class RecipeImportService
 
         return merged;
     }
+
+    private static HttpClient CreateHttpClient()
+    {
+        var handler = new HttpClientHandler
+        {
+            AutomaticDecompression = System.Net.DecompressionMethods.All,
+            AllowAutoRedirect = true,
+            MaxAutomaticRedirections = 10,
+        };
+
+        var client = new HttpClient(handler);
+        client.DefaultRequestHeaders.Add("User-Agent",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36");
+        client.DefaultRequestHeaders.Add("Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+        client.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+        client.DefaultRequestHeaders.Add("Sec-Fetch-Dest", "document");
+        client.DefaultRequestHeaders.Add("Sec-Fetch-Mode", "navigate");
+        client.DefaultRequestHeaders.Add("Sec-Fetch-Site", "none");
+        client.DefaultRequestHeaders.Add("Sec-Fetch-User", "?1");
+        client.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
+        client.Timeout = TimeSpan.FromSeconds(15);
+
+        return client;
+    }
+
+    /// <summary>
+    /// Attempts to fetch HTML from the URL, first via HttpClient (fast path),
+    /// falling back to a platform WebView when the server blocks the request.
+    /// </summary>
+    private async Task<string?> FetchHtmlAsync(string url)
+    {
+        // ---- Attempt 1: Direct HttpClient (fast, lightweight) ----
+        try
+        {
+            return await _httpClient.GetStringAsync(url);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode.HasValue)
+        {
+            var httpStatus = (int)ex.StatusCode;
+            System.Diagnostics.Debug.WriteLine(
+                $"RecipeImportService: HTTP {httpStatus} fetching {url}");
+
+            // ---- Attempt 2: WebView fallback for server errors (bot protection) ----
+            if (_webViewFetcher != null)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "RecipeImportService: WebView fallback...");
+                var webHtml = await _webViewFetcher.FetchHtmlAsync(url);
+                if (webHtml != null)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        $"RecipeImportService: WebView fallback succeeded ({webHtml.Length} chars)");
+                    return webHtml;
+                }
+                System.Diagnostics.Debug.WriteLine(
+                    "RecipeImportService: WebView fallback also failed");
+            }
+
+            LastErrorMessage = httpStatus switch
+            {
+                402 => "The website blocked the request (HTTP 402). This usually means the site has bot protection enabled.",
+                403 => "The website blocked the request (HTTP 403). This site may not allow recipe importing.",
+                404 => "Recipe page not found (HTTP 404). The URL may be invalid.",
+                >= 400 => $"Could not import recipe (server returned HTTP {httpStatus}).",
+                _ => "Could not import recipe from this URL."
+            };
+            return null;
+        }
+        catch (HttpRequestException)
+        {
+            // Connection-level error (DNS, TLS, etc.) — WebView won't help
+            System.Diagnostics.Debug.WriteLine($"RecipeImportService: connection error fetching {url}");
+            LastErrorMessage = "Could not connect to the website. Check your internet connection.";
+            return null;
+        }
+        catch (TaskCanceledException)
+        {
+            System.Diagnostics.Debug.WriteLine($"RecipeImportService: timeout fetching {url}");
+            LastErrorMessage = "Request timed out. The website may be too slow or unreachable.";
+            return null;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"RecipeImportService: fetch failed: {ex.Message} [{url}]");
+            LastErrorMessage = "Could not import recipe from this URL.";
+            return null;
+        }
+    }
+
 }

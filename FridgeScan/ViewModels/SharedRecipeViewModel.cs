@@ -32,6 +32,9 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
     private bool hasError;
 
     [ObservableProperty]
+    private string errorMessage = string.Empty;
+
+    [ObservableProperty]
     private ObservableCollection<Cookbook> allCookbooks = new();
 
     [ObservableProperty]
@@ -126,6 +129,7 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
             {
                 HasError = true;
                 PageTitle = "Import Failed";
+                ErrorMessage = _importService.LastErrorMessage ?? "Could not import recipe from this URL.";
             }
         }
         catch (Exception ex)
@@ -133,6 +137,7 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
             System.Diagnostics.Debug.WriteLine($"Import failed: {ex.Message}");
             HasError = true;
             PageTitle = "Import Failed";
+            ErrorMessage = "An unexpected error occurred while importing.";
         }
         finally
         {

@@ -14,7 +14,12 @@
       "Bash(\"C:/Program Files \\(x86\\)/Android/android-sdk/platform-tools/adb.exe\" -s emulator-5554 shell pm list packages)",
       "Bash(\"C:/Program Files \\(x86\\)/Android/android-sdk/platform-tools/adb.exe\" -s emulator-5554 shell dumpsys package com.racingsolutions.fridgescan)",
       "WebFetch(domain:www.bbcgoodfood.com)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.allrecipes.com)",
+      "Bash(curl -sI -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/134.0.0.0 Safari/537.36\" \"https://www.allrecipes.com/recipe/245724/home-cured-holiday-ham/\")",
+      "Bash(curl -sL -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/134.0.0.0 Safari/537.36\" \"https://www.allrecipes.com/recipe/245724/home-cured-holiday-ham/\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

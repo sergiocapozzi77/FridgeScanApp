@@ -84,10 +84,16 @@
                 <Label
                     IsVisible="{Binding HasError}"
                     FontSize="14"
-                    Text="Could not import recipe from this URL."
+                    Text="{Binding ErrorMessage}"
                     TextColor="Gray"
                     HorizontalOptions="Center"
                     Padding="0,40" />
+                <Label
+                    IsVisible="{Binding HasError}"
+                    FontSize="12"
+                    Text="Check the debug log for more details."
+                    TextColor="DimGray"
+                    HorizontalOptions="Center" />
 
             </VerticalStackLayout>
         </ScrollView>
