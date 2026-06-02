@@ -1,64 +1,200 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="FridgeScan.Views.SavedRecipeDetailPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
-    xmlns:sfButtons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+    BackgroundColor="#0D0D2B"
     Title="{Binding Recipe.Name}">
 
-    <Grid>
-        <Grid>
-            <ScrollView>
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,16,16,16" Spacing="2">
+
+            <!-- Row 1: back arrow + title + delete icon -->
+            <Grid ColumnDefinitions="36,*,Auto">
+
+                <!-- Back arrow: Material ArrowBack, 48dp transparent touch target -->
+                <Label Grid.Column="0"
+                       Text="&#xe5c4;"
+                       FontFamily="Material"
+                       FontSize="24"
+                       TextColor="#CCCCDD"
+                       WidthRequest="48"
+                       HeightRequest="48"
+                       Margin="-12,0,0,0"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <!-- Title -->
+                <Label Grid.Column="1"
+                       Text="{Binding Recipe.Name}"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"
+                       VerticalOptions="Center" />
+
+                <!-- Delete icon -->
+                <Border Grid.Column="2"
+                        BackgroundColor="#2A1E1E"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="Transparent"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteRecipeCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="&#xe872;"
+                           FontFamily="Material"
+                           FontSize="16"
+                           TextColor="#ff6b6b"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+            </Grid>
+
+            <!-- Row 2: recipe source, indented to align with title -->
+            <Label Margin="36,0,0,0"
+                   Text="{Binding Recipe.RecipeSource}"
+                   FontSize="13"
+                   TextColor="#8888AA" />
+        </VerticalStackLayout>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="0">
-                <Image Source="{Binding Recipe.ImageUrl}" Aspect="AspectFill" HeightRequest="250" />
-                <VerticalStackLayout Padding="16" Spacing="8">
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="{Binding Recipe.RecipeSource}" FontSize="13" TextColor="Gray" />
-                        <Label Text="{Binding Recipe.TotalTime}" FontSize="13" TextColor="Gray" />
-                        <Label Text="{Binding Recipe.Difficulty}" FontSize="13" TextColor="Gray" />
-                    </HorizontalStackLayout>
-                    <Label Text="{Binding Recipe.Description}" FontSize="14" LineBreakMode="WordWrap" />
-                    <Label Text="Ingredients" FontSize="16" FontAttributes="Bold" Margin="0,12,0,6" />
-                    <Frame BackgroundColor="#252525" BorderColor="Transparent" CornerRadius="10" Padding="0" HasShadow="False">
-                        <CollectionView ItemsSource="{Binding Recipe.Ingredients}" SelectionMode="None">
+                <Image Source="{Binding Recipe.ImageUrl}"
+                       Aspect="AspectFill"
+                       HeightRequest="250" />
+
+                <VerticalStackLayout Padding="16" Spacing="12">
+
+                    <!-- Metadata chips row -->
+                    <FlexLayout Wrap="Wrap"
+                                Direction="Row"
+                                JustifyContent="Start"
+                                AlignItems="Start"
+                                BindableLayout.ItemsSource="{Binding MetadataChips}"
+                                IsVisible="{Binding HasMetadata}"
+                                Margin="0,0,0,4">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border BackgroundColor="#1E1E3A"
+                                        StrokeShape="RoundRectangle 12"
+                                        Stroke="Transparent"
+                                        Padding="10,4"
+                                        Margin="0,0,6,6"
+                                        HeightRequest="28">
+                                    <Label Text="{Binding .}"
+                                           FontSize="12"
+                                           TextColor="#CCCCDD"
+                                           VerticalOptions="Center" />
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+
+                    <!-- Description (saved recipes only) -->
+                    <Label Text="{Binding Recipe.Description}"
+                           FontSize="14"
+                           LineBreakMode="WordWrap"
+                           IsVisible="{Binding HasDescription}" />
+
+                    <!-- Ingredients -->
+                    <Label Text="Ingredients"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                    <Frame BackgroundColor="#252525"
+                           BorderColor="Transparent"
+                           CornerRadius="10"
+                           Padding="0"
+                           HasShadow="False">
+                        <CollectionView ItemsSource="{Binding Recipe.Ingredients}"
+                                        SelectionMode="None">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="x:String">
-                                    <Label Text="{Binding .}" FontSize="14" Padding="14,6" />
+                                    <Label Text="{Binding .}"
+                                           FontSize="14"
+                                           Padding="14,6"
+                                           TextColor="#CCCCDD" />
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                     </Frame>
-                    <Label Text="Method" FontSize="16" FontAttributes="Bold" Margin="0,12,0,6" />
-                    <Frame BackgroundColor="#252525" BorderColor="Transparent" CornerRadius="10" Padding="0" HasShadow="False">
-                        <CollectionView ItemsSource="{Binding Recipe.MethodSteps}" SelectionMode="None">
+
+                    <!-- Method -->
+                    <Label Text="Method"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                    <Frame BackgroundColor="#252525"
+                           BorderColor="Transparent"
+                           CornerRadius="10"
+                           Padding="0"
+                           HasShadow="False">
+                        <CollectionView ItemsSource="{Binding Recipe.MethodSteps}"
+                                        SelectionMode="None">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="x:String">
-                                    <Grid Padding="14,8" ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                        <Label Grid.Column="1" Text="{Binding .}" FontSize="14" LineBreakMode="WordWrap" />
+                                    <Grid Padding="14,8"
+                                          ColumnDefinitions="Auto,*"
+                                          ColumnSpacing="10">
+                                        <Label Grid.Column="1"
+                                               Text="{Binding .}"
+                                               FontSize="14"
+                                               LineBreakMode="WordWrap"
+                                               TextColor="#CCCCDD" />
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
                     </Frame>
+
+                    <!-- Nutrition (web/AI recipes only) -->
+                    <VerticalStackLayout IsVisible="{Binding HasNutrition}" Spacing="6">
+                        <Label Text="Nutrition"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                        <Frame BackgroundColor="#252525"
+                               BorderColor="Transparent"
+                               CornerRadius="10"
+                               Padding="0"
+                               HasShadow="False">
+                            <CollectionView ItemsSource="{Binding Recipe.Nutritions}"
+                                            SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Label Text="{Binding .}"
+                                               FontSize="14"
+                                               Padding="14,6"
+                                               TextColor="#CCCCDD" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Frame>
+                    </VerticalStackLayout>
+
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
-        <sfBusy:SfBusyIndicator AnimationType="CircularMaterial"
-                                 IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
-                                 HorizontalOptions="Center" VerticalOptions="Center"
-                                 HeightRequest="60" WidthRequest="60" />
-        </Grid>
 
-        <sfButtons:SfButton x:Name="BackButton"
-            Text="←"
-            FontSize="22"
-            HeightRequest="44"
-            WidthRequest="44"
-            CornerRadius="22"
-            Margin="8,12,0,0"
-            HorizontalOptions="Start"
-            VerticalOptions="Start"
-            Clicked="OnBackClicked" />
+        <sfBusy:SfBusyIndicator Grid.Row="1"
+                                 AnimationType="CircularMaterial"
+                                 IsRunning="{Binding IsLoading}"
+                                 IsVisible="{Binding IsLoading}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 HeightRequest="60"
+                                 WidthRequest="60" />
     </Grid>
 </ContentPage>

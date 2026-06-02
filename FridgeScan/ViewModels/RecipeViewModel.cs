@@ -286,7 +286,7 @@ public partial class RecipeViewModel : BaseViewModel
             { "provider", selectedRecipe.RecipeSource } 
         };
 
-        await Shell.Current.GoToAsync(nameof(RecipeDetailsPage), navigationParameter);
+        await Shell.Current.GoToAsync(nameof(SavedRecipeDetailPage), navigationParameter);
     }
 
 }

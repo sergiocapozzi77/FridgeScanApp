@@ -33,7 +33,6 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<ImportViewModel>();
         builder.Services.AddSingleton<ActivitiesViewModel>();
         builder.Services.AddSingleton<RecipeViewModel>();
-        builder.Services.AddSingleton<RecipeDetailsViewModel>();
         builder.Services.AddSingleton<SharedRecipeViewModel>();
         builder.Services.AddSingleton<CookbookViewModel>();
         builder.Services.AddSingleton<CookbookDetailViewModel>();
@@ -82,7 +81,6 @@ public static partial class MauiProgram
         builder.Services.AddTransient<Views.ProductsPage>();
         builder.Services.AddTransient<Views.ImportPage>();
         builder.Services.AddTransient<Views.RecipePage>();
-        builder.Services.AddTransient<Views.RecipeDetailsPage>();
         builder.Services.AddTransient<Views.SharedRecipePage>();
         builder.Services.AddTransient<Views.CookbookPage>();
         builder.Services.AddTransient<Views.CookbookDetailPage>();

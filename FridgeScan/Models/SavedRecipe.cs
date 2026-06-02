@@ -10,8 +10,13 @@ public class SavedRecipe
     public string? Description { get; set; }
     public string? Difficulty { get; set; }
     public string? TotalTime { get; set; }
+    public string? PrepTime { get; set; }
+    public string? CookTime { get; set; }
+    public string? Serving { get; set; }
+    public string? DishType { get; set; }
     public string? RecipeSource { get; set; }
     public List<string> CookbookIds { get; set; } = new();
     public List<string> Ingredients { get; set; } = new();
     public List<string> MethodSteps { get; set; } = new();
+    public List<string> Nutritions { get; set; } = new();
 }
