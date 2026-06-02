@@ -109,6 +109,8 @@
                     <!-- Autocomplete input -->
                     <editors:SfAutocomplete Grid.Column="1"
                                              x:Name="addItemAutocomplete"
+                                             ShowBorder="False"
+                                             Stroke="Transparent"
                                              Completed="SfAutocomplete_Completed"
                                              DisplayMemberPath="Name"
                                              ItemsSource="{Binding GrocerySuggestions}"
