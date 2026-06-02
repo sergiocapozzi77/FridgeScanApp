@@ -45,6 +45,11 @@ public partial class ProductsPage : ContentPage
 
     }
 
+    private void OnSearchTapped(object sender, EventArgs e)
+    {
+        addItemAutocomplete?.Focus();
+    }
+
     private async void OnEditProductTapped(object sender, EventArgs e)
     {
         if (sender is Border border && border.BindingContext is Models.Product product)

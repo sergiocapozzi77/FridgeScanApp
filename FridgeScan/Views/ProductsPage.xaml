@@ -53,6 +53,9 @@
                         WidthRequest="40"
                         HeightRequest="40"
                         Margin="8,0,0,0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSearchTapped" />
+                    </Border.GestureRecognizers>
                     <Label Text="&#xe8b6;"
                            FontFamily="Material"
                            FontSize="18"
@@ -105,6 +108,7 @@
 
                     <!-- Autocomplete input -->
                     <editors:SfAutocomplete Grid.Column="1"
+                                             x:Name="addItemAutocomplete"
                                              Completed="SfAutocomplete_Completed"
                                              DisplayMemberPath="Name"
                                              ItemsSource="{Binding GrocerySuggestions}"
