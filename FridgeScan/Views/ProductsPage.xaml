@@ -192,7 +192,7 @@
                                                             HeightRequest="40"
                                                             VerticalOptions="Center">
                                                             <Border.GestureRecognizers>
-                                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProductsViewModel}}, Path=EditProductCommand}" CommandParameter="{Binding}" />
+                                                                <TapGestureRecognizer Command="{Binding Source={x:Reference ProductsPageRoot}, Path=BindingContext.EditProductCommand}" CommandParameter="{Binding}" />
                                                             </Border.GestureRecognizers>
                                                             <Label
                                                                 Text="&#xe3c9;"
