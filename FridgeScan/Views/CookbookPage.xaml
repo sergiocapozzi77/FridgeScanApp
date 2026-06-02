@@ -7,13 +7,15 @@
     xmlns:sfPull="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:views="clr-namespace:FridgeScan.Views"
+    xmlns:controls="clr-namespace:FridgeScan.Controls"
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
     BackgroundColor="#0D0D2B"
     Title="Cookbooks">
 
-    <Grid RowDefinitions="Auto,*">
-        <Grid Grid.Row="0" Padding="20,16,16,12" ColumnDefinitions="*,Auto">
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0" RowDefinitions="Auto,*">
+            <Grid Grid.Row="0" Padding="20,16,16,12" ColumnDefinitions="*,Auto">
             <Label Text="Cookbooks"
                    FontSize="22"
                    FontAttributes="Bold"
@@ -76,5 +78,9 @@
                 </CollectionView>
             </sfPull:SfPullToRefresh.PullableContent>
         </sfPull:SfPullToRefresh>
+        </Grid>
+
+        <!-- Floating Bottom Bar -->
+        <controls:FloatingBottomBar Grid.Row="1" />
     </Grid>
 </ContentPage>
