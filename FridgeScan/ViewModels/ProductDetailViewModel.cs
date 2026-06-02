@@ -130,7 +130,7 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
             if (success)
             {
                 productsManager.RemoveProduct(originalProduct);
-                await Shell.Current.GoToAsync("//ProductsPage");
+                await Shell.Current.GoToAsync("..");
             }
             else
             {

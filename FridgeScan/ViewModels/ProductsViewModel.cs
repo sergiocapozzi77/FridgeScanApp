@@ -63,8 +63,6 @@ public partial class ProductsViewModel : BaseViewModel
         AddItemCommand = new Command(OnAddItem);
         BarcodeCommand = new Command(OnBarcodeCommand);
         LoadSuggestionsFromJson();
-
-        _ = LoadProductsAsync();
         
     }
 

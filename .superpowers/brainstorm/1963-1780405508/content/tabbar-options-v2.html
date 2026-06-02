@@ -1,0 +1,144 @@
+<h2>🎯 3 Refined Bottom Bar Shapes</h2>
+<p class="subtitle" style="color:#8888AA;">All use the same M3 color tokens from your design system — the shape is what changes.</p>
+
+<div style="display:flex; gap:6px; align-items:center; margin:12px 0; padding:8px 14px; background:#14142E; border-radius:12px;">
+  <span style="font-size:16px;">🎨</span>
+  <span style="color:#CCCCDD; font-size:13px;">
+    <strong>Color tokens used:</strong>
+    <code style="background:#1E1E3A; padding:2px 6px; border-radius:4px;">#14142E</code> container,
+    <code style="background:#1E1E3A; padding:2px 6px; border-radius:4px;">#1E1E3A</code> active fill,
+    <code style="background:#1E1E3A; padding:2px 6px; border-radius:4px;">#8888AA</code> muted,
+    <code style="background:#1E1E3A; padding:2px 6px; border-radius:4px;">White</code> active
+  </span>
+</div>
+
+<div class="cards">
+
+  <!-- A1: M3 Standard -->
+  <div class="card" data-choice="a1" onclick="toggleSelect(this)">
+    <div class="card-body">
+      <h3>A1. M3 Standard</h3>
+      <p class="subtitle" style="color:#8888AA;">Edge-to-edge · flat top · classic M3</p>
+      <div class="mockup" style="margin-top:12px;">
+        <div class="mockup-body" style="padding:0;">
+          <div style="background:#14142E; padding:8px 0 6px;">
+            <div style="display:flex; align-items:center; justify-content:space-around;">
+              <!-- Products active -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px;">
+                <div style="width:40px;height:32px;border-radius:16px;background:#1E1E3A; display:flex; align-items:center; justify-content:center;">
+                  <span style="color:white;font-size:18px;">📦</span>
+                </div>
+                <span style="color:white;font-size:10px;">Products</span>
+              </div>
+              <!-- Rest unselected -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">🍳</span>
+                <span style="color:#8888AA;font-size:10px;">Recipe</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">📥</span>
+                <span style="color:#8888AA;font-size:10px;">Import</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">📚</span>
+                <span style="color:#8888AA;font-size:10px;">Cookbooks</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">📊</span>
+                <span style="color:#8888AA;font-size:10px;">Activity</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="color:#8888AA;font-size:12px;margin-top:8px;">
+        Straight top edge, edge-to-edge. Active tab gets a filled pill behind the icon. Standard M3 Navigation Bar layout.
+      </p>
+    </div>
+  </div>
+
+  <!-- A2: Rounded Dock -->
+  <div class="card" data-choice="a2" onclick="toggleSelect(this)">
+    <div class="card-body">
+      <h3>A2. Rounded Dock</h3>
+      <p class="subtitle" style="color:#8888AA;">Edge-to-edge · rounded top corners (16dp)</p>
+      <div class="mockup" style="margin-top:12px;">
+        <div class="mockup-body" style="padding:0;">
+          <div style="background:#14142E; border-radius:16px 16px 0 0; padding:8px 0 6px;">
+            <div style="display:flex; align-items:center; justify-content:space-around;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">📦</span>
+                <span style="color:#8888AA;font-size:10px;">Products</span>
+              </div>
+              <!-- Recipe active -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px;">
+                <div style="width:40px;height:32px;border-radius:16px;background:#1E1E3A; display:flex; align-items:center; justify-content:center;">
+                  <span style="color:white;font-size:18px;">🍳</span>
+                </div>
+                <span style="color:white;font-size:10px;">Recipe</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">📥</span>
+                <span style="color:#8888AA;font-size:10px;">Import</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">📚</span>
+                <span style="color:#8888AA;font-size:10px;">Cookbooks</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:56px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:20px;">📊</span>
+                <span style="color:#8888AA;font-size:10px;">Activity</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="color:#8888AA;font-size:12px;margin-top:8px;">
+        Same edge-to-edge width, but the top corners have a 16dp radius. Visually softer — like a dock floating up from the bottom edge. Common in modern Android apps.
+      </p>
+    </div>
+  </div>
+
+  <!-- A3: Floating Shelf -->
+  <div class="card" data-choice="a3" onclick="toggleSelect(this)">
+    <div class="card-body">
+      <h3>A3. Floating Shelf</h3>
+      <p class="subtitle" style="color:#8888AA;">Inset · rounded all around (16dp) · elevated</p>
+      <div style="margin-top:12px; display:flex; justify-content:center;">
+        <div style="background:#14142E; border-radius:16px; padding:8px 12px 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); width:92%;">
+          <div style="display:flex; align-items:center; justify-content:space-around;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:48px; opacity:0.45;">
+              <span style="color:#8888AA;font-size:18px;">📦</span>
+              <span style="color:#8888AA;font-size:9px;">Products</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:48px; opacity:0.45;">
+              <span style="color:#8888AA;font-size:18px;">🍳</span>
+              <span style="color:#8888AA;font-size:9px;">Recipe</span>
+            </div>
+            <!-- Cookbooks active -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:48px;">
+              <div style="width:36px;height:28px;border-radius:14px;background:#1E1E3A; display:flex; align-items:center; justify-content:center;">
+                <span style="color:white;font-size:16px;">📚</span>
+              </div>
+              <span style="color:white;font-size:9px;">Cookbooks</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:48px; opacity:0.45;">
+              <span style="color:#8888AA;font-size:18px;">📥</span>
+              <span style="color:#8888AA;font-size:9px;">Import</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; min-width:48px; opacity:0.45;">
+              <span style="color:#8888AA;font-size:18px;">📊</span>
+              <span style="color:#8888AA;font-size:9px;">Activity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="color:#8888AA;font-size:12px;margin-top:8px;">
+        Not edge-to-edge — has horizontal margin (≈12dp sides). Rounded all around with subtle shadow elevation. Sits above the screen bottom. The most premium/unique option. Used by YouTube Music, Spotify, and many modern iOS apps.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:24px;"><strong>Which shape feels right?</strong> Let me know in the terminal — A1 (Standard), A2 (Rounded Dock), or A3 (Floating Shelf).</p>

@@ -15,12 +15,13 @@ public partial class ProductsPage : ContentPage
         var vm = services.GetService<ProductsViewModel>();
         BindingContext = vm;
 
-        // Set up native SfListView grouping after the view loads
+        // Load products and set up native SfListView grouping after the view loads
         Loaded += OnLoaded;
     }
 
-    private void OnLoaded(object? sender, EventArgs e)
+    private async void OnLoaded(object? sender, EventArgs e)
     {
+        // Set up grouping first so the DataSource is ready
         if (listView.DataSource.GroupDescriptors.Count == 0)
         {
             listView.DataSource.GroupDescriptors.Add(new GroupDescriptor()
@@ -29,6 +30,15 @@ public partial class ProductsPage : ContentPage
             });
             listView.DataSource.LiveDataUpdateMode = LiveDataUpdateMode.AllowDataShaping;
         }
+
+        // Load products
+        var vm = (ProductsViewModel)BindingContext;
+        await vm.LoadProductsAsync();
+
+        // Force DataSource to re-apply grouping on all loaded items.
+        // Individual CollectionChanged events (RemoveAt+Add) may not auto-trigger grouping,
+        // so an explicit refresh ensures groups are created.
+        listView.DataSource.Refresh();
     }
 
     private void SfAutocomplete_Completed(object sender, EventArgs e)
@@ -49,7 +59,9 @@ public partial class ProductsPage : ContentPage
         pullToRefresh.IsRefreshing = true;
         try
         {
-            await ((ProductsViewModel)BindingContext).LoadProductsAsync();
+            var vm = (ProductsViewModel)BindingContext;
+            await vm.LoadProductsAsync();
+            listView.DataSource.Refresh();
         }
         finally
         {

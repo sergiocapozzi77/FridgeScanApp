@@ -1,0 +1,131 @@
+<h2>🎯 TabBar Redesign — 3 Options</h2>
+<p class="subtitle">Pick the direction you prefer. Each follows the M3 dark theme from your design system.</p>
+
+<div class="cards">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-body">
+      <h3>A. Refined Shell</h3>
+      <p class="subtitle" style="color:#8888AA">Keep Shell TabBar — color + icon polish</p>
+      <div class="mockup" style="margin-top:12px;">
+        <div class="mockup-body" style="padding:0;">
+          <div style="display:flex; align-items:center; justify-content:space-around; background:#14142E; border-radius:12px; padding:6px 0;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A; display:flex; align-items:center; justify-content:center;">
+                <span style="color:white;font-size:18px;">📦</span>
+              </div>
+              <span style="color:white;font-size:10px;font-weight:700;">Products</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px; opacity:0.5;">
+              <span style="color:#8888AA;font-size:20px;">🍳</span>
+              <span style="color:#8888AA;font-size:10px;">Recipe</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px; opacity:0.5;">
+              <span style="color:#8888AA;font-size:20px;">📥</span>
+              <span style="color:#8888AA;font-size:10px;">Import</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px; opacity:0.5;">
+              <span style="color:#8888AA;font-size:20px;">📚</span>
+              <span style="color:#8888AA;font-size:10px;">Cookbooks</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px; opacity:0.5;">
+              <span style="color:#8888AA;font-size:20px;">📊</span>
+              <span style="color:#8888AA;font-size:10px;">Activity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Quickest to implement</li><li>Native platform feel</li><li>Minimal code change</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Limited to Shell APIs</li><li>No custom animations</li><li>Still looks "default-ish"</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-body">
+      <h3>B. M3 Navigation Bar</h3>
+      <p class="subtitle" style="color:#8888AA">Custom bottom bar — full M3 spec</p>
+      <div class="mockup" style="margin-top:12px;">
+        <div class="mockup-body" style="padding:0;">
+          <div style="background:#14142E; border-radius:12px; padding:6px 0;">
+            <div style="display:flex; align-items:flex-start; justify-content:space-around;">
+              <!-- Products - active -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+                <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A; display:flex; align-items:center; justify-content:center;">
+                  <span style="color:white;font-size:18px;">📦</span>
+                </div>
+                <span style="color:white;font-size:10px;font-weight:700;">Products</span>
+                <div style="width:6px;height:6px;border-radius:3px;background:white;"></div>
+              </div>
+              <!-- Recipe -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:22px;">🍳</span>
+                <span style="color:#8888AA;font-size:10px;">Recipe</span>
+                <div style="width:6px;height:6px;border-radius:3px;background:transparent;"></div>
+              </div>
+              <!-- Import -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:22px;">📥</span>
+                <span style="color:#8888AA;font-size:10px;">Import</span>
+                <div style="width:6px;height:6px;border-radius:3px;background:transparent;"></div>
+              </div>
+              <!-- Cookbooks -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:22px;">📚</span>
+                <span style="color:#8888AA;font-size:10px;">Cookbooks</span>
+                <div style="width:6px;height:6px;border-radius:3px;background:transparent;"></div>
+              </div>
+              <!-- Activity -->
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; opacity:0.45;">
+                <span style="color:#8888AA;font-size:22px;">📊</span>
+                <span style="color:#8888AA;font-size:10px;">Activity</span>
+                <div style="width:6px;height:6px;border-radius:3px;background:transparent;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Full M3 Nav Bar spec</li><li>Active dot indicator</li><li>Custom animations possible</li><li>Premium look</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More implementation work</li><li>Custom navigation handler</li><li>Platform consistency needed</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-body">
+      <h3>C. Floating Mini Bar</h3>
+      <p class="subtitle" style="color:#8888AA">Compact floating bar — icons only</p>
+      <div style="margin-top:12px; display:flex; justify-content:center;">
+        <div style="background:#1E1E3A; border-radius:24px; padding:8px 16px; display:inline-flex; align-items:center; gap:12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+          <div style="width:40px;height:40px;border-radius:20px;background:#14142E; display:flex; align-items:center; justify-content:center;">
+            <span style="color:white;font-size:18px;">📦</span>
+          </div>
+          <div style="width:40px;height:40px;border-radius:20px; display:flex; align-items:center; justify-content:center;">
+            <span style="color:#8888AA;font-size:18px;">🍳</span>
+          </div>
+          <div style="width:40px;height:40px;border-radius:20px; display:flex; align-items:center; justify-content:center;">
+            <span style="color:#8888AA;font-size:18px;">📥</span>
+          </div>
+          <div style="width:40px;height:40px;border-radius:20px; display:flex; align-items:center; justify-content:center;">
+            <span style="color:#8888AA;font-size:18px;">📚</span>
+          </div>
+          <div style="width:40px;height:40px;border-radius:20px; display:flex; align-items:center; justify-content:center;">
+            <span style="color:#8888AA;font-size:18px;">📊</span>
+          </div>
+        </div>
+      </div>
+      <div class="pros-cons" style="margin-top:10px;">
+        <div class="pros"><h4>Pros</h4><ul><li>Unique, distinctive look</li><li>Compact — more screen space</li><li>Spotify/BBC-inspired</li><li>Fun to build</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>No labels — less discoverable</li><li>Floating bar overlay on content</li><li>Less standard M3 pattern</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:24px;"><strong>Take a look at the options above</strong> and let me know which direction appeals to you in the terminal. You can also click to select your preferred option in the browser!</p>
