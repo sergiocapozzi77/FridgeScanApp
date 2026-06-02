@@ -8,47 +8,27 @@
     xmlns:views="clr-namespace:FridgeScan.Views"
     Title="FridgeScan">
 
-    <TabBar>
-        <ShellContent Title="Products" ContentTemplate="{DataTemplate views:ProductsPage}">
+    <TabBar Shell.TabBarIsVisible="False">
+        <ShellContent Title="Products" Route="products" ContentTemplate="{DataTemplate views:ProductsPage}">
             <ShellContent.Icon>
-                <FontImageSource
-                    FontFamily="Material"
-                    Glyph="&#xe85d;"
-                  />
-            </ShellContent.Icon>
-
-        </ShellContent>
-        <ShellContent
-            Title="Recipe"
-            ContentTemplate="{DataTemplate views:RecipePage}"
-           >
-            <ShellContent.Icon>
-                <FontImageSource
-         FontFamily="Material"
-         Glyph="&#xf357;"
-       />
+                <FontImageSource FontFamily="Material" Glyph="&#xe85d;" />
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent
-            Title="Import"
-            ContentTemplate="{DataTemplate views:ImportPage}"
-            Icon="icon_import.png" />
-        <ShellContent Title="Activities" ContentTemplate="{DataTemplate views:ActivitiesPage}">
+        <ShellContent Title="Recipe" Route="recipe" ContentTemplate="{DataTemplate views:RecipePage}">
             <ShellContent.Icon>
-                <FontImageSource
-                    FontFamily="Material"
-                    Glyph="&#xe889;"
-                    />
+                <FontImageSource FontFamily="Material" Glyph="&#xf357;" />
             </ShellContent.Icon>
-
         </ShellContent>
-        <ShellContent
-            Title="Cookbooks"
-            ContentTemplate="{DataTemplate views:CookbookPage}">
+        <ShellContent Title="Import" Route="import" ContentTemplate="{DataTemplate views:ImportPage}"
+                      Icon="icon_import.png" />
+        <ShellContent Title="Activities" Route="activities" ContentTemplate="{DataTemplate views:ActivitiesPage}">
             <ShellContent.Icon>
-                <FontImageSource
-                    FontFamily="Material"
-                    Glyph="&#xe86d;" />
+                <FontImageSource FontFamily="Material" Glyph="&#xe889;" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Cookbooks" Route="cookbook" ContentTemplate="{DataTemplate views:CookbookPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="Material" Glyph="&#xe86d;" />
             </ShellContent.Icon>
         </ShellContent>
     </TabBar>
