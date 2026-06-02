@@ -89,7 +89,8 @@
                     StrokeShape="RoundRectangle 14"
                     Stroke="Transparent"
                     HeightRequest="48"
-                    Padding="12,0">
+                    Padding="12,0"
+                    Margin="0,0,0,5">
                 <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center">
                     <!-- + icon container -->
                     <Border BackgroundColor="#2A2E58"
