@@ -44,4 +44,14 @@ public partial class ProductsPage : ContentPage
 
 
     }
+
+    private async void OnEditProductTapped(object sender, EventArgs e)
+    {
+        if (sender is Border border && border.BindingContext is Models.Product product)
+        {
+            var vm = (ProductsViewModel)BindingContext;
+            if (vm.EditProductCommand.CanExecute(product))
+                vm.EditProductCommand.Execute(product);
+        }
+    }
 }
