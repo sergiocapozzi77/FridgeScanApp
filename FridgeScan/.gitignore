@@ -1,8 +1,10 @@
 
-# Secrets (don’t commit!)
+# Secrets (donï¿½t commit!)
 secrets.json
 appsettings.Development.json
 *.env
+/.ideaimplement
+
 
 # Crash reports
 crash.log

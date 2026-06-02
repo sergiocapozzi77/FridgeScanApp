@@ -43,7 +43,6 @@ This spec covers **visual changes only** to `ProductsPage.xaml`. No ViewModel, m
 ### Top App Bar (Large Expressive Header)
 
 - **Title:** "Inventory" — 28sp Bold, White
-- **Subtitle:** "Keep track of products and expiry dates" — 13sp, `#8888AA`
 - **Actions:** Two 40dp tonal circle buttons (`#1E1E3A`) with search and barcode icons
 - **Spacing:** 20dp top padding, 4dp sides, 12dp bottom
 

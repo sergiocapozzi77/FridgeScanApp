@@ -1,0 +1,184 @@
+<h2>📱 M3 Redesign — Compact Row Height</h2>
+<p class="subtitle">Preserving row structure with reduced 48dp height for a denser, scannable list</p>
+
+<div class="mockup">
+  <div class="mockup-header">Products Page · Compact Row Preview</div>
+  <div class="mockup-body" style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center;">
+
+    <!-- Phone frame -->
+    <div style="width:360px;background:#0D1023;border-radius:32px;padding:16px;font-family:system-ui,sans-serif;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+
+      <!-- Top App Bar (Large) -->
+      <div style="padding:20px 4px 12px 4px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-size:28px;font-weight:700;color:#fff;letter-spacing:-0.3px;">Inventory</div>
+            <div style="font-size:13px;color:#8888AA;margin-top:4px;">Keep track of products and expiry dates</div>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <div style="width:40px;height:40px;background:#1E1E3A;border-radius:20px;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:18px;">🔍</span>
+            </div>
+            <div style="width:40px;height:40px;background:#1E1E3A;border-radius:20px;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:18px;">📷</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Item Section -->
+      <div style="background:#202448;border-radius:22px;padding:10px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;background:#2A2E58;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#D0BCFF;">+</div>
+        <div style="flex:1;font-size:15px;color:#CCCCDD;font-weight:500;">Add item</div>
+        <div style="font-size:20px;color:#666688;font-weight:300;">›</div>
+      </div>
+
+      <!-- Section: Meat -->
+      <div style="margin-bottom:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 4px 6px 4px;">
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.5px;">Meat</span>
+            <span style="font-size:11px;color:#8888AA;">· 3 items</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ Rows at 48dp ═══ -->
+
+      <!-- Row 1: Chicken Breast (good, 5d left) -->
+      <div style="background:#171A35;border-radius:14px;padding:0 14px;margin-bottom:8px;height:48px;display:flex;align-items:center;">
+        <div style="flex:1;">
+          <span style="font-size:14px;font-weight:500;color:#fff;">Chicken Breast</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <!-- Expiry badge - good (tonal neutral) -->
+          <div style="background:#2A2E58;border-radius:8px;padding:2px 8px;">
+            <span style="font-size:11px;font-weight:700;color:#CCCCDD;">5d left</span>
+          </div>
+          <!-- Edit button - smaller -->
+          <div style="width:32px;height:32px;background:#1E1E3A;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:14px;color:#CCCCDD;">✎</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Bacon (today, frozen icon visible) -->
+      <div style="background:#171A35;border-radius:14px;padding:0 14px;margin-bottom:8px;height:48px;display:flex;align-items:center;">
+        <div style="flex:1;display:flex;align-items:center;gap:4px;">
+          <span style="font-size:14px;font-weight:500;color:#fff;">Bacon</span>
+          <span style="font-size:14px;color:#8888AA;">❄️</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <!-- Expiry badge - today/amber -->
+          <div style="background:#3A2E28;border-radius:8px;padding:2px 8px;">
+            <span style="font-size:11px;font-weight:700;color:#FFAA44;">Today</span>
+          </div>
+          <div style="width:32px;height:32px;background:#1E1E3A;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:14px;color:#CCCCDD;">✎</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Ground Beef (expired) -->
+      <div style="background:#171A35;border-radius:14px;padding:0 14px;margin-bottom:8px;height:48px;display:flex;align-items:center;">
+        <div style="flex:1;">
+          <span style="font-size:14px;font-weight:500;color:#fff;">Ground Beef</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <!-- Expiry badge - expired/red -->
+          <div style="background:#2E1E1E;border-radius:8px;padding:2px 8px;">
+            <span style="font-size:11px;font-weight:700;color:#FF6666;">Expired</span>
+          </div>
+          <div style="width:32px;height:32px;background:#1E1E3A;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:14px;color:#CCCCDD;">✎</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 4: Frozen Chicken (good, 14d left) -->
+      <div style="background:#171A35;border-radius:14px;padding:0 14px;margin-bottom:8px;height:48px;display:flex;align-items:center;">
+        <div style="flex:1;display:flex;align-items:center;gap:4px;">
+          <span style="font-size:14px;font-weight:500;color:#fff;">Frozen Chicken</span>
+          <span style="font-size:14px;color:#8888AA;">❄️</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="background:#2A2E58;border-radius:8px;padding:2px 8px;">
+            <span style="font-size:11px;font-weight:700;color:#CCCCDD;">14d left</span>
+          </div>
+          <div style="width:32px;height:32px;background:#1E1E3A;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:14px;color:#CCCCDD;">✎</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Dairy -->
+      <div style="margin-bottom:4px;margin-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 4px 6px 4px;">
+          <div style="display:flex;align-items:baseline;gap:8px;">
+            <span style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.5px;">Dairy</span>
+            <span style="font-size:11px;color:#8888AA;">· 2 items</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 5: Milk (no expiry badge >3 days) -->
+      <div style="background:#171A35;border-radius:14px;padding:0 14px;margin-bottom:8px;height:48px;display:flex;align-items:center;">
+        <div style="flex:1;">
+          <span style="font-size:14px;font-weight:500;color:#fff;">Milk</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <!-- No expiry badge (hidden) -->
+          <!-- Remove button -->
+          <div style="width:32px;height:32px;background:#2A1E1E;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:14px;color:#ff6b6b;">🗑</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 6: Eggs (no expiry badge) -->
+      <div style="background:#171A35;border-radius:14px;padding:0 14px;margin-bottom:8px;height:48px;display:flex;align-items:center;">
+        <div style="flex:1;display:flex;align-items:center;gap:4px;">
+          <span style="font-size:14px;font-weight:500;color:#fff;">Eggs</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:32px;height:32px;background:#2A1E1E;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:14px;color:#ff6b6b;">🗑</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<h3>Updated Dimensions</h3>
+
+<table style="width:100%;border-collapse:collapse;margin:12px 0;">
+  <tr style="border-bottom:1px solid #333;">
+    <th style="text-align:left;padding:8px 4px;font-size:13px;color:#8888AA;">Element</th>
+    <th style="text-align:left;padding:8px 4px;font-size:13px;color:#8888AA;">Before</th>
+    <th style="text-align:left;padding:8px 4px;font-size:13px;color:#8888AA;">After</th>
+  </tr>
+  <tr style="border-bottom:1px solid #222;">
+    <td style="padding:6px 4px;font-size:13px;">Row height</td>
+    <td style="padding:6px 4px;font-size:13px;">56dp</td>
+    <td style="padding:6px 4px;font-size:13px;color:#FFAA44;font-weight:700;">48dp</td>
+  </tr>
+  <tr style="border-bottom:1px solid #222;">
+    <td style="padding:6px 4px;font-size:13px;">Card corner radius</td>
+    <td style="padding:6px 4px;font-size:13px;">12dp</td>
+    <td style="padding:6px 4px;font-size:13px;">14dp</td>
+  </tr>
+  <tr style="border-bottom:1px solid #222;">
+    <td style="padding:6px 4px;font-size:13px;">Edit button size</td>
+    <td style="padding:6px 4px;font-size:13px;">40dp</td>
+    <td style="padding:6px 4px;font-size:13px;">32dp</td>
+  </tr>
+  <tr style="border-bottom:1px solid #222;">
+    <td style="padding:6px 4px;font-size:13px;">Row gap (vertical)</td>
+    <td style="padding:6px 4px;font-size:13px;">10dp</td>
+    <td style="padding:6px 4px;font-size:13px;">8dp</td>
+  </tr>
+</table>
+
+<p class="subtitle" style="margin-top:16px;">Rows now 48dp (down from 56dp) with 14dp corner radius. Edit buttons at 32dp. More compact, scannable list that still feels modern. Does this look right? Any other tweaks?</p>
