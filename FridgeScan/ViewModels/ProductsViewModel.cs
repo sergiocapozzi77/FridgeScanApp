@@ -2,7 +2,6 @@
 using FridgeScan.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using FridgeScan.Views;
 
 namespace FridgeScan.ViewModels;
 
@@ -78,7 +77,7 @@ public partial class ProductsViewModel : BaseViewModel
     private async Task EditProduct(Product product)
     {
         if (product == null) return;
-        await Shell.Current.GoToAsync(nameof(ProductDetailPage), new Dictionary<string, object>
+        await Shell.Current.GoToAsync("ProductDetailPage", new Dictionary<string, object>
         {
             { "productId", product.RowId }
         });
