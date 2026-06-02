@@ -75,6 +75,19 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
     }
 
     [RelayCommand]
+    private void DecreaseQuantity()
+    {
+        if (Quantity > 0)
+            Quantity--;
+    }
+
+    [RelayCommand]
+    private void IncreaseQuantity()
+    {
+        Quantity++;
+    }
+
+    [RelayCommand]
     private async Task Delete()
     {
         if (originalProduct == null) return;
