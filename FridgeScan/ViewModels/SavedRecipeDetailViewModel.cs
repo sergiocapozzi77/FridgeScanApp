@@ -36,8 +36,9 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     public ObservableCollection<MethodStep> MethodSteps { get; } = new();
 
     [RelayCommand]
-    private void ToggleIngredient(IngredientItem item)
+    private void ToggleIngredient(IngredientItem? item)
     {
+        if (item == null) return;
         item.IsChecked = !item.IsChecked;
     }
 
