@@ -21,7 +21,7 @@ public partial class ProductsPage : ContentPage
     {
         base.OnAppearing();
         if (BindingContext is ProductsViewModel vm)
-            vm.RefreshGrouping();
+            vm.RefreshAfterEdit();
     }
 
     private void OnLoaded(object sender, EventArgs e)

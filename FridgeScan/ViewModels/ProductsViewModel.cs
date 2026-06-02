@@ -130,6 +130,67 @@ public partial class ProductsViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// Syncs groupings in-place after edits/deletes from detail page.
+    /// Preserves scroll position by avoiding GroupedProducts.Clear().
+    /// </summary>
+    public void RefreshAfterEdit()
+    {
+        if (productsManager.Products == null) return;
+
+        var desired = productsManager.Products
+            .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category)
+            .OrderBy(g => g.Key)
+            .ToList();
+
+        var desiredKeys = desired.Select(g => g.Key).ToHashSet();
+
+        // Remove groups that no longer have any products
+        for (int i = GroupedProducts.Count - 1; i >= 0; i--)
+        {
+            if (!desiredKeys.Contains(GroupedProducts[i].FoodCategory))
+                GroupedProducts.RemoveAt(i);
+        }
+
+        var existingGroups = GroupedProducts.ToDictionary(g => g.FoodCategory);
+        int insertIndex = 0;
+
+        foreach (var group in desired)
+        {
+            if (existingGroups.TryGetValue(group.Key, out var existingGroup))
+            {
+                // Sync products in this group
+                var desiredProducts = group.ToList();
+                var desiredIds = desiredProducts.Select(p => p.RowId).ToHashSet();
+
+                // Remove products deleted or moved to another category
+                for (int i = existingGroup.FoodMenuCollection.Count - 1; i >= 0; i--)
+                {
+                    if (!desiredIds.Contains(existingGroup.FoodMenuCollection[i].RowId))
+                        existingGroup.FoodMenuCollection.RemoveAt(i);
+                }
+
+                // Add products that moved into this category
+                foreach (var product in desiredProducts)
+                {
+                    if (!existingGroup.FoodMenuCollection.Any(p => p.RowId == product.RowId))
+                        existingGroup.FoodMenuCollection.Add(product);
+                }
+
+                // Ensure alphabetical ordering of groups
+                var currentIndex = GroupedProducts.IndexOf(existingGroup);
+                if (currentIndex != insertIndex && currentIndex >= 0)
+                    GroupedProducts.Move(currentIndex, insertIndex);
+            }
+            else
+            {
+                // New group
+                GroupedProducts.Insert(insertIndex, new ListViewFoodCategory(group.Key, group.ToList()));
+            }
+            insertIndex++;
+        }
+    }
+
     private void AddProductToGroups(Product product)
     {
         var category = string.IsNullOrWhiteSpace(product.Category)
