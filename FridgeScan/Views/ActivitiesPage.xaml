@@ -12,28 +12,34 @@
     xmlns:sf="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
     xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:controls="clr-namespace:FridgeScan.Controls"
     xmlns:vm="clr-namespace:FridgeScan.ViewModels"
     Title="Activities"
     x:DataType="vm:ActivitiesViewModel">
-    <Grid>
-        <pulltoRefresh:SfPullToRefresh
-            x:Name="pullToRefresh"
-            Grid.Row="1"
-            IsRefreshing="False"
-            PullingThreshold="150"
-            RefreshViewHeight="50"
-            RefreshViewThreshold="30"
-            RefreshViewWidth="50"
-            Refreshing="pullToRefresh_Refreshing"
-            TransitionMode="SlideOnTop">
-            <pulltoRefresh:SfPullToRefresh.PullableContent>
-                <Grid x:Name="mainGrid">
-                    <sf:SfListView
-                        x:Name="listView"
-                        DisplayMemberPath="Description"
-                        ItemsSource="{Binding Activities}" />
-                </Grid>
-            </pulltoRefresh:SfPullToRefresh.PullableContent>
-        </pulltoRefresh:SfPullToRefresh>
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0">
+            <pulltoRefresh:SfPullToRefresh
+                x:Name="pullToRefresh"
+                Grid.Row="1"
+                IsRefreshing="False"
+                PullingThreshold="150"
+                RefreshViewHeight="50"
+                RefreshViewThreshold="30"
+                RefreshViewWidth="50"
+                Refreshing="pullToRefresh_Refreshing"
+                TransitionMode="SlideOnTop">
+                <pulltoRefresh:SfPullToRefresh.PullableContent>
+                    <Grid x:Name="mainGrid">
+                        <sf:SfListView
+                            x:Name="listView"
+                            DisplayMemberPath="Description"
+                            ItemsSource="{Binding Activities}" />
+                    </Grid>
+                </pulltoRefresh:SfPullToRefresh.PullableContent>
+            </pulltoRefresh:SfPullToRefresh>
+        </Grid>
+
+        <!-- Floating Bottom Bar -->
+        <controls:FloatingBottomBar Grid.Row="1" />
     </Grid>
 </ContentPage>
