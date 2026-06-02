@@ -152,12 +152,12 @@
                             <DataTemplate x:DataType="models:ListViewFoodCategory">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <!-- Category group header (Option A: subtle section label) -->
-                                    <Grid Grid.Row="0" Padding="4,0,4,0">
+                                    <!-- Category group header (M3 style) -->
+                                    <Grid Grid.Row="0" Padding="4,2,4,6" Margin="0,12,0,0">
                                         <Grid.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding ToggleExpandCommand}" />
                                         </Grid.GestureRecognizers>
@@ -169,16 +169,16 @@
                                         </Grid.ColumnDefinitions>
                                         <Label
                                             Grid.Column="0"
-                                            FontSize="12"
+                                            FontSize="13"
                                             FontAttributes="Bold"
                                             CharacterSpacing="0.5"
-                                            TextColor="#8888AA"
+                                            TextColor="White"
                                             Text="{Binding FoodCategory}" />
                                         <Label
                                             Grid.Column="1"
-                                            Margin="4,0,0,0"
+                                            Margin="8,0,0,0"
                                             FontSize="11"
-                                            TextColor="#666688"
+                                            TextColor="#8888AA"
                                             Text="{Binding FoodMenuCollection.Count, StringFormat='· {0} items'}" />
                                         <Label
                                             Grid.Column="3"
