@@ -1,0 +1,80 @@
+<h2>Product Detail Page — V2</h2>
+<p class="subtitle">Added "Clear date" option on expiry field</p>
+
+<div class="mockup" style="max-width: 420px; margin: 0 auto;">
+  <div class="mockup-header">Preview</div>
+  <div class="mockup-body" style="background: #0D0D2B; padding: 20px; font-family: system-ui, sans-serif;">
+
+    <!-- Header: back + title -->
+    <div style="display: flex; align-items: center; margin-bottom: 24px;">
+      <span style="font-size: 22px; color: #CCCCDD; width: 48px;">←</span>
+      <span style="color: white; font-size: 22px; font-weight: 700;">Edit Product</span>
+    </div>
+
+    <!-- Name -->
+    <div style="margin-bottom: 20px;">
+      <span style="color: #8888AA; font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block;">NAME</span>
+      <div style="background: #14142E; border-radius: 12px; padding: 12px 14px;">
+        <span style="color: white; font-size: 16px;">Yogurt</span>
+      </div>
+    </div>
+
+    <!-- Quantity -->
+    <div style="margin-bottom: 20px;">
+      <span style="color: #8888AA; font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block;">QUANTITY</span>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: #1E1E3A; border-radius: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+          <span style="color: #CCCCDD; font-size: 20px;">−</span>
+        </div>
+        <span style="color: white; font-size: 20px; font-weight: 600; min-width: 30px; text-align: center;">2</span>
+        <div style="background: #1E1E3A; border-radius: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+          <span style="color: #CCCCDD; font-size: 20px;">+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expiry date with clear -->
+    <div style="margin-bottom: 20px;">
+      <span style="color: #8888AA; font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block;">EXPIRY DATE</span>
+      <div style="background: #14142E; border-radius: 12px; padding: 12px 14px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="color: white; font-size: 16px;">May 30, 2026</span>
+          <span style="display: flex; gap: 8px;">
+            <span style="color: #666; font-size: 16px; cursor: pointer;">✕</span>
+            <span style="color: #8888AA; font-size: 14px;">📅</span>
+          </span>
+        </div>
+        <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E1E3A;">
+          <span style="color: #ff6b6b; font-size: 12px; font-weight: 500; cursor: pointer;">Clear expiry date</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frozen -->
+    <div style="margin-bottom: 20px;">
+      <span style="color: #8888AA; font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block;">STORAGE</span>
+      <div style="background: #14142E; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #8888AA; font-size: 16px;">❄️</span>
+          <span style="color: white; font-size: 16px;">Frozen</span>
+        </div>
+        <div style="background: #27AE60; width: 48px; height: 28px; border-radius: 14px; padding: 3px; display: flex;">
+          <div style="background: white; width: 22px; height: 22px; border-radius: 11px; margin-left: auto;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save -->
+    <div style="background: #1E1E3A; border-radius: 20px; padding: 12px; text-align: center; margin-bottom: 24px;">
+      <span style="color: #CCCCDD; font-size: 14px; font-weight: 700;">Save</span>
+    </div>
+
+    <!-- Delete -->
+    <div style="background: #2A1E1E; border-radius: 20px; padding: 12px; text-align: center;">
+      <span style="color: #ff6b6b; font-size: 14px; font-weight: 700;">Delete Product</span>
+    </div>
+
+  </div>
+</div>
+
+<p><strong>New:</strong> ✕ icon + "Clear expiry date" link below the date picker to set expiry back to <code>null</code>.</p>

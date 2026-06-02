@@ -363,4 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # JetBrains Rider
+
+# MCP server config (contains API keys)
+.mcp.json
 .idea/

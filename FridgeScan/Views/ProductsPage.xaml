@@ -84,130 +84,114 @@
                         x:DataType="vm:ProductsViewModel"
                         AutoFitMode="DynamicHeight"
                         IsStickyGroupHeader="True"
-                        ItemsSource="{Binding GroupedProducts}"
+                        ItemsSource="{Binding Products}"
                         SelectionMode="None">
-                        <sf:SfListView.ItemTemplate>
-                            <DataTemplate x:DataType="models:ListViewFoodCategory">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="30" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
 
-                                    <!-- Category group header (Option A: subtle section label) -->
-                                    <Grid Grid.Row="0" Padding="4,0,4,0">
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding ToggleExpandCommand}" />
-                                        </Grid.GestureRecognizers>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                        <sf:SfListView.GroupHeaderTemplate>
+                            <DataTemplate>
+                                <Grid Padding="4,0,4,0" HeightRequest="30">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Grid.Column="0"
+                                        FontSize="12"
+                                        FontAttributes="Bold"
+                                        CharacterSpacing="0.5"
+                                        TextColor="#8888AA"
+                                        Text="{Binding Key}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="4,0,0,0"
+                                        FontSize="11"
+                                        TextColor="#666688"
+                                        Text="{Binding Count, StringFormat='· {0} items'}" />
+                                    <Label
+                                        Grid.Column="3"
+                                        FontFamily="Material"
+                                        FontSize="12"
+                                        TextColor="#666688"
+                                        Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </sf:SfListView.GroupHeaderTemplate>
+
+                        <sf:SfListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Product">
+                                <Border
+                                    BackgroundColor="#14142E"
+                                    StrokeShape="RoundRectangle 12"
+                                    Stroke="Transparent"
+                                    Padding="12,0"
+                                    Margin="0,0,0,10"
+                                    HeightRequest="56">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleSelectCommand}" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" VerticalOptions="Center">
+                                        <!-- Product name -->
                                         <Label
                                             Grid.Column="0"
-                                            FontSize="12"
-                                            FontAttributes="Bold"
-                                            CharacterSpacing="0.5"
-                                            TextColor="#8888AA"
-                                            Text="{Binding FoodCategory}" />
+                                            FontFamily="Roboto-Regular"
+                                            FontSize="14"
+                                            TextColor="White"
+                                            VerticalOptions="Center"
+                                            LineBreakMode="TailTruncation"
+                                            Text="{Binding Name}" />
+
+                                        <!-- Frozen icon (if frozen) -->
                                         <Label
                                             Grid.Column="1"
-                                            Margin="4,0,0,0"
-                                            FontSize="11"
-                                            TextColor="#666688"
-                                            Text="{Binding FoodMenuCollection.Count, StringFormat='· {0} items'}" />
-                                        <Label
-                                            Grid.Column="3"
                                             FontFamily="Material"
-                                            FontSize="12"
-                                            TextColor="#666688"
-                                            Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}" />
+                                            FontSize="16"
+                                            TextColor="#8888AA"
+                                            VerticalOptions="Center"
+                                            IsVisible="{Binding ShowFrozenIcon}"
+                                            Text="ac_unit" />
+
+                                        <!-- Expiry badge -->
+                                        <Border
+                                            Grid.Column="2"
+                                            Margin="6,0,0,0"
+                                            StrokeShape="RoundRectangle 10"
+                                            Stroke="Transparent"
+                                            Padding="6,2,6,2"
+                                            IsVisible="{Binding ShowExpiryBadge}"
+                                            BackgroundColor="{Binding ExpiryColor}"
+                                            VerticalOptions="Center">
+                                            <Label
+                                                FontSize="11"
+                                                FontAttributes="Bold"
+                                                TextColor="White"
+                                                Text="{Binding ExpiryDisplayText}" />
+                                        </Border>
+
+                                        <!-- Edit button -->
+                                        <Border
+                                            Grid.Column="3"
+                                            Margin="6,0,0,0"
+                                            BackgroundColor="#1E1E3A"
+                                            StrokeShape="RoundRectangle 20"
+                                            Stroke="Transparent"
+                                            WidthRequest="40"
+                                            HeightRequest="40"
+                                            VerticalOptions="Center">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnEditProductTapped" />
+                                            </Border.GestureRecognizers>
+                                            <Label
+                                                Text="&#xe3c9;"
+                                                FontFamily="Material"
+                                                FontSize="18"
+                                                TextColor="#CCCCDD"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center" />
+                                        </Border>
                                     </Grid>
-
-                                    <!-- Product list (visible when expanded) -->
-                                    <StackLayout
-                                        Grid.Row="1"
-                                        BindableLayout.ItemsSource="{Binding FoodMenuCollection}"
-                                        IsVisible="{Binding IsExpanded}">
-                                        <BindableLayout.ItemTemplate>
-                                            <DataTemplate x:DataType="models:Product">
-                                                <Border
-                                                    BackgroundColor="#14142E"
-                                                    StrokeShape="RoundRectangle 12"
-                                                    Stroke="Transparent"
-                                                    Padding="12,0"
-                                                    Margin="0,0,0,10"
-                                                    HeightRequest="56">
-                                                    <Border.GestureRecognizers>
-                                                        <TapGestureRecognizer Command="{Binding ToggleSelectCommand}" />
-                                                    </Border.GestureRecognizers>
-                                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" VerticalOptions="Center">
-                                                        <!-- Product name -->
-                                                        <Label
-                                                            Grid.Column="0"
-                                                            FontFamily="Roboto-Regular"
-                                                            FontSize="14"
-                                                            TextColor="White"
-                                                            VerticalOptions="Center"
-                                                            LineBreakMode="TailTruncation"
-                                                            Text="{Binding Name}" />
-
-                                                        <!-- Frozen icon (if frozen) -->
-                                                        <Label
-                                                            Grid.Column="1"
-                                                            FontFamily="Material"
-                                                            FontSize="16"
-                                                            TextColor="#8888AA"
-                                                            VerticalOptions="Center"
-                                                            IsVisible="{Binding ShowFrozenIcon}"
-                                                            Text="ac_unit" />
-
-                                                        <!-- Expiry badge -->
-                                                        <Border
-                                                            Grid.Column="2"
-                                                            Margin="6,0,0,0"
-                                                            StrokeShape="RoundRectangle 10"
-                                                            Stroke="Transparent"
-                                                            Padding="6,2,6,2"
-                                                            IsVisible="{Binding ShowExpiryBadge}"
-                                                            BackgroundColor="{Binding ExpiryColor}"
-                                                            VerticalOptions="Center">
-                                                            <Label
-                                                                FontSize="11"
-                                                                FontAttributes="Bold"
-                                                                TextColor="White"
-                                                                Text="{Binding ExpiryDisplayText}" />
-                                                        </Border>
-
-                                                        <!-- Edit button -->
-                                                        <Border
-                                                            Grid.Column="3"
-                                                            Margin="6,0,0,0"
-                                                            BackgroundColor="#1E1E3A"
-                                                            StrokeShape="RoundRectangle 20"
-                                                            Stroke="Transparent"
-                                                            WidthRequest="40"
-                                                            HeightRequest="40"
-                                                            VerticalOptions="Center">
-                                                            <Border.GestureRecognizers>
-                                                                <TapGestureRecognizer Tapped="OnEditProductTapped" />
-                                                            </Border.GestureRecognizers>
-                                                            <Label
-                                                                Text="&#xe3c9;"
-                                                                FontFamily="Material"
-                                                                FontSize="18"
-                                                                TextColor="#CCCCDD"
-                                                                HorizontalOptions="Center"
-                                                                VerticalOptions="Center" />
-                                                        </Border>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </BindableLayout.ItemTemplate>
-                                    </StackLayout>
-                                </Grid>
+                                </Border>
                             </DataTemplate>
                         </sf:SfListView.ItemTemplate>
                     </sf:SfListView>

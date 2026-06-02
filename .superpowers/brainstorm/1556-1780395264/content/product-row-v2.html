@@ -1,0 +1,67 @@
+<h2>Product Row — Updated Expiry Rules</h2>
+<p class="subtitle">No green badges · Only show when ≤3 days or expired · Red/amber only</p>
+
+<div class="mockup">
+  <div class="mockup-header">Dairy category — expanded</div>
+  <div class="mockup-body" style="background: #0D0D2B; padding: 12px;">
+
+    <!-- Category Header -->
+    <div style="display: flex; justify-content: space-between; padding: 8px 4px; margin-bottom: 4px;">
+      <span style="color: white; font-size: 14px; font-weight: 600;">Dairy</span>
+      <span style="color: #8888AA; font-size: 14px;">▼</span>
+    </div>
+
+    <!-- Milk: Frozen, 5d left → badge hidden (4+) -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Milk</span>
+      <span style="color: #8888AA; font-size: 14px;">❄️</span>
+      <!-- no badge — 5d > 3 -->
+      <div style="background: #1E1E3A; border-radius: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 16px; color: #CCCCDD;">✏️</span>
+      </div>
+    </div>
+
+    <!-- Yogurt: 2d left → amber badge -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Yogurt</span>
+      <span style="background: #F39C12; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">2d left</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 16px; color: #CCCCDD;">✏️</span>
+      </div>
+    </div>
+
+    <!-- Cream: Expired → red badge -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Cream</span>
+      <span style="background: #E74C3C; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">Expired</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 16px; color: #CCCCDD;">✏️</span>
+      </div>
+    </div>
+
+    <!-- Cheese: Today → amber badge -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Cheese</span>
+      <span style="background: #F39C12; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">Today</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 16px; color: #CCCCDD;">✏️</span>
+      </div>
+    </div>
+
+    <!-- Eggs: No expiry → just edit -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Eggs</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 16px; color: #CCCCDD;">✏️</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h3>Summary</h3>
+  <p>✅ Name left · items right-aligned: frozen ❄️ → expiry pill → edit ✏️<br>
+  ✅ Badge: only when ≤3d (amber) or expired (red) — hidden otherwise<br>
+  ✅ Single row, 40dp height, Material 3 colors</p>
+</div>

@@ -1,0 +1,70 @@
+<h2>Product Row — V3</h2>
+<p class="subtitle">Using Material icon <code>&amp;#xe3c9;</code> (edit/pencil) in 40×40 circle</p>
+
+<div class="mockup">
+  <div class="mockup-header">Dairy category — expanded</div>
+  <div class="mockup-body" style="background: #0D0D2B; padding: 12px; font-family: Roboto, sans-serif;">
+
+    <!-- Category Header -->
+    <div style="display: flex; justify-content: space-between; padding: 8px 4px; margin-bottom: 4px;">
+      <span style="color: white; font-size: 14px; font-weight: 600;">Dairy</span>
+      <span style="color: #8888AA; font-size: 14px;">▼</span>
+    </div>
+
+    <!-- Yogurt: 2d left → amber badge -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Yogurt</span>
+      <span style="background: #F39C12; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">2d left</span>
+      <!-- Edit circle: 40×40, #1E1E3A, uses &#xe3c9; -->
+      <div style="background: #1E1E3A; border-radius: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <span style="font-family: 'Material Icons'; font-size: 18px; color: #CCCCDD;">edit</span>
+      </div>
+    </div>
+
+    <!-- Cream: Expired → red badge -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Cream</span>
+      <span style="background: #E74C3C; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">Expired</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <span style="font-family: 'Material Icons'; font-size: 18px; color: #CCCCDD;">edit</span>
+      </div>
+    </div>
+
+    <!-- Cheese: Today → amber badge -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Cheese</span>
+      <span style="background: #F39C12; color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600;">Today</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <span style="font-family: 'Material Icons'; font-size: 18px; color: #CCCCDD;">edit</span>
+      </div>
+    </div>
+
+    <!-- Buter: Frozen -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Butter</span>
+      <span style="color: #8888AA; font-size: 16px;">❄️</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <span style="font-family: 'Material Icons'; font-size: 18px; color: #CCCCDD;">edit</span>
+      </div>
+    </div>
+
+    <!-- Eggs: No expiry -->
+    <div style="background: #14142E; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: white; font-size: 14px; flex: 1;">Eggs</span>
+      <div style="background: #1E1E3A; border-radius: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <span style="font-family: 'Material Icons'; font-size: 18px; color: #CCCCDD;">edit</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <h3>Element spacing (left → right)</h3>
+  <p>
+    <strong>Product name</strong> (flex: 1, pushes items right)<br>
+    <strong>❄️</strong> frozen icon (only if frozen) · <span style="color: #8888AA;">8px gap</span><br>
+    <strong>Expiry pill</strong> (only if ≤3d or expired) · <span style="color: #8888AA;">8px gap</span><br>
+    <strong>Edit ⬮</strong> 40×40 circle, <code>#1E1E3A</code>, Material <code>&amp;#xe3c9;</code>
+  </p>
+</div>

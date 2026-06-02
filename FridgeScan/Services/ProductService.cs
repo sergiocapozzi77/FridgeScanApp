@@ -169,19 +169,36 @@ namespace FridgeScan.Services
 
         public async Task<bool> DeleteProductAsync(string rowId)
         {
+            if (string.IsNullOrEmpty(rowId))
+            {
+                Console.WriteLine("Error deleting product: RowId is null or empty");
+                return false;
+            }
+
             try
             {
-                var url = $"{Endpoint}/tablesdb/{DatabaseId}/tables/{CollectionId}/rows/{rowId}";
+                var url = $"{Endpoint}/tablesdb/{DatabaseId}/tables/{CollectionId}/rows/{Uri.EscapeDataString(rowId)}";
 
                 var response = await _http.DeleteAsync(url);
 
-                response.EnsureSuccessStatusCode();
+                // Appwrite Tables API returns 200 on success, 204 on no-content success
+                if (response.StatusCode == System.Net.HttpStatusCode.OK ||
+                    response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return true;
+                }
 
+                response.EnsureSuccessStatusCode();
                 return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Error deleting product {rowId}: {(int?)ex.StatusCode} {ex.Message}");
+                return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching products: {ex.Message}");
+                Console.WriteLine($"Error deleting product {rowId}: {ex.Message}");
                 return false;
             }
         }

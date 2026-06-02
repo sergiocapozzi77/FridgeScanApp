@@ -1,3 +1,4 @@
+using Syncfusion.Maui.DataSource;
 using Microsoft.Maui.Graphics;
 using System;
 
@@ -13,6 +14,21 @@ public partial class ProductsPage : ContentPage
 
         var vm = services.GetService<ProductsViewModel>();
         BindingContext = vm;
+
+        // Set up native SfListView grouping after the view loads
+        Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        if (listView.DataSource.GroupDescriptors.Count == 0)
+        {
+            listView.DataSource.GroupDescriptors.Add(new GroupDescriptor()
+            {
+                PropertyName = "Category"
+            });
+            listView.DataSource.LiveDataUpdateMode = LiveDataUpdateMode.AllowDataShaping;
+        }
     }
 
     private void SfAutocomplete_Completed(object sender, EventArgs e)
@@ -26,8 +42,6 @@ public partial class ProductsPage : ContentPage
 
         // Dismiss the keyboard
         hiddenEntry.HideSoftInputAsync(CancellationToken.None);
-
-
     }
 
     private async void pullToRefresh_Refreshing(object sender, EventArgs e)
@@ -35,14 +49,12 @@ public partial class ProductsPage : ContentPage
         pullToRefresh.IsRefreshing = true;
         try
         {
-            await((ProductsViewModel)BindingContext).LoadProductsAsync();
+            await ((ProductsViewModel)BindingContext).LoadProductsAsync();
         }
         finally
         {
             pullToRefresh.IsRefreshing = false;
         }
-
-
     }
 
     private async void OnEditProductTapped(object sender, EventArgs e)

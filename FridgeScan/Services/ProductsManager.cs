@@ -1,28 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace FridgeScan.Services;
 
-namespace FridgeScan.Services
+public class ProductsManager
 {
-    public class ProductsManager
+    public ObservableCollection<Product> Products { get; } = new();
+
+    public void AddProduct(Product product) => Products.Add(product);
+
+    public void RemoveProduct(Product product) => Products.Remove(product);
+
+    internal void Init(List<Product> items)
     {
-        public ObservableCollection<Product> Products { get; set; }
-
-        public void AddProduct(Product product)
-        {
-            Products.Add(product);
-        }
-
-        public void RemoveProduct(Product product)
-        {
-            Products.Remove(product);
-        }
-
-        internal void Init(List<Product> items)
-        {
-            Products = new ObservableCollection<Product>(items);
-        }
+        Products.Clear();
+        foreach (var item in items)
+            Products.Add(item);
     }
 }
