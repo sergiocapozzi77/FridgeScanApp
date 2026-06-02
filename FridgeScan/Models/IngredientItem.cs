@@ -16,6 +16,7 @@ public partial class IngredientItem : ObservableObject
     [NotifyPropertyChangedFor(nameof(TextColor))]
     [NotifyPropertyChangedFor(nameof(Opacity))]
     [NotifyPropertyChangedFor(nameof(TextDecorations))]
+    [NotifyPropertyChangedFor(nameof(CircleBackgroundColor))]
     private bool isChecked;
 
     public TextDecorations TextDecorations
@@ -26,4 +27,7 @@ public partial class IngredientItem : ObservableObject
 
     public Color TextColor
         => IsChecked ? Color.FromArgb("#8888AA") : Color.FromArgb("#CCCCDD");
+
+    public Color CircleBackgroundColor
+        => IsChecked ? Color.FromArgb("#CCCCDD") : Colors.Transparent;
 }

@@ -136,7 +136,8 @@
                                                 <Border WidthRequest="22" HeightRequest="22"
                                                         StrokeShape="RoundRectangle 11"
                                                         Stroke="#CCCCDD" StrokeThickness="1.5"
-                                                        BackgroundColor="Transparent">
+                                                        BackgroundColor="{Binding CircleBackgroundColor}"
+                                                        VerticalOptions="Center">
                                                     <Label Text="&#10003;" FontSize="12"
                                                            TextColor="#CCCCDD"
                                                            HorizontalOptions="Center"
