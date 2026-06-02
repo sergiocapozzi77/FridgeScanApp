@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using FridgeScan.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using FridgeScan.Views;
 
 namespace FridgeScan.ViewModels;
 
@@ -56,7 +56,6 @@ public partial class ProductsViewModel : BaseViewModel
         this.activityService = activityService;
         this.productsManager = productsManager;
 
-        WeakReferenceMessenger.Default.Register<PropertyChangedMessage<int>>(this, OnQuantityChanged);
         WeakReferenceMessenger.Default.Register<ProductMessage>(this, (r, m) =>
         {
             AddItem(m.Value.Name, m.Value.Category);
@@ -75,34 +74,14 @@ public partial class ProductsViewModel : BaseViewModel
         Application.Current.MainPage.Navigation.PushAsync(new BarcodeScannerPage());
     }
 
-    private void OnQuantityChanged(object recipient, PropertyChangedMessage<int> message)
+    [RelayCommand]
+    private async Task EditProduct(Product product)
     {
-        if (message.PropertyName == nameof(Product.Quantity))
+        if (product == null) return;
+        await Shell.Current.GoToAsync(nameof(ProductDetailPage), new Dictionary<string, object>
         {
-            // message.Sender is the Product instance
-            var product = (Product)message.Sender;
-
-            int oldValue = message.OldValue;
-            int newValue = message.NewValue;
-
-            // React however you want
-            HandleQuantityChanged(product, oldValue, newValue);
-        }
-    }
-
-    private async void HandleQuantityChanged(Product product, int oldValue, int newValue)
-    {
-        if(oldValue != newValue)
-        {
-            if (product.Quantity <= 0)
-            {
-                await RemoveProduct(product);
-            }
-            else
-            {
-                await productService.UpdateProductAsync(product);
-            }
-        }
+            { "productId", product.RowId }
+        });
     }
 
     public async Task LoadProductsAsync()
@@ -209,6 +188,7 @@ public partial class ProductsViewModel : BaseViewModel
         if (existing != null)
         {
             existing.Quantity += 1;
+            await productService.UpdateProductAsync(existing);
             return;
         }
 
