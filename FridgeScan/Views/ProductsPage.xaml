@@ -9,7 +9,6 @@
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:pulltoRefresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
     xmlns:sf="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:FridgeScan.ViewModels"
     x:Name="ProductsPageRoot"
     x:DataType="vm:ProductsViewModel"
@@ -139,7 +138,7 @@
                                                     StrokeShape="RoundRectangle 12"
                                                     Stroke="Transparent"
                                                     Padding="12,0"
-                                                    Margin="0,0,0,6"
+                                                    Margin="0,0,0,10"
                                                     HeightRequest="56">
                                                     <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding ToggleSelectCommand}" />
