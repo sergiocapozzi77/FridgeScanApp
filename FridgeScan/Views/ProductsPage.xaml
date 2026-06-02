@@ -196,12 +196,12 @@
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="models:Product">
                                                 <Border
-                                                    BackgroundColor="#14142E"
-                                                    StrokeShape="RoundRectangle 12"
+                                                    BackgroundColor="#171A35"
+                                                    StrokeShape="RoundRectangle 14"
                                                     Stroke="Transparent"
-                                                    Padding="12,0"
-                                                    Margin="0,0,0,10"
-                                                    HeightRequest="56">
+                                                    Padding="14,0"
+                                                    Margin="0,0,0,8"
+                                                    HeightRequest="48">
                                                     <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Command="{Binding ToggleSelectCommand}" />
                                                     </Border.GestureRecognizers>
@@ -230,9 +230,9 @@
                                                         <Border
                                                             Grid.Column="2"
                                                             Margin="6,0,0,0"
-                                                            StrokeShape="RoundRectangle 10"
+                                                            StrokeShape="RoundRectangle 8"
                                                             Stroke="Transparent"
-                                                            Padding="6,2,6,2"
+                                                            Padding="8,2"
                                                             IsVisible="{Binding ShowExpiryBadge}"
                                                             BackgroundColor="{Binding ExpiryColor}"
                                                             VerticalOptions="Center">
@@ -248,10 +248,10 @@
                                                             Grid.Column="3"
                                                             Margin="6,0,0,0"
                                                             BackgroundColor="#1E1E3A"
-                                                            StrokeShape="RoundRectangle 20"
+                                                            StrokeShape="RoundRectangle 16"
                                                             Stroke="Transparent"
-                                                            WidthRequest="40"
-                                                            HeightRequest="40"
+                                                            WidthRequest="32"
+                                                            HeightRequest="32"
                                                             VerticalOptions="Center">
                                                             <Border.GestureRecognizers>
                                                                 <TapGestureRecognizer Tapped="OnEditProductTapped" />
@@ -259,7 +259,7 @@
                                                             <Label
                                                                 Text="&#xe3c9;"
                                                                 FontFamily="Material"
-                                                                FontSize="18"
+                                                                FontSize="14"
                                                                 TextColor="#CCCCDD"
                                                                 HorizontalOptions="Center"
                                                                 VerticalOptions="Center" />
