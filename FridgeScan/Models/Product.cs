@@ -33,6 +33,7 @@ public partial class Product : ObservableRecipient
     [NotifyPropertyChangedFor(nameof(ShowExpiryBadge))]
     [NotifyPropertyChangedFor(nameof(ExpiryDisplayText))]
     [NotifyPropertyChangedFor(nameof(ExpiryColor))]
+    [NotifyPropertyChangedFor(nameof(ExpiryTextColor))]
     private DateTime? expiryDate;
 
     [ObservableProperty]
@@ -62,6 +63,13 @@ public partial class Product : ObservableRecipient
         < 0 => Color.FromArgb("#2E1E1E"),   // Error surface (tonal red)
         0   => Color.FromArgb("#3A2E28"),   // Warning surface (tonal amber)
         _   => Color.FromArgb("#2A2E58"),   // Surface container high (tonal neutral)
+    };
+
+    public Color ExpiryTextColor => DaysUntilExpiry switch
+    {
+        < 0 => Color.FromArgb("#FF6666"),   // Error text (tonal red)
+        0   => Color.FromArgb("#FFAA44"),   // Warning text (tonal amber)
+        _   => Color.FromArgb("#CCCCDD"),   // Muted text (tonal neutral)
     };
 
     public bool ShowFrozenIcon => isFrozen;
