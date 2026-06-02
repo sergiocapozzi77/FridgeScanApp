@@ -122,7 +122,8 @@
                                             SelectionMode="None">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="models:IngredientItem">
-                                        <Border Padding="0,6" BackgroundColor="Transparent">
+                                        <Border Padding="0,6" BackgroundColor="Transparent"
+                                                MinimumHeightRequest="40">
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SavedRecipeDetailViewModel}}, Path=ToggleIngredientCommand}"
@@ -145,6 +146,7 @@
                                                 <!-- Ingredient name -->
                                                 <Label Grid.Column="1" Text="{Binding Name}"
                                                        FontSize="14"
+                                                       LineBreakMode="WordWrap"
                                                        TextColor="{Binding TextColor}"
                                                        TextDecorations="{Binding TextDecorations}"
                                                        VerticalOptions="Center" />
