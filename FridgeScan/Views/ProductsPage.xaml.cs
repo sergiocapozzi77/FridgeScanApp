@@ -1,4 +1,3 @@
-using Syncfusion.Maui.DataSource;
 using Microsoft.Maui.Graphics;
 using System;
 
@@ -14,31 +13,6 @@ public partial class ProductsPage : ContentPage
 
         var vm = services.GetService<ProductsViewModel>();
         BindingContext = vm;
-
-        // Load products and set up native SfListView grouping after the view loads
-        Loaded += OnLoaded;
-    }
-
-    private async void OnLoaded(object? sender, EventArgs e)
-    {
-        // Set up grouping first so the DataSource is ready
-        if (listView.DataSource.GroupDescriptors.Count == 0)
-        {
-            listView.DataSource.GroupDescriptors.Add(new GroupDescriptor()
-            {
-                PropertyName = "Category"
-            });
-            listView.DataSource.LiveDataUpdateMode = LiveDataUpdateMode.AllowDataShaping;
-        }
-
-        // Load products
-        var vm = (ProductsViewModel)BindingContext;
-        await vm.LoadProductsAsync();
-
-        // Force DataSource to re-apply grouping on all loaded items.
-        // Individual CollectionChanged events (RemoveAt+Add) may not auto-trigger grouping,
-        // so an explicit refresh ensures groups are created.
-        listView.DataSource.Refresh();
     }
 
     private void SfAutocomplete_Completed(object sender, EventArgs e)
@@ -52,6 +26,8 @@ public partial class ProductsPage : ContentPage
 
         // Dismiss the keyboard
         hiddenEntry.HideSoftInputAsync(CancellationToken.None);
+
+
     }
 
     private async void pullToRefresh_Refreshing(object sender, EventArgs e)
@@ -59,14 +35,14 @@ public partial class ProductsPage : ContentPage
         pullToRefresh.IsRefreshing = true;
         try
         {
-            var vm = (ProductsViewModel)BindingContext;
-            await vm.LoadProductsAsync();
-            listView.DataSource.Refresh();
+            await((ProductsViewModel)BindingContext).LoadProductsAsync();
         }
         finally
         {
             pullToRefresh.IsRefreshing = false;
         }
+
+
     }
 
     private async void OnEditProductTapped(object sender, EventArgs e)

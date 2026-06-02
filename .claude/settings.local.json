@@ -10,7 +10,9 @@
       "WebSearch",
       "Bash(git commit -m 'fix\\(ui\\): add VerticalOptions=Center to frozen icon in detail page *)",
       "mcp__syncfusion-maui-assistant__SyncfusionMAUIAssistant",
-      "Bash(bash *)"
+      "Bash(bash *)",
+      "Bash(git commit -m 'docs: add TabBar redesign spec — A3 Floating Shelf *)",
+      "Bash(git checkout *)"
     ]
   },
   "enableAllProjectMcpServers": true,

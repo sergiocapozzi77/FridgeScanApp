@@ -1,22 +1,28 @@
-﻿namespace FridgeScan.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class ProductsManager
+namespace FridgeScan.Services
 {
-    public ObservableCollection<Product> Products { get; } = new();
-
-    public void AddProduct(Product product) => Products.Add(product);
-
-    public void RemoveProduct(Product product) => Products.Remove(product);
-
-    internal void Init(List<Product> items)
+    public class ProductsManager
     {
-        // Remove items one at a time instead of Clear()
-        // Clear() fires a Reset event which confuses SfListView's DataSource
-        // and scrambles BindingContext assignments on visual items
-        while (Products.Count > 0)
-            Products.RemoveAt(Products.Count - 1);
+        public ObservableCollection<Product> Products { get; set; }
 
-        foreach (var item in items)
-            Products.Add(item);
+        public void AddProduct(Product product)
+        {
+            Products.Add(product);
+        }
+
+        public void RemoveProduct(Product product)
+        {
+            Products.Remove(product);
+        }
+
+        internal void Init(List<Product> items)
+        {
+            Products = new ObservableCollection<Product>(items);
+        }
     }
 }
