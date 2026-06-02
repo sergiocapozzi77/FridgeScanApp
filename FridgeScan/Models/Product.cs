@@ -59,8 +59,9 @@ public partial class Product : ObservableRecipient
 
     public Color ExpiryColor => DaysUntilExpiry switch
     {
-        < 0 => Color.FromArgb("#E74C3C"),
-        _   => Color.FromArgb("#F39C12"),
+        < 0 => Color.FromArgb("#2E1E1E"),   // Error surface (tonal red)
+        0   => Color.FromArgb("#3A2E28"),   // Warning surface (tonal amber)
+        _   => Color.FromArgb("#2A2E58"),   // Surface container high (tonal neutral)
     };
 
     public bool ShowFrozenIcon => isFrozen;
