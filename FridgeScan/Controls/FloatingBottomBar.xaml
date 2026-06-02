@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FridgeScan.Controls.FloatingBottomBar"
+             x:Name="FloatingBar">
+
+    <!-- Floating shelf container -->
+    <Border BackgroundColor="#14142E"
+            StrokeShape="RoundRectangle 16"
+            Stroke="Transparent"
+            Padding="8,6"
+            Margin="12,0,12,8"
+            Shadow="{Binding Source={x:Reference FloatingBar}, Path=BarShadow}">
+        <HorizontalStackLayout x:Name="TabsContainer"
+                               HorizontalOptions="FillAndExpand"
+                               Spacing="0">
+            <!-- Tabs are built programmatically in code-behind -->
+        </HorizontalStackLayout>
+    </Border>
+</ContentView>
