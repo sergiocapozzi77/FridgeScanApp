@@ -38,13 +38,21 @@ public partial class Product : ObservableRecipient
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFrozenIcon))]
+    [NotifyPropertyChangedFor(nameof(DaysUntilExpiry))]
+    [NotifyPropertyChangedFor(nameof(ShowExpiryBadge))]
+    [NotifyPropertyChangedFor(nameof(ExpiryDisplayText))]
+    [NotifyPropertyChangedFor(nameof(ExpiryColor))]
+    [NotifyPropertyChangedFor(nameof(ExpiryTextColor))]
     private bool isFrozen;
 
     // Computed properties
 
+    private DateTime GetEffectiveExpiry() =>
+        ExpiryDate!.Value.Date.AddMonths(IsFrozen ? 4 : 0);
+
     public int? DaysUntilExpiry =>
         ExpiryDate.HasValue
-            ? (int?)(ExpiryDate.Value.Date - DateTime.Today.Date).TotalDays
+            ? (int?)(GetEffectiveExpiry() - DateTime.Today.Date).TotalDays
             : null;
 
     public bool ShowExpiryBadge =>
@@ -72,7 +80,7 @@ public partial class Product : ObservableRecipient
         _   => Color.FromArgb("#CCCCDD"),   // Muted text (tonal neutral)
     };
 
-    public bool ShowFrozenIcon => isFrozen;
+    public bool ShowFrozenIcon => IsFrozen;
 
     [RelayCommand]
     private void ToggleSelect()
