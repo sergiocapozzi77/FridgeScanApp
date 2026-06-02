@@ -8,16 +8,18 @@
     xmlns:sf="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
-    xmlns:models="clr-namespace:FridgeScan.Models">
+    xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:controls="clr-namespace:FridgeScan.Controls">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
         <Grid Padding="10">
             <Grid.ColumnDefinitions>
@@ -304,5 +306,9 @@
             IsVisible="{Binding IsLoading}"
             VerticalOptions="Center"
             WidthRequest="120" />
+        </Grid>
+
+        <!-- Floating Bottom Bar -->
+        <controls:FloatingBottomBar Grid.Row="1" />
     </Grid>
 </ContentPage>
