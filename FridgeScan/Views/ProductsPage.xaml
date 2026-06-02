@@ -10,6 +10,7 @@
     xmlns:pulltoRefresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
     xmlns:sf="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
     xmlns:vm="clr-namespace:FridgeScan.ViewModels"
+    xmlns:controls="clr-namespace:FridgeScan.Controls"
     x:Name="ProductsPageRoot"
     x:DataType="vm:ProductsViewModel"
     BackgroundColor="#0D0D2B">
@@ -20,7 +21,9 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="10">
+    <Grid RowDefinitions="*,Auto">
+        <!-- Main content area -->
+        <Grid Padding="10" Grid.Row="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -214,5 +217,9 @@
                 </Grid>
             </pulltoRefresh:SfPullToRefresh.PullableContent>
         </pulltoRefresh:SfPullToRefresh>
+        </Grid>
+
+        <!-- Floating Bottom Bar -->
+        <controls:FloatingBottomBar Grid.Row="1" />
     </Grid>
 </ContentPage>
