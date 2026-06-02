@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FridgeScan.Views.CookbookDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfCards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
+    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
+    BackgroundColor="#0D0D2B"
+    Title="{Binding Cookbook.Name}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,16,16,16" Spacing="2">
+
+            <!-- Row 1: back arrow + title + action icons -->
+            <Grid ColumnDefinitions="36,*,Auto,Auto">
+
+                <!-- Back arrow: Material ArrowBack, 48dp transparent touch target -->
+                <Label Grid.Column="0"
+                       Text="&#xe5c4;"
+                       FontFamily="Material"
+                       FontSize="24"
+                       TextColor="#CCCCDD"
+                       WidthRequest="48"
+                       HeightRequest="48"
+                       Margin="-12,0,0,0"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <!-- Title -->
+                <Label Grid.Column="1"
+                       Text="{Binding Cookbook.Name}"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"
+                       VerticalOptions="Center" />
+
+                <!-- Edit / Rename icon -->
+                <Border Grid.Column="2"
+                        BackgroundColor="#1E1E3A"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="Transparent"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RenameCookbookCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="&#xe3c9;"
+                           FontFamily="Material"
+                           FontSize="18"
+                           TextColor="#CCCCDD"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
+                <!-- Delete icon -->
+                <Border Grid.Column="3"
+                        BackgroundColor="#2A1E1E"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="Transparent"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        Margin="4,0,0,0"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteCookbookCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="&#xe872;"
+                           FontFamily="Material"
+                           FontSize="16"
+                           TextColor="#ff6b6b"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+            </Grid>
+
+            <!-- Row 2: recipe count, indented to align with title -->
+            <Label Margin="36,0,0,0" FontSize="13" TextColor="#8888AA">
+                <Label.Text>
+                    <MultiBinding StringFormat="{}{0} recipes">
+                        <Binding Path="Cookbook.RecipeCount" />
+                    </MultiBinding>
+                </Label.Text>
+            </Label>
+        </VerticalStackLayout>
+
+        <!-- Recipe list -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Recipes}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnRecipeSelected"
+                        Margin="12,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:SavedRecipe">
+                    <sfCards:SfCardView Margin="8,4"
+                                        CornerRadius="12"
+                                        Padding="0"
+                                        BackgroundColor="#14142E">
+                        <Grid ColumnDefinitions="100,*" HeightRequest="90">
+                            <Image Grid.Column="0"
+                                   Source="{Binding ImageUrl}"
+                                   Aspect="AspectFill"
+                                   WidthRequest="100"
+                                   HeightRequest="90" />
+                            <Grid Grid.Column="1"
+                                  ColumnDefinitions="*,Auto"
+                                  Padding="12,8">
+                                <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2" />
+                                    <Label Text="{Binding RecipeSource}"
+                                           FontSize="12"
+                                           TextColor="#777" />
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Label Text="{Binding TotalTime}"
+                                               FontSize="12"
+                                               TextColor="#888" />
+                                        <Label Text="{Binding Difficulty}"
+                                               FontSize="12"
+                                               TextColor="#888" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1"
+                                       Text="&#x22ef;"
+                                       FontSize="20"
+                                       TextColor="#666"
+                                       VerticalOptions="Center"
+                                       Padding="8,0">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CookbookDetailViewModel}}, Path=EditRecipeCommand}"
+                                            CommandParameter="{Binding}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
+                        </Grid>
+                    </sfCards:SfCardView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Padding="0,60"
+                                     Spacing="8">
+                    <Label Text="No recipes yet"
+                           FontSize="16"
+                           TextColor="#8888AA"
+                           HorizontalOptions="Center" />
+                    <Label Text="Import a recipe to get started"
+                           FontSize="13"
+                           TextColor="#8888AA"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <sfBusy:SfBusyIndicator Grid.Row="1"
+                                 AnimationType="CircularMaterial"
+                                 IsRunning="{Binding IsLoading}"
+                                 IsVisible="{Binding IsLoading}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 HeightRequest="60"
+                                 WidthRequest="60" />
+    </Grid>
+</ContentPage>

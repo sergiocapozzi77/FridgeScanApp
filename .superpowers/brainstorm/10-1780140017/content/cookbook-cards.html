@@ -1,0 +1,140 @@
+<h2>Cookbook Card — Mosaic Layouts</h2>
+<p class="subtitle">Each card shows the cookbook name, recipe count, and a mosaic of up to 4 recipe images. Which layout direction feels right?</p>
+
+<div class="section">
+  <h3>Layout for different image counts</h3>
+</div>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">0 Recipes</div>
+    <div class="mockup-body">
+      <div style="width:100%;aspect-ratio:16/10;background:#2a2a2a;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+        <div style="font-size:32px;color:#555">🍲</div>
+        <div style="color:#777;font-size:13px">No recipes yet</div>
+      </div>
+      <div style="margin-top:10px"><strong>My Cookbook</strong></div>
+      <div style="color:#888;font-size:13px">0 recipes</div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">1 Recipe — Full image</div>
+    <div class="mockup-body">
+      <div style="width:100%;aspect-ratio:16/10;border-radius:8px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=250&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+      </div>
+      <div style="margin-top:10px"><strong>Italian Favorites</strong></div>
+      <div style="color:#888;font-size:13px">1 recipe</div>
+    </div>
+  </div>
+</div>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">2 Recipes — Side by side</div>
+    <div class="mockup-body">
+      <div style="display:flex;gap:3px;width:100%;aspect-ratio:16/10;border-radius:8px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=250&fit=crop" style="width:50%;object-fit:cover" />
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=250&fit=crop" style="width:50%;object-fit:cover" />
+      </div>
+      <div style="margin-top:10px"><strong>Weeknight Dinners</strong></div>
+      <div style="color:#888;font-size:13px">2 recipes</div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">3 Recipes — 1 large + 2 stacked</div>
+    <div class="mockup-body">
+      <div style="display:flex;gap:3px;width:100%;aspect-ratio:16/10;border-radius:8px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=250&fit=crop" style="width:50%;object-fit:cover" />
+        <div style="display:flex;flex-direction:column;gap:3px;width:50%">
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=123&fit=crop" style="height:50%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=200&h=123&fit=crop" style="height:50%;object-fit:cover" />
+        </div>
+      </div>
+      <div style="margin-top:10px"><strong>Baking Adventures</strong></div>
+      <div style="color:#888;font-size:13px">3 recipes</div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:20px">
+  <div class="mockup">
+    <div class="mockup-header">4+ Recipes — 2×2 Grid</div>
+    <div class="mockup-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;width:100%;aspect-ratio:16/10;border-radius:8px;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=123&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=123&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+        <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=200&h=123&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=200&h=123&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+      </div>
+      <div style="margin-top:10px"><strong>All-Time Favorites</strong></div>
+      <div style="color:#888;font-size:13px">12 recipes</div>
+    </div>
+  </div>
+</div>
+
+<hr style="margin:30px 0;border-color:#333">
+
+<h2>Cookbook Tab Page Layout</h2>
+<p class="subtitle">Grid of cookbook cards with a FAB or header button to create new</p>
+
+<div class="mockup" style="max-width:420px">
+  <div class="mockup-header">Cookbooks Tab — Phone width</div>
+  <div class="mockup-body" style="padding:16px;background:#1a1a1a">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0;color:#fff">Cookbooks</h3>
+      <div style="width:36px;height:36px;background:#4a90d9;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px">+</div>
+    </div>
+    <!-- 2-column grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <!-- Card 1 -->
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;aspect-ratio:4/3">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px">Italian Favorites</div>
+          <div style="color:#999;font-size:12px">8 recipes</div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:flex;aspect-ratio:4/3">
+          <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=100&h=75&fit=crop" style="width:50%;object-fit:cover" />
+          <div style="display:flex;flex-direction:column;width:50%">
+            <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+            <img src="https://images.unsplash.com/photo-1576402187878-974f70c890a7?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+          </div>
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px">Quick Desserts</div>
+          <div style="color:#999;font-size:12px">3 recipes</div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:flex;aspect-ratio:4/3">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=100&h=75&fit=crop" style="width:50%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=100&h=75&fit=crop" style="width:50%;object-fit:cover" />
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px">Weeknight</div>
+          <div style="color:#999;font-size:12px">2 recipes</div>
+        </div>
+      </div>
+      <!-- Card 4 empty -->
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="aspect-ratio:4/3;background:#2a2a2a;display:flex;align-items:center;justify-content:center;font-size:28px;color:#555">🍲</div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px">New Ideas</div>
+          <div style="color:#999;font-size:12px">0 recipes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

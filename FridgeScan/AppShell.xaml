@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="FridgeScan.AppShell"
+    Shell.NavBarIsVisible="False"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FridgeScan"
@@ -40,6 +41,15 @@
                     />
             </ShellContent.Icon>
 
+        </ShellContent>
+        <ShellContent
+            Title="Cookbooks"
+            ContentTemplate="{DataTemplate views:CookbookPage}">
+            <ShellContent.Icon>
+                <FontImageSource
+                    FontFamily="Material"
+                    Glyph="&#xe86d;" />
+            </ShellContent.Icon>
         </ShellContent>
     </TabBar>
 </Shell>

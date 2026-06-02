@@ -1,0 +1,185 @@
+<h2>Modern Button + Font Styles</h2>
+<p class="subtitle">Option A layout, but with updated button and font pairings. Pick one from each row.</p>
+
+<div class="section">
+  <h3>Button Style (3 options)</h3>
+  <p style="color:#999;font-size:13px">Click to select a button style</p>
+</div>
+
+<div class="options" id="buttons">
+  <div class="option" data-choice="btn-round" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>Rounded pill</h3>
+      <p>Pill-shaped with subtle gradient. Feels native and modern.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="btn-square" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>Squircle icon button</h3>
+      <p>Rounded square (24% corner radius) — iOS-style. Clean and understated.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="btn-outline" onclick="toggleSelect(this)">
+    <div class="letter">3</div>
+    <div class="content">
+      <h3>Minimal ring</h3>
+      <p>Thin bordered circle. Blends in until you need it, very modern.</p>
+    </div>
+  </div>
+</div>
+
+<hr style="margin:30px 0;border-color:#333">
+
+<div class="section">
+  <h3>Font Pairing (3 options)</h3>
+  <p style="color:#999;font-size:13px">Title font + body font. Click to select.</p>
+</div>
+
+<div class="options" id="fonts">
+  <div class="option" data-choice="font-sf" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>SF Pro (system)</h3>
+      <p>Clean, modern, zero-config. The native iOS/Android feel. Works everywhere.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="font-inter" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Inter / Figma style</h3>
+      <p>Slightly geometric, used in modern web apps. Would require embedding the font.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="font-mono" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Modern geometric (Outfit / Poppins)</h3>
+      <p>Rounded, friendly geometric sans. Bold personality, fresh feel. Requires embedding.</p>
+    </div>
+  </div>
+</div>
+
+<hr style="margin:30px 0;border-color:#333">
+
+<div class="section">
+  <h3>Live preview — mix and match</h3>
+</div>
+
+<div class="mockup" style="max-width:420px">
+  <div class="mockup-header">Button 1 + Font A (Rounded pill + System)</div>
+  <div class="mockup-body" style="background:#1a1a1a">
+    <div style="padding:12px 16px 8px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:#fff;font-size:22px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:-0.3px">Cookbooks</span>
+      <div style="width:80px;height:36px;background:linear-gradient(135deg,#4a90d9,#6eb5ff);border-radius:18px;display:flex;align-items:center;justify-content:center;gap:4px;color:#fff;font-size:14px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,sans-serif;box-shadow:0 2px 8px rgba(74,144,217,0.35)">
+        <span style="font-size:16px;line-height:1">+</span> New
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 12px 16px">
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;aspect-ratio:4/3;gap:2px">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Italian Favorites</div>
+          <div style="color:#999;font-size:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">8 recipes</div>
+        </div>
+      </div>
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:flex;aspect-ratio:4/3">
+          <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=100&h=75&fit=crop" style="width:50%;object-fit:cover" />
+          <div style="display:flex;flex-direction:column;width:50%;gap:2px">
+            <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+            <img src="https://images.unsplash.com/photo-1576402187878-974f70c890a7?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+          </div>
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">Quick Desserts</div>
+          <div style="color:#999;font-size:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">3 recipes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="max-width:420px;margin-top:16px">
+  <div class="mockup-header">Button 2 + Font B (Squircle + Inter)</div>
+  <div class="mockup-body" style="background:#1a1a1a">
+    <div style="padding:12px 16px 8px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:#fff;font-size:22px;font-weight:700;font-family:Inter,-apple-system,sans-serif;letter-spacing:-0.3px">Cookbooks</span>
+      <div style="width:40px;height:40px;background:#4a90d9;border-radius:24%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:500;font-family:Inter,-apple-system,sans-serif;box-shadow:0 2px 8px rgba(74,144,217,0.3)">
+        +
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 12px 16px">
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;aspect-ratio:4/3;gap:2px">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px;font-family:Inter,-apple-system,sans-serif">Italian Favorites</div>
+          <div style="color:#999;font-size:12px;font-family:Inter,-apple-system,sans-serif">8 recipes</div>
+        </div>
+      </div>
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:flex;aspect-ratio:4/3">
+          <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=100&h=75&fit=crop" style="width:50%;object-fit:cover" />
+          <div style="display:flex;flex-direction:column;width:50%;gap:2px">
+            <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+            <img src="https://images.unsplash.com/photo-1576402187878-974f70c890a7?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+          </div>
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px;font-family:Inter,-apple-system,sans-serif">Quick Desserts</div>
+          <div style="color:#999;font-size:12px;font-family:Inter,-apple-system,sans-serif">3 recipes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="max-width:420px;margin-top:16px">
+  <div class="mockup-header">Button 3 + Font C (Ring + Outfit)</div>
+  <div class="mockup-body" style="background:#1a1a1a">
+    <div style="padding:12px 16px 8px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:#fff;font-size:22px;font-weight:700;font-family:Outfit,-apple-system,sans-serif;letter-spacing:-0.2px">Cookbooks</span>
+      <div style="width:36px;height:36px;border:2px solid rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);font-size:20px;font-weight:400;font-family:Outfit,-apple-system,sans-serif">
+        +
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 12px 16px">
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;aspect-ratio:4/3;gap:2px">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=100&h=75&fit=crop" style="width:100%;height:100%;object-fit:cover" />
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px;font-family:Outfit,-apple-system,sans-serif">Italian Favorites</div>
+          <div style="color:#999;font-size:12px;font-family:Outfit,-apple-system,sans-serif">8 recipes</div>
+        </div>
+      </div>
+      <div style="background:#252525;border-radius:10px;overflow:hidden">
+        <div style="display:flex;aspect-ratio:4/3">
+          <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=100&h=75&fit=crop" style="width:50%;object-fit:cover" />
+          <div style="display:flex;flex-direction:column;width:50%;gap:2px">
+            <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+            <img src="https://images.unsplash.com/photo-1576402187878-974f70c890a7?w=100&h=38&fit=crop" style="height:50%;object-fit:cover" />
+          </div>
+        </div>
+        <div style="padding:10px">
+          <div style="color:#fff;font-weight:600;font-size:14px;font-family:Outfit,-apple-system,sans-serif">Quick Desserts</div>
+          <div style="color:#999;font-size:12px;font-family:Outfit,-apple-system,sans-serif">3 recipes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

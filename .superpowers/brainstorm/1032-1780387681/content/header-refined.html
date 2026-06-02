@@ -1,0 +1,51 @@
+<h2>Refined header — separate icons + minimal back arrow</h2>
+<p class="subtitle">Clean Material 3 back arrow (transparent, no styling) with edit/delete icon buttons on the right</p>
+
+<div class="mockup">
+  <div class="mockup-header">Cookbook Detail Page — Header Area</div>
+  <div class="mockup-body" style="padding:0">
+    <div style="background:#0D0D2B;padding:20px 16px 12px 16px;font-family:system-ui,sans-serif;max-width:400px;margin:0 auto">
+
+      <!-- Header row: back arrow + title + actions -->
+      <div style="display:flex;align-items:center;margin-bottom:4px">
+        <!-- Back arrow — minimal, transparent touch target -->
+        <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:-12px">
+          <!-- Larger, clean arrow shape using CSS -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#CCCCDD"/>
+          </svg>
+        </div>
+        <!-- Title -->
+        <span style="color:white;font-size:22px;font-weight:700;flex:1;line-height:1.3">Italian Favorites</span>
+        <!-- Action icons -->
+        <div style="display:flex;gap:4px;flex-shrink:0">
+          <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center" title="Rename">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#CCCCDD"/>
+            </svg>
+          </div>
+          <div style="width:40px;height:40px;border-radius:20px;background:#2A1E1E;display:flex;align-items:center;justify-content:center" title="Delete">
+            <svg width="16" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#ff6b6b"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recipe count — indented to align with title text start -->
+      <div style="color:#8888AA;font-size:13px;margin-left:36px;margin-bottom:4px">12 recipes</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:16px">
+  <h3>Key details</h3>
+  <ul style="color:#aaa;font-size:14px;line-height:1.8">
+    <li><strong>Back arrow:</strong> Material <code>&amp;#xe5c4;</code> (ArrowBack) glyph at 24dp, inside a 48dp transparent touch target. The 12dp negative left margin pulls it flush with content. No background, border, or pill.</li>
+    <li><strong>Title:</strong> 22sp bold, white — the primary focal point.</li>
+    <li><strong>Recipe count:</strong> 13sp secondary text in #8888AA, indented 36px to align with title text.</li>
+    <li><strong>Edit:</strong> 40dp circle icon button, #1E1E3A fill, subtle low-contrast for a secondary action.</li>
+    <li><strong>Delete:</strong> 40dp circle icon button, warm dark fill (#2A1E1E) with #ff6b6b icon — communicates destructive action.</li>
+    <li><strong>No divider</strong> — whitespace separates header from recipe list.</li>
+  </ul>
+</div>

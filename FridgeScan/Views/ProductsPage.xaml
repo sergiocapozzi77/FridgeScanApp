@@ -5,25 +5,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:behaviours="clr-namespace:FridgeScan.Behaviours"
     xmlns:converters="clr-namespace:FridgeScan.Converters"
-    xmlns:ds="clr-namespace:Syncfusion.Maui.DataSource;assembly=Syncfusion.Maui.DataSource"
     xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:pulltoRefresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
     xmlns:sf="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
-    xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:FridgeScan.ViewModels"
     x:Name="ProductsPageRoot"
-    x:DataType="vm:ProductsViewModel">
+    x:DataType="vm:ProductsViewModel"
+    BackgroundColor="#0D0D2B">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:ExpandCollapseIconConverter x:Key="ExpandCollapseIconConverter" />
-            <converters:FoodSelectionIconConverter x:Key="foodSelectionIconConverter" />
-            <converters:FoodSelectionIconColorConverter x:Key="foodSelectionIconColorConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-
 
     <Grid Padding="10">
         <Grid.RowDefinitions>
@@ -31,8 +26,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-
-        <!--  AUTOCOMPLETE INPUT  -->
+        <!--  AUTOCOMPLETE + BARCODE  -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -66,18 +60,13 @@
                     <TapGestureRecognizer Command="{Binding BarcodeCommand}" CommandParameter="{Binding}" />
                 </Label.GestureRecognizers>
             </Label>
-            <Border
-                Grid.Column="1"
-                Margin="0,12,0,7"
-                HeightRequest="1"
-                Stroke="{DynamicResource SfAutocompleteNormalStroke}"
-                VerticalOptions="End" />
         </Grid>
 
         <Entry
             x:Name="hiddenEntry"
             IsVisible="False"
             Text="{Binding NewItemName, Mode=TwoWay}" />
+
         <pulltoRefresh:SfPullToRefresh
             x:Name="pullToRefresh"
             Grid.Row="1"
@@ -101,156 +90,123 @@
                             <DataTemplate x:DataType="models:ListViewFoodCategory">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="40" />
+                                        <RowDefinition Height="30" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Grid Grid.Row="0" BackgroundColor="{DynamicResource SfTabViewActivePressedBackground}">
-                                        <Grid.Behaviors>
-                                            <behaviours:GridBehavior ListView="{x:Reference listView}" />
-                                        </Grid.Behaviors>
-
+                                    <!-- Category group header (Option A: subtle section label) -->
+                                    <Grid Grid.Row="0" Padding="4,0,4,0">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleExpandCommand}" />
+                                        </Grid.GestureRecognizers>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-
-                                        <!--     <Label
-                                Grid.Column="0"
-                                FontFamily="Material"
-                                FontSize="26"
-                                HorizontalOptions="Center"
-                                Text="{Binding FoodIcon}"
-                                VerticalOptions="Center" />-->
-
                                         <Label
                                             Grid.Column="0"
-                                            CharacterSpacing="0.1"
-                                            FontFamily="Roboto-Medium"
-                                            FontSize="14"
-                                            HorizontalOptions="Start"
-                                            Text="{Binding FoodCategory}"
-                                            VerticalOptions="Center" />
-
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            CharacterSpacing="0.5"
+                                            TextColor="#8888AA"
+                                            Text="{Binding FoodCategory}" />
                                         <Label
                                             Grid.Column="1"
-                                            Margin="0,0,16,0"
+                                            Margin="4,0,0,0"
+                                            FontSize="11"
+                                            TextColor="#666688"
+                                            Text="{Binding FoodMenuCollection.Count, StringFormat='· {0} items'}" />
+                                        <Label
+                                            Grid.Column="3"
                                             FontFamily="Material"
-                                            FontSize="14"
-                                            Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}"
-                                            VerticalOptions="Center" />
-
+                                            FontSize="12"
+                                            TextColor="#666688"
+                                            Text="{Binding IsExpanded, Converter={StaticResource ExpandCollapseIconConverter}}" />
                                     </Grid>
 
-                                    <Grid Grid.Row="1" IsVisible="{Binding IsExpanded}">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
+                                    <!-- Product list (visible when expanded) -->
+                                    <StackLayout
+                                        Grid.Row="1"
+                                        BindableLayout.ItemsSource="{Binding FoodMenuCollection}"
+                                        IsVisible="{Binding IsExpanded}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="models:Product">
+                                                <Border
+                                                    BackgroundColor="#14142E"
+                                                    StrokeShape="RoundRectangle 12"
+                                                    Stroke="Transparent"
+                                                    Padding="12,0"
+                                                    Margin="0,0,0,10"
+                                                    HeightRequest="56">
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding ToggleSelectCommand}" />
+                                                    </Border.GestureRecognizers>
+                                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" VerticalOptions="Center">
+                                                        <!-- Product name -->
+                                                        <Label
+                                                            Grid.Column="0"
+                                                            FontFamily="Roboto-Regular"
+                                                            FontSize="14"
+                                                            TextColor="White"
+                                                            VerticalOptions="Center"
+                                                            LineBreakMode="TailTruncation"
+                                                            Text="{Binding Name}" />
 
-                                        <BoxView Grid.Row="0" HeightRequest="1" />
+                                                        <!-- Frozen icon (if frozen) -->
+                                                        <Label
+                                                            Grid.Column="1"
+                                                            FontFamily="Material"
+                                                            FontSize="16"
+                                                            TextColor="#8888AA"
+                                                            VerticalOptions="Center"
+                                                            IsVisible="{Binding ShowFrozenIcon}"
+                                                            Text="ac_unit" />
 
-                                        <StackLayout
-                                            Grid.Row="1"
-                                            BindableLayout.ItemsSource="{Binding FoodMenuCollection}"
-                                            IsVisible="{Binding IsExpanded}">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate x:DataType="models:Product">
-                                                    <ContentView HeightRequest="40">
-                                                        <ContentView.GestureRecognizers>
-                                                            <TapGestureRecognizer Command="{Binding ToggleSelectCommand}" CommandParameter="{Binding}" />
-                                                        </ContentView.GestureRecognizers>
-
-                                                        <Grid Padding="0,0,12,0" ColumnSpacing="12">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <!--  CHEF ICON  -->
+                                                        <!-- Expiry badge -->
+                                                        <Border
+                                                            Grid.Column="2"
+                                                            Margin="6,0,0,0"
+                                                            StrokeShape="RoundRectangle 10"
+                                                            Stroke="Transparent"
+                                                            Padding="6,2,6,2"
+                                                            IsVisible="{Binding ShowExpiryBadge}"
+                                                            BackgroundColor="{Binding ExpiryColor}"
+                                                            VerticalOptions="Center">
                                                             <Label
-                                                                Grid.Column="0"
+                                                                FontSize="11"
+                                                                FontAttributes="Bold"
+                                                                TextColor="White"
+                                                                Text="{Binding ExpiryDisplayText}" />
+                                                        </Border>
+
+                                                        <!-- Edit button -->
+                                                        <Border
+                                                            Grid.Column="3"
+                                                            Margin="6,0,0,0"
+                                                            BackgroundColor="#1E1E3A"
+                                                            StrokeShape="RoundRectangle 20"
+                                                            Stroke="Transparent"
+                                                            WidthRequest="40"
+                                                            HeightRequest="40"
+                                                            VerticalOptions="Center">
+                                                            <Border.GestureRecognizers>
+                                                                <TapGestureRecognizer Command="{Binding Source={x:Reference ProductsPageRoot}, Path=BindingContext.EditProductCommand}" CommandParameter="{Binding}" />
+                                                            </Border.GestureRecognizers>
+                                                            <Label
+                                                                Text="&#xe3c9;"
                                                                 FontFamily="Material"
-                                                                FontSize="16"
-                                                                IsVisible="{Binding IsSelected}"
-                                                                Text="restaurant"
-                                                                VerticalOptions="Center" />
-
-                                                            <!--  PRODUCT NAME  -->
-                                                            <Label
-                                                                Grid.Column="1"
-                                                                Margin="0,0,0,0"
-                                                                CharacterSpacing="0.25"
-                                                                FontFamily="Roboto-Regular"
-                                                                FontSize="14"
-                                                                Text="{Binding Name}"
-                                                                VerticalOptions="Center"
-                                                                VerticalTextAlignment="Center" />
-
-                                                            <!--  MINUS BUTTON  -->
-                                                            <Label
-                                                                Grid.Column="2"
-                                                                FontFamily="Material"
-                                                                FontSize="20"
-                                                                HorizontalTextAlignment="Center"
-                                                                Text="remove"
-                                                                VerticalOptions="FillAndExpand"
-                                                                VerticalTextAlignment="Center"
-                                                                WidthRequest="30">
-                                                                <Label.GestureRecognizers>
-                                                                    <TapGestureRecognizer Command="{Binding DecreaseCommand}" CommandParameter="{Binding}" />
-                                                                </Label.GestureRecognizers>
-                                                            </Label>
-
-                                                            <!--  QUANTITY  -->
-                                                            <Label
-                                                                Grid.Column="3"
-                                                                FontFamily="Roboto-Medium"
-                                                                FontSize="14"
+                                                                FontSize="18"
+                                                                TextColor="#CCCCDD"
                                                                 HorizontalOptions="Center"
-                                                                Text="{Binding Quantity}"
                                                                 VerticalOptions="Center" />
-
-                                                            <!--  PLUS BUTTON  -->
-                                                            <Label
-                                                                Grid.Column="4"
-                                                                FontFamily="Material"
-                                                                FontSize="20"
-                                                                HorizontalTextAlignment="Center"
-                                                                Text="add"
-                                                                VerticalOptions="FillAndExpand"
-                                                                VerticalTextAlignment="Center"
-                                                                WidthRequest="30">
-                                                                <Label.GestureRecognizers>
-                                                                    <TapGestureRecognizer Command="{Binding IncreaseCommand}" CommandParameter="{Binding}" />
-                                                                </Label.GestureRecognizers>
-                                                            </Label>
-
-                                                            <!--  DELETE BUTTON  -->
-                                                            <Label
-                                                                Grid.Column="5"
-                                                                FontFamily="Material"
-                                                                FontSize="20"
-                                                                HorizontalTextAlignment="Center"
-                                                                Text="delete"
-                                                                TextColor="Red"
-                                                                VerticalOptions="FillAndExpand"
-                                                                VerticalTextAlignment="Center"
-                                                                WidthRequest="30">
-                                                                <Label.GestureRecognizers>
-                                                                    <TapGestureRecognizer Command="{Binding RemoveCommand}" CommandParameter="{Binding}" />
-                                                                </Label.GestureRecognizers>
-                                                            </Label>
-
-                                                        </Grid>
-                                                    </ContentView>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </StackLayout>
-                                    </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </StackLayout>
                                 </Grid>
                             </DataTemplate>
                         </sf:SfListView.ItemTemplate>

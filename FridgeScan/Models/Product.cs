@@ -1,36 +1,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Windows.Input;
 
 namespace FridgeScan.Models;
 
 public partial class Product : ObservableRecipient
 {
-    public ICommand DecreaseCommand { get; }
-    public ICommand IncreaseCommand { get; }
-    public ICommand RemoveCommand { get; }
-
     public Product(string name, string? category, int quantity)
     {
         this.name = name;
         this.category = category ?? "Other";
         this.quantity = quantity;
-
-        DecreaseCommand = new Command(() =>
-        {
-            if (Quantity > 0)
-                Quantity--;
-        });
-
-        IncreaseCommand = new Command(() =>
-        {
-            Quantity++;
-        });
-
-        RemoveCommand = new Command(() =>
-        {
-            Quantity = 0;
-        });
     }
 
     [ObservableProperty]
@@ -49,7 +28,43 @@ public partial class Product : ObservableRecipient
     [ObservableProperty]
     public bool isSelected;
 
-    // FIXED: no parameter needed
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DaysUntilExpiry))]
+    [NotifyPropertyChangedFor(nameof(ShowExpiryBadge))]
+    [NotifyPropertyChangedFor(nameof(ExpiryDisplayText))]
+    [NotifyPropertyChangedFor(nameof(ExpiryColor))]
+    private DateTime? expiryDate;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowFrozenIcon))]
+    private bool isFrozen;
+
+    // Computed properties
+
+    public int? DaysUntilExpiry =>
+        ExpiryDate.HasValue
+            ? (int?)(ExpiryDate.Value.Date - DateTime.Today.Date).TotalDays
+            : null;
+
+    public bool ShowExpiryBadge =>
+        DaysUntilExpiry.HasValue && DaysUntilExpiry.Value <= 3;
+
+    public string ExpiryDisplayText => DaysUntilExpiry switch
+    {
+        < 0 => "Expired",
+        0   => "Today",
+        <= 3 => $"{DaysUntilExpiry}d left",
+        _   => null
+    };
+
+    public Color ExpiryColor => DaysUntilExpiry switch
+    {
+        < 0 => Color.FromArgb("#E74C3C"),
+        _   => Color.FromArgb("#F39C12"),
+    };
+
+    public bool ShowFrozenIcon => isFrozen;
+
     [RelayCommand]
     private void ToggleSelect()
     {

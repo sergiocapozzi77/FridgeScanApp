@@ -1,0 +1,125 @@
+<h2>Full Page Design — CookbookDetailPage</h2>
+<p class="subtitle">Material 3 dark theme, minimal chrome, whitespace-driven layout</p>
+
+<div class="mockup">
+  <div class="mockup-header">Complete page layout</div>
+  <div class="mockup-body" style="padding:0">
+    <div style="background:#0D0D2B;font-family:system-ui,sans-serif;max-width:400px;margin:0 auto;min-height:500px">
+
+      <!-- ===== HEADER ===== -->
+      <div style="padding:20px 16px 16px 16px">
+
+        <!-- Row 1: back arrow + title + actions -->
+        <div style="display:flex;align-items:center;margin-bottom:2px">
+          <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:-12px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#CCCCDD"/></svg>
+          </div>
+          <span style="color:white;font-size:22px;font-weight:700;flex:1;line-height:1.3">Italian Favorites</span>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#CCCCDD"/></svg>
+            </div>
+            <div style="width:40px;height:40px;border-radius:20px;background:#2A1E1E;display:flex;align-items:center;justify-content:center">
+              <svg width="16" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#ff6b6b"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: recipe count -->
+        <div style="color:#8888AA;font-size:13px;margin-left:36px">12 recipes</div>
+      </div>
+
+      <!-- No divider — whitespace gap: 8px from header bottom to first card -->
+
+      <!-- ===== RECIPE LIST ===== -->
+      <div style="padding:0 12px 24px 12px">
+
+        <!-- Card 1 -->
+        <div style="background:#14142E;border-radius:12px;margin-bottom:10px;overflow:hidden;display:flex">
+          <div style="width:100px;height:90px;background:linear-gradient(135deg,#2A2A5A,#1A1A3A);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#666;font-size:32px">🍝</div>
+          <div style="flex:1;padding:14px 12px;display:flex;justify-content:space-between">
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0">
+              <span style="color:white;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Spaghetti Carbonara</span>
+              <span style="color:#777;font-size:12px">BBC Good Food</span>
+              <div style="display:flex;gap:10px;font-size:12px;color:#888">
+                <span>30 min</span>
+                <span>Easy</span>
+              </div>
+            </div>
+            <!-- kebab menu -->
+            <div style="display:flex;align-items:center;padding-left:8px">
+              <span style="color:#666;font-size:18px">⋯</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div style="background:#14142E;border-radius:12px;margin-bottom:10px;overflow:hidden;display:flex">
+          <div style="width:100px;height:90px;background:linear-gradient(135deg,#3A2A2A,#2A1A1A);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#777;font-size:32px">🍕</div>
+          <div style="flex:1;padding:14px 12px;display:flex;justify-content:space-between">
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0">
+              <span style="color:white;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Margherita Pizza</span>
+              <span style="color:#777;font-size:12px">Giallo Zafferano</span>
+              <div style="display:flex;gap:10px;font-size:12px;color:#888">
+                <span>45 min</span>
+                <span>Medium</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;padding-left:8px">
+              <span style="color:#666;font-size:18px">⋯</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div style="background:#14142E;border-radius:12px;margin-bottom:10px;overflow:hidden;display:flex">
+          <div style="width:100px;height:90px;background:linear-gradient(135deg,#2A3A2A,#1A2A1A);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#777;font-size:32px">🥗</div>
+          <div style="flex:1;padding:14px 12px;display:flex;justify-content:space-between">
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0">
+              <span style="color:white;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Caesar Salad</span>
+              <span style="color:#777;font-size:12px">AI Generated</span>
+              <div style="display:flex;gap:10px;font-size:12px;color:#888">
+                <span>15 min</span>
+                <span>Easy</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;padding-left:8px">
+              <span style="color:#666;font-size:18px">⋯</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:16px">
+  <h3>Design tokens</h3>
+  <table style="width:100%;border-collapse:collapse;color:#aaa;font-size:13px">
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888;width:120px">Background</td><td style="padding:8px 0">#0D0D2B (matches CookbookPage)</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Card background</td><td style="padding:8px 0">#14142E (was auto, now explicit)</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Title</td><td style="padding:8px 0">22sp bold, white</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Secondary text</td><td style="padding:8px 0">13sp, #8888AA</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Card title</td><td style="padding:8px 0">15sp bold, white</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Card meta</td><td style="padding:8px 0">12sp, #777 / #888</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Header padding</td><td style="padding:8px 0">20px top, 16px sides, 16px bottom</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">List padding</td><td style="padding:8px 0">12px sides, 24px bottom</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Card spacing</td><td style="padding:8px 0">10px gap between cards</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Card corners</td><td style="padding:8px 0">12px (was 10px)</td></tr>
+    <tr style="border-bottom:1px solid #222"><td style="padding:8px 0;color:#888">Thumbnail</td><td style="padding:8px 0">100×90px (was 110×100px)</td></tr>
+  </table>
+</div>
+
+<div class="section" style="margin-top:16px">
+  <h3>What changes vs. current</h3>
+  <ul style="color:#aaa;font-size:14px;line-height:1.8">
+    <li><strong>Back button:</strong> SfChip → transparent 48dp Label with Material glyph and TapGestureRecognizer</li>
+    <li><strong>Title & actions:</strong> moved into single horizontal row (was stacked vertically)</li>
+    <li><strong>Rename/Delete:</strong> text Buttons → 40dp icon Border buttons</li>
+    <li><strong>Divider:</strong> BoxView removed entirely</li>
+    <li><strong>RowDefinitions:</strong> simplified from Auto,Auto,* to Auto,*</li>
+    <li><strong>Cards:</strong> subtle refinements — corner radius 10→12, thumbnail 110→100px, card padding tightened</li>
+    <li><strong>Page background:</strong> explicit #0D0D2B to match CookbookPage</li>
+  </ul>
+</div>

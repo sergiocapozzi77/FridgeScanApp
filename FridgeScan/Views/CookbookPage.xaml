@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FridgeScan.Views.CookbookPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfCards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
+    xmlns:sfPull="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
+    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:views="clr-namespace:FridgeScan.Views"
+    xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
+    BackgroundColor="#0D0D2B"
+    Title="Cookbooks">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Padding="20,16,16,12" ColumnDefinitions="*,Auto">
+            <Label Text="Cookbooks"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center" />
+            <Border Grid.Column="1"
+                    BackgroundColor="#1E1E3A"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="Transparent"
+                    HeightRequest="40"
+                    Padding="18,0"
+                    VerticalOptions="Center">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreateCookbookCommand}" />
+                </Border.GestureRecognizers>
+                <Label Text="+ New"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="#CCCCDD"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center" />
+            </Border>
+        </Grid>
+        <sfPull:SfPullToRefresh Grid.Row="1"
+                                 IsRefreshing="{Binding IsLoading}"
+                                 RefreshCommand="{Binding LoadCookbooksCommand}">
+            <sfPull:SfPullToRefresh.PullableContent>
+                <CollectionView ItemsSource="{Binding Cookbooks}"
+                                ItemsLayout="VerticalGrid, 2"
+                                SelectionMode="Single"
+                                SelectionChanged="OnCookbookSelected"
+                                Margin="12,0">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Cookbook">
+                            <sfCards:SfCardView Margin="5"
+                                                CornerRadius="16"
+                                                Padding="0"
+                                                BackgroundColor="#14142E">
+                                <VerticalStackLayout Padding="0" Spacing="0">
+                                    <views:CookbookMosaic ImageUrls="{Binding PreviewImageUrls}" HeightRequest="150" />
+                                    <VerticalStackLayout Padding="12,10,12,12">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
+                                               TextColor="White"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2" />
+                                        <Label FontSize="12" TextColor="#8888AA">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} recipes">
+                                                    <Binding Path="RecipeCount" />
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </sfCards:SfCardView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </sfPull:SfPullToRefresh.PullableContent>
+        </sfPull:SfPullToRefresh>
+    </Grid>
+</ContentPage>

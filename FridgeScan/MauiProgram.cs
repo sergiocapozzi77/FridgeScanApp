@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
+using FridgeScan.Services.RecipeImport;
 
 namespace FridgeScan;
 
@@ -34,6 +35,20 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<RecipeViewModel>();
         builder.Services.AddSingleton<RecipeDetailsViewModel>();
         builder.Services.AddSingleton<SharedRecipeViewModel>();
+        builder.Services.AddSingleton<CookbookViewModel>();
+        builder.Services.AddSingleton<CookbookDetailViewModel>();
+        builder.Services.AddSingleton<RecipePreviewViewModel>();
+        builder.Services.AddSingleton<SavedRecipeDetailViewModel>();
+        builder.Services.AddSingleton<ProductDetailViewModel>();
+
+        // Recipe import pipeline
+        builder.Services.AddSingleton<IRecipeImageExtractor, RecipeImageExtractor>();
+        builder.Services.AddSingleton<IRecipeExtractor, JsonLdRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeExtractor, NextDataRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeExtractor, PostContentRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeExtractor, MicrodataRecipeExtractor>();
+        builder.Services.AddSingleton<IRecipeHtmlFetcher, WebViewHtmlFetcher>();
+        builder.Services.AddSingleton<RecipeImportService>();
 
         builder.Services.AddSingleton<EmailService>();
 
@@ -60,12 +75,20 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<JsonLdParser>();
         builder.Services.AddSingleton<RecipeAiService>();
 
+        builder.Services.AddSingleton<CookbookService>();
+        builder.Services.AddSingleton<FavouriteService>();
+
         // pages
         builder.Services.AddTransient<Views.ProductsPage>();
         builder.Services.AddTransient<Views.ImportPage>();
         builder.Services.AddTransient<Views.RecipePage>();
         builder.Services.AddTransient<Views.RecipeDetailsPage>();
         builder.Services.AddTransient<Views.SharedRecipePage>();
+        builder.Services.AddTransient<Views.CookbookPage>();
+        builder.Services.AddTransient<Views.CookbookDetailPage>();
+        builder.Services.AddTransient<Views.RecipePreviewPage>();
+        builder.Services.AddTransient<Views.SavedRecipeDetailPage>();
+        builder.Services.AddTransient<Views.ProductDetailPage>();
 
 #if ANDROID || IOS || MACCATALYST
         // Initialize Syncfusion license (replace with your license key)

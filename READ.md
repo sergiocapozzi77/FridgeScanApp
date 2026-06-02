@@ -1,0 +1,2 @@
+﻿# to test the import intent
+"C:/Program Files (x86)/Android/android-sdk/platform-tools/adb.exe" -s adb-R5CY54KQ3PT-1tvj5S._adb-tls-connect._tcp shell am start -a android.intent.action.SEND -t text/plain --es android.intent.extra.TEXT "https://www.allrecipes.com/recipe/245724/home-cured-holiday-ham/" com.racingsolutions.fridgescan/crc64c7a6a133fdc61b6c.MainActivity

@@ -1,0 +1,80 @@
+<h2>How should rename and delete actions appear?</h2>
+<p class="subtitle">Material 3 uses overflow menus for secondary actions — but the choice depends on how accessible you want these to be</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">A: Separate icon buttons</div>
+    <div class="mockup-body" style="padding:0">
+      <!-- Simplified phone frame -->
+      <div style="background:#0D0D2B;min-height:340px;padding:16px;font-family:system-ui,sans-serif">
+        <!-- Status bar placeholder -->
+        <div style="color:#666;font-size:10px;text-align:center;margin-bottom:12px">━━━  Cookbook Detail  ━━━</div>
+        <!-- Header row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:32px;height:32px;border-radius:16px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:16px">←</div>
+            <span style="color:white;font-size:20px;font-weight:700">Italian Favorites</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="width:32px;height:32px;border-radius:16px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:14px" title="Rename">✎</div>
+            <div style="width:32px;height:32px;border-radius:16px;background:#2A1A1A;display:flex;align-items:center;justify-content:center;color:#ff6b6b;font-size:14px" title="Delete">🗑</div>
+          </div>
+        </div>
+        <!-- Recipe count -->
+        <div style="color:#8888AA;font-size:13px;margin-left:40px;margin-bottom:16px">12 recipes</div>
+        <!-- Recipe cards -->
+        <div style="background:#14142E;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:center">
+          <div style="width:60px;height:60px;background:#2A2A4A;border-radius:8px;flex-shrink:0"></div>
+          <div>
+            <div style="color:white;font-size:13px;font-weight:600">Spaghetti Carbonara</div>
+            <div style="color:#777;font-size:11px">BBC Good Food · 30 min · Easy</div>
+          </div>
+        </div>
+        <div style="background:#14142E;border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center">
+          <div style="width:60px;height:60px;background:#2A2A4A;border-radius:8px;flex-shrink:0"></div>
+          <div>
+            <div style="color:white;font-size:13px;font-weight:600">Margherita Pizza</div>
+            <div style="color:#777;font-size:11px">Giallo Zafferano · 45 min · Medium</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:12px 16px"><p style="margin:0;font-size:13px;color:#888">Two icon buttons always visible. More accessible, but busier header.</p></div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">B: Single overflow menu</div>
+    <div class="mockup-body" style="padding:0">
+      <div style="background:#0D0D2B;min-height:340px;padding:16px;font-family:system-ui,sans-serif">
+        <div style="color:#666;font-size:10px;text-align:center;margin-bottom:12px">━━━  Cookbook Detail  ━━━</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:32px;height:32px;border-radius:16px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:16px">←</div>
+            <span style="color:white;font-size:20px;font-weight:700">Italian Favorites</span>
+          </div>
+          <div style="width:32px;height:32px;border-radius:16px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:16px">⋯</div>
+        </div>
+        <div style="color:#8888AA;font-size:13px;margin-left:40px;margin-bottom:16px">12 recipes</div>
+        <div style="background:#14142E;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:center">
+          <div style="width:60px;height:60px;background:#2A2A4A;border-radius:8px;flex-shrink:0"></div>
+          <div>
+            <div style="color:white;font-size:13px;font-weight:600">Spaghetti Carbonara</div>
+            <div style="color:#777;font-size:11px">BBC Good Food · 30 min · Easy</div>
+          </div>
+        </div>
+        <div style="background:#14142E;border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center">
+          <div style="width:60px;height:60px;background:#2A2A4A;border-radius:8px;flex-shrink:0"></div>
+          <div>
+            <div style="color:white;font-size:13px;font-weight:600">Margherita Pizza</div>
+            <div style="color:#777;font-size:11px">Giallo Zafferano · 45 min · Medium</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:12px 16px"><p style="margin:0;font-size:13px;color:#888">Cleaner, more modern. Tapping ⋯ shows an action sheet with Rename / Delete.</p></div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px">
+  <p style="color:#aaa;font-size:14px">💡 <strong>Recommendation: B</strong> — Material 3 favors overflow menus for destructive/secondary actions. Cleaner header, and rename/delete aren't frequent enough to need permanent visibility.</p>
+</div>

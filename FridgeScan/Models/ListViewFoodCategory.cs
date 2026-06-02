@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace FridgeScan.Models
 {
@@ -58,6 +59,8 @@ namespace FridgeScan.Models
             }
         }
 
+        public ICommand ToggleExpandCommand { get; }
+
         #endregion
 
         #region Constructor
@@ -67,6 +70,7 @@ namespace FridgeScan.Models
             this.FoodCategory = foodCategory;
             this.FoodMenuCollection = new ObservableCollection<Product>(products);
             IsExpanded = true;
+            this.ToggleExpandCommand = new Command(() => IsExpanded = !IsExpanded);
         }
 
         #endregion

@@ -56,6 +56,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="secrets.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BarcodeScanning.Native.Maui" Version="2.2.1" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.3.0" />
 		<PackageReference Include="CommunityToolkit.MVVM" Version="8.4.0" />
@@ -89,6 +93,24 @@
 	  <Compile Update="Views\ActivitiesPage.xaml.cs">
 	    <DependentUpon>ActivitiesPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\CookbookPage.xaml.cs">
+	    <DependentUpon>CookbookPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\CookbookDetailPage.xaml.cs">
+	    <DependentUpon>CookbookDetailPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\RecipePreviewPage.xaml.cs">
+	    <DependentUpon>RecipePreviewPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\SavedRecipeDetailPage.xaml.cs">
+	    <DependentUpon>SavedRecipeDetailPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiAsset Update="Resources\Raw\secrets.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </MauiAsset>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -111,6 +133,18 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SharedRecipePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CookbookPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CookbookDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RecipePreviewPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SavedRecipeDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
