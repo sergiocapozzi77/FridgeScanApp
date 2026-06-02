@@ -10,7 +10,7 @@ public partial class ProductDetailPage : ContentPage
         BindingContext = viewModel;
     }
 
-    private async void OnBackClicked(object sender, EventArgs e)
+    private async void OnBackClicked(object sender, TappedEventArgs e)
     {
         await Shell.Current.GoToAsync("..");
     }

@@ -67,7 +67,8 @@
                                TextColor="White"
                                FontSize="16"
                                Placeholder="Product name"
-                               PlaceholderColor="#666688" />
+                               PlaceholderColor="#666688"
+                               Keyboard="Text" />
                     </Border>
                 </VerticalStackLayout>
 
@@ -147,7 +148,7 @@
                                    Text="&#xe5c9;"
                                    FontFamily="Material"
                                    FontSize="18"
-                                   TextColor="#666"
+                                   TextColor="#666666"
                                    VerticalOptions="Center">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ClearExpiryCommand}" />
