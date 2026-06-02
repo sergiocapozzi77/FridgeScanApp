@@ -186,6 +186,7 @@
                                             Margin="8,0,0,0"
                                             FontSize="11"
                                             TextColor="#8888AA"
+                                            VerticalOptions="Center"
                                             Text="{Binding FoodMenuCollection.Count, StringFormat='· {0} items'}" />
                                         <Label
                                             Grid.Column="3"

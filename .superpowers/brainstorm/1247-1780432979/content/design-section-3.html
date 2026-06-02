@@ -1,0 +1,82 @@
+<h2>Design Section 3: Interactions & Visual States</h2>
+<p class="subtitle">Tap behavior, state transitions, and edge cases</p>
+
+<div class="section">
+  <h3>Ingredient tap interaction</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <tr>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid #333;color:#8888AA;">State</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid #333;color:#8888AA;">Circle</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid #333;color:#8888AA;">Text</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid #333;color:#8888AA;">Opacity</th>
+    </tr>
+    <tr>
+      <td style="padding:6px 8px;">Unchecked (default)</td>
+      <td style="padding:6px 8px;">Hollow ring, <code>BorderColor #CCCCDD</code></td>
+      <td style="padding:6px 8px;">Normal, <code>#CCCCDD</code></td>
+      <td style="padding:6px 8px;">1.0</td>
+    </tr>
+    <tr>
+      <td style="padding:6px 8px;">Checked (tapped)</td>
+      <td style="padding:6px 8px;">Filled, <code>BackgroundColor #CCCCDD</code>, shows ✓</td>
+      <td style="padding:6px 8px;">Strikethrough, <code>#8888AA</code></td>
+      <td style="padding:6px 8px;">0.5</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section">
+  <h3>Method steps</h3>
+  <p>Static numbered badges — no tap interaction needed. The step number badge uses <code>#1E1E3A</code> background (action surface token) with bold <code>#CCCCDD</code> text.</p>
+</div>
+
+<div class="section">
+  <h3>IngredientItem model (final)</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="padding:12px 16px;font-family:monospace;font-size:13px;color:#CCDDEE;">
+      public partial class IngredientItem : ObservableObject<br>
+      {<br>
+      <span style="margin-left:20px;">[ObservableProperty]</span><br>
+      <span style="margin-left:20px;">private string name;</span><br>
+      <br>
+      <span style="margin-left:20px;">[ObservableProperty]</span><br>
+      <span style="margin-left:20px;">[AlsoNotifyChangeFor(nameof(TextColor), nameof(Opacity))]</span><br>
+      <span style="margin-left:20px;">private bool isChecked;</span><br>
+      <br>
+      <span style="margin-left:20px;">public TextDecorations TextDecorations</span><br>
+      <span style="margin-left:20px;">  => IsChecked ? TextDecorations.Strikethrough : TextDecorations.None;</span><br>
+      <span style="margin-left:20px;">public double Opacity</span><br>
+      <span style="margin-left:20px;">  => IsChecked ? 0.5 : 1.0;</span><br>
+      <span style="margin-left:20px;">public Color TextColor</span><br>
+      <span style="margin-left:20px;">  => IsChecked ? Color.FromArgb("#8888AA") : Color.FromArgb("#CCCCDD");</span><br>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Numbering method steps in XAML</h3>
+  <p>We'll add an <code>IndexValueConverter</code> that returns the item's index + 1. The step number badge binds via this converter:</p>
+  <div class="mockup">
+    <div class="mockup-body" style="padding:12px 16px;font-family:monospace;font-size:13px;color:#CCDDEE;">
+      <span style="color:#888;">// IndexValueConverter.cs</span><br>
+      public class IndexValueConverter : IValueConverter<br>
+      {<br>
+      <span style="margin-left:20px;">public object Convert(object value, Type targetType, object parameter, CultureInfo culture)</span><br>
+      <span style="margin-left:40px;">=> CollectionView.GetIndex(value as BindableObject) + 1;</span><br>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Edge cases handled</h3>
+  <ul style="color:#CCCCDD;font-size:13px;line-height:1.6;">
+    <li><strong>Empty ingredients</strong> — card still shows (with title), collection is empty. Handled by existing flow.</li>
+    <li><strong>Very long ingredient name</strong> — wraps to next line, circle stays aligned top-center (not center).</li>
+    <li><strong>Many ingredients (scroll)</strong> — CollectionView inside ScrollView. We'll keep CollectionView height unconstrained (VerticalStackLayout inside ScrollView handles scrolling).</li>
+    <li><strong>Persisting checked state</strong> — <em>Not persisted</em>. Checked state is ephemeral (per session). Reloading the page resets all ingredients to unchecked.</li>
+  </ul>
+</div>
+
+<p style="margin-top:20px;color:#8888AA;"><em>Does this interaction design look good? If yes, I'll write the full spec document.</em></p>

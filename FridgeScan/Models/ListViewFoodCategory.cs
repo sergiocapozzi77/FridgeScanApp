@@ -24,7 +24,7 @@ namespace FridgeScan.Models
             get { return foodCategory; }
             set
             {
-                foodCategory = value;
+                foodCategory = value?.ToUpperInvariant();
                 this.RaisedOnPropertyChanged("FoodCategory");
             }
         }

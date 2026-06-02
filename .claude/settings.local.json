@@ -20,7 +20,9 @@
       "Bash(git log *)",
       "Bash(C:\\\\Users\\\\sergi\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.1.0\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh *)",
       "Bash(git rm *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(C:\\\\Users\\\\sergi\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.1.0\\\\skills\\\\brainstorming\\\\scripts\\\\stop-server.sh *)",
+      "mcp__ide__getDiagnostics"
     ]
   },
   "enableAllProjectMcpServers": true,

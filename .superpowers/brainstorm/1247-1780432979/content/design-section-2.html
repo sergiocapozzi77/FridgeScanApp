@@ -1,0 +1,175 @@
+<h2>Design Section 2: View Layout</h2>
+<p class="subtitle">Classic Card Sections — full XAML structure for ingredients and method</p>
+
+<h3>Ingredients Section (SfCardView)</h3>
+<div class="mockup" style="margin-top:4px;">
+  <div class="mockup-body" style="padding:16px;text-align:left;font-size:13px;line-height:1.7;overflow-x:auto;">
+    <pre style="margin:0;color:#CCDDEE;font-family:monospace;">
+<span style="color:#888;">&lt;!-- Ingredients Card --&gt;</span>
+&lt;sfCards:<span style="color:#7C9;">SfCardView</span>
+    CornerRadius=<span style="color:#E8A838;">"16"</span>
+    Padding=<span style="color:#E8A838;">"0"</span>
+    BackgroundColor=<span style="color:#E8A838;">"#14142E"</span>&gt;
+
+    &lt;VerticalStackLayout Spacing=<span style="color:#E8A838;">"0"</span> Padding=<span style="color:#E8A838;">"16,12"</span>&gt;
+
+        <span style="color:#888;">&lt;!-- Section title + icon row --&gt;</span>
+        &lt;Grid ColumnDefinitions=<span style="color:#E8A838;">"Auto,*"</span>
+              ColumnSpacing=<span style="color:#E8A838;">"8"</span>
+              Margin=<span style="color:#E8A838;">"0,0,0,8"</span>&gt;
+            &lt;Label Text=<span style="color:#E8A838;">"&#x2B24;"</span>
+                   FontSize=<span style="color:#E8A838;">"10"</span>
+                   TextColor=<span style="color:#8888AA;">"#8888AA"</span>
+                   VerticalOptions=<span style="color:#E8A838;">"Center"</span> /&gt;
+            &lt;Label Grid.Column=<span style="color:#E8A838;">"1"</span>
+                   Text=<span style="color:#E8A838;">"Ingredients"</span>
+                   FontSize=<span style="color:#E8A838;">"15"</span>
+                   FontAttributes=<span style="color:#E8A838;">"Bold"</span>
+                   TextColor=<span style="color:#E8A838;">"White"</span> /&gt;
+        &lt;/Grid&gt;
+
+        <span style="color:#888;">&lt;!-- Checklist --&gt;</span>
+        &lt;CollectionView ItemsSource=<span style="color:#E8A838;">"{Binding IngredientItems}"</span>
+                        SelectionMode=<span style="color:#E8A838;">"None"</span>&gt;
+            &lt;CollectionView.ItemTemplate&gt;
+                &lt;DataTemplate x:DataType=<span style="color:#E8A838;">"models:IngredientItem"</span>&gt;
+                    &lt;Border Padding=<span style="color:#E8A838;">"0,6"</span>
+                            BackgroundColor=<span style="color:#E8A838;">"Transparent"</span>&gt;
+                        &lt;Border.GestureRecognizers&gt;
+                            &lt;TapGestureRecognizer
+                                Command=<span style="color:#E8A838;">"{Binding Source={RelativeSource AncestorType={x:Type viewmodel:SavedRecipeDetailViewModel}}, Path=ToggleIngredientCommand}"</span>
+                                CommandParameter=<span style="color:#E8A838;">"{Binding .}"</span> /&gt;
+                        &lt;/Border.GestureRecognizers&gt;
+
+                        &lt;Grid ColumnDefinitions=<span style="color:#E8A838;">"Auto,*"</span>
+                              ColumnSpacing=<span style="color:#E8A838;">"12"</span>&gt;
+                            <span style="color:#888;">&lt;!-- Circle indicator --&gt;</span>
+                            &lt;Border WidthRequest=<span style="color:#E8A838;">"22"</span>
+                                    HeightRequest=<span style="color:#E8A838;">"22"</span>
+                                    StrokeShape=<span style="color:#E8A838;">"RoundRectangle 11"</span>
+                                    Stroke=<span style="color:#E8A838;">"#CCCCDD"</span>
+                                    StrokeThickness=<span style="color:#E8A838;">"1.5"</span>
+                                    BackgroundColor=<span style="color:#E8A838;">"Transparent"</span>&gt;
+                                &lt;Label Text=<span style="color:#E8A838;">"✓"</span>
+                                       FontSize=<span style="color:#E8A838;">"12"</span>
+                                       TextColor=<span style="color:#E8A838;">"#CCCCDD"</span>
+                                       HorizontalOptions=<span style="color:#E8A838;">"Center"</span>
+                                       VerticalOptions=<span style="color:#E8A838;">"Center"</span>
+                                       IsVisible=<span style="color:#E8A838;">"{Binding IsChecked}"</span> /&gt;
+                            &lt;/Border&gt;
+
+                            <span style="color:#888;">&lt;!-- Ingredient name --&gt;</span>
+                            &lt;Label Grid.Column=<span style="color:#E8A838;">"1"</span>
+                                   Text=<span style="color:#E8A838;">"{Binding Name}"</span>
+                                   FontSize=<span style="color:#E8A838;">"14"</span>
+                                   TextColor=<span style="color:#E8A838;">"{Binding TextColor}"</span>
+                                   TextDecorations=<span style="color:#E8A838;">"{Binding TextDecorations}"</span>
+                                   VerticalOptions=<span style="color:#E8A838;">"Center"</span> /&gt;
+                        &lt;/Grid&gt;
+                    &lt;/Border&gt;
+                &lt;/DataTemplate&gt;
+            &lt;/CollectionView.ItemTemplate&gt;
+        &lt;/CollectionView&gt;
+    &lt;/VerticalStackLayout&gt;
+&lt;/sfCards:SfCardView&gt;</pre>
+    </div>
+  </div>
+
+<h3 style="margin-top:24px;">Method Section (SfCardView)</h3>
+<div class="mockup" style="margin-top:4px;">
+  <div class="mockup-body" style="padding:16px;text-align:left;font-size:13px;line-height:1.7;overflow-x:auto;">
+    <pre style="margin:0;color:#CCDDEE;font-family:monospace;">
+<span style="color:#888;">&lt;!-- Method Card -- same corner radius, same tonal surface --&gt;</span>
+&lt;sfCards:<span style="color:#7C9;">SfCardView</span>
+    CornerRadius=<span style="color:#E8A838;">"16"</span>
+    Padding=<span style="color:#E8A838;">"0"</span>
+    BackgroundColor=<span style="color:#E8A838;">"#14142E"</span>&gt;
+
+    &lt;VerticalStackLayout Spacing=<span style="color:#E8A838;">"0"</span> Padding=<span style="color:#E8A838;">"16,12"</span>&gt;
+
+        <span style="color:#888;">&lt;!-- Section title --&gt;</span>
+        &lt;Label Text=<span style="color:#E8A838;">"Method"</span>
+               FontSize=<span style="color:#E8A838;">"15"</span>
+               FontAttributes=<span style="color:#E8A838;">"Bold"</span>
+               TextColor=<span style="color:#E8A838;">"White"</span>
+               Margin=<span style="color:#E8A838;">"0,0,0,8"</span> /&gt;
+
+        &lt;CollectionView ItemsSource=<span style="color:#E8A838;">"{Binding Recipe.MethodSteps}"</span>
+                        SelectionMode=<span style="color:#E8A838;">"None"</span>&gt;
+            &lt;CollectionView.ItemTemplate&gt;
+                &lt;DataTemplate x:DataType=<span style="color:#E8A838;">"x:String"</span>&gt;
+                    &lt;Grid Padding=<span style="color:#E8A838;">"0,8"</span>
+                          ColumnDefinitions=<span style="color:#E8A838;">"Auto,*"</span>
+                          ColumnSpacing=<span style="color:#E8A838;">"12"</span>&gt;
+
+                        <span style="color:#888;">&lt;!-- Step number badge --&gt;</span>
+                        &lt;Border WidthRequest=<span style="color:#E8A838;">"24"</span>
+                                HeightRequest=<span style="color:#E8A838;">"24"</span>
+                                StrokeShape=<span style="color:#E8A838;">"RoundRectangle 12"</span>
+                                Stroke=<span style="color:#E8A838;">"Transparent"</span>
+                                BackgroundColor=<span style="color:#E8A838;">"#1E1E3A"</span>&gt;
+                            &lt;Label Text=<span style="color:#E8A838;">"{Binding ., StringFormat='{0}'}"</span>
+                                   FontSize=<span style="color:#E8A838;">"12"</span>
+                                   FontAttributes=<span style="color:#E8A838;">"Bold"</span>
+                                   TextColor=<span style="color:#E8A838;">"#CCCCDD"</span>
+                                   HorizontalOptions=<span style="color:#E8A838;">"Center"</span>
+                                   VerticalOptions=<span style="color:#E8A838;">"Center"</span> /&gt;
+                        &lt;/Border&gt;
+
+                        <span style="color:#888;">&lt;!-- Step text --&gt;</span>
+                        &lt;Label Grid.Column=<span style="color:#E8A838;">"1"</span>
+                               Text=<span style="color:#E8A838;">"{Binding .}"</span>
+                               FontSize=<span style="color:#E8A838;">"14"</span>
+                               TextColor=<span style="color:#E8A838;">"#CCCCDD"</span>
+                               LineBreakMode=<span style="color:#E8A838;">"WordWrap"</span>
+                               VerticalOptions=<span style="color:#E8A838;">"Center"</span> /&gt;
+                    &lt;/Grid&gt;
+                &lt;/DataTemplate&gt;
+            &lt;/CollectionView.ItemTemplate&gt;
+        &lt;/CollectionView&gt;
+    &lt;/VerticalStackLayout&gt;
+&lt;/sfCards:SfCardView&gt;</pre>
+    </div>
+  </div>
+
+<h3 style="margin-top:24px;">Visual result</h3>
+<p style="color:#CCCCDD;">The two cards sit inside the current ScrollView, replacing the old Frame-based sections. Visual preview:</p>
+<div class="mockup" style="margin-top:4px;">
+  <div class="mockup-body" style="padding:20px;text-align:left;font-size:13px;">
+    <div style="background:#14142E;border-radius:16px;padding:16px;margin-bottom:16px;border:1px solid #2A2A4A;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <span style="color:#8888AA;font-size:10px;">⬤</span>
+        <span style="font-weight:bold;font-size:15px;color:white;">Ingredients</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:6px 0;">
+        <span style="width:22px;height:22px;border-radius:11px;border:1.5px solid #CCCCDD;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="color:#CCCCDD;font-size:11px;">✓</span></span>
+        <span style="color:#CCCCDD;font-size:14px;">200g pasta</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:6px 0;opacity:0.5;">
+        <span style="width:22px;height:22px;border-radius:11px;background:#CCCCDD;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="color:#14142E;font-size:11px;">✓</span></span>
+        <span style="text-decoration:line-through;color:#8888AA;font-size:14px;">2 tbsp olive oil</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:6px 0;">
+        <span style="width:22px;height:22px;border-radius:11px;border:1.5px solid #CCCCDD;flex-shrink:0;"></span>
+        <span style="color:#CCCCDD;font-size:14px;">3 cloves garlic, minced</span>
+      </div>
+    </div>
+    <div style="background:#14142E;border-radius:16px;padding:16px;border:1px solid #2A2A4A;">
+      <div style="font-weight:bold;font-size:15px;color:white;margin-bottom:10px;">Method</div>
+      <div style="display:flex;gap:12px;padding:6px 0;">
+        <span style="width:24px;height:24px;border-radius:12px;background:#1E1E3A;color:#CCCCDD;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;flex-shrink:0;">1</span>
+        <span style="color:#CCCCDD;font-size:14px;">Bring a large pot of salted water to a rolling boil.</span>
+      </div>
+      <div style="display:flex;gap:12px;padding:6px 0;">
+        <span style="width:24px;height:24px;border-radius:12px;background:#1E1E3A;color:#CCCCDD;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;flex-shrink:0;">2</span>
+        <span style="color:#CCCCDD;font-size:14px;">Add pasta and cook according to package timing, stirring occasionally.</span>
+      </div>
+      <div style="display:flex;gap:12px;padding:6px 0;">
+        <span style="width:24px;height:24px;border-radius:12px;background:#1E1E3A;color:#CCCCDD;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;flex-shrink:0;">3</span>
+        <span style="color:#CCCCDD;font-size:14px;">Drain pasta, reserving ¼ cup of pasta water. Set aside.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="margin-top:20px;color:#8888AA;"><em>This replaces the current Frame (#252525) sections with SfCardView (#14142E) — aligning with the project's Material 3 design standards.</em></p>

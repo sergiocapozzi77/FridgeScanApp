@@ -1,0 +1,47 @@
+<h2>How should ingredients be arranged?</h2>
+<p class="subtitle">This shapes the entire layout direction. Pick the arrangement style you prefer.</p>
+
+<div class="options">
+  <div class="option" data-choice="list" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Vertical Checklist</h3>
+      <p>Each ingredient is a full-width row with a check icon. Clean scanning, easy tapping, classic shopping-list feel.</p>
+      <div class="pros-cons" style="margin-top:8px;font-size:13px">
+        <ul>
+          <li>✅ Best for long ingredient lists (scroll vertically)</li>
+          <li>✅ Large touch targets (easy to tap)</li>
+          <li>✅ Can show quantity alongside ingredient name</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="chips" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Chip Grid</h3>
+      <p>Ingredients as compact chips/tags that wrap in a flex layout. Compact, visual, modern Material 3 feel.</p>
+      <div class="pros-cons" style="margin-top:8px;font-size:13px">
+        <ul>
+          <li>✅ Space-efficient — fits more above the fold</li>
+          <li>✅ Modern chip aesthetic (like filter chips)</li>
+          <li>✅ Tapping chip fills it with strikethrough effect</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="cards" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Mini Cards / Tiles</h3>
+      <p>Each ingredient in its own small card/tile with border, image placeholder, and checkmark overlay.</p>
+      <div class="pros-cons" style="margin-top:8px;font-size:13px">
+        <ul>
+          <li>✅ Most visually separated — each in its own container</li>
+          <li>✅ Can expand to show notes/substitutions</li>
+          <li>✅ Strongest visual hierarchy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

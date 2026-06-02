@@ -1,0 +1,54 @@
+<h2>Design Section 1: Data Model</h2>
+<p class="subtitle">The simplest model change to enable strikethrough</p>
+
+<div class="section">
+  <h3>New model: IngredientItem</h3>
+  <p>Currently <code>Ingredients</code> is <code>List&lt;string&gt;</code>. We'll add a lightweight wrapper:</p>
+  <div class="mockup" style="margin-top:8px;">
+    <div class="mockup-body" style="padding:16px;text-align:left;font-family:monospace;font-size:13px;line-height:1.6;color:#CCDDEE;">
+      <span style="color:#888;">// No changes to SavedRecipe model (persisted as-is)</span>
+      <br>
+      <span style="color:#7C9;">public class</span> IngredientItem<br>
+      <span style="color:#7C9;">{</span><br>
+      <span style="margin-left:20px;">public string Name { get; set; }</span><br>
+      <span style="margin-left:20px;">public bool IsChecked { get; set; }</span><br>
+      <span style="margin-left:20px;">// Computed — drives strikethrough + opacity</span><br>
+      <span style="margin-left:20px;color:#888;">[AlsoNotifyChangedFor(nameof(TextDecoration))]</span><br>
+      <span style="margin-left:20px;color:#888;">[AlsoNotifyChangedFor(nameof(TextOpacity))]</span><br>
+      <span style="margin-left:20px;">partial void OnIsCheckedChanged(bool)</span><br>
+      <span style="margin-left:40px;">→ TextDecoration = value ? TextDecorations.Strikethrough : None</span><br>
+      <span style="margin-left:40px;">→ TextOpacity = value ? 0.5 : 1.0</span><br>
+      <span style="color:#7C9;">}</span>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <h3>ViewModel additions</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="padding:16px;text-align:left;font-family:monospace;font-size:13px;line-height:1.6;color:#CCDDEE;">
+      <span style="color:#888;">// New observable collection for the view to bind to</span><br>
+      <span style="color:#7C9;">public</span> ObservableCollection&lt;IngredientItem&gt; IngredientItems { get; } = new();<br><br>
+      <span style="color:#888;">// Populated in recipe load (after Recipe is set)</span><br>
+      <span style="color:#7C9;">private void</span> BuildIngredientItems()<br>
+      <span style="color:#7C9;">{</span><br>
+      <span style="margin-left:20px;">IngredientItems.Clear();</span><br>
+      <span style="margin-left:20px;">foreach (var ing in Recipe.Ingredients)</span><br>
+      <span style="margin-left:40px;">IngredientItems.Add(new IngredientItem(ing));</span><br>
+      <span style="color:#7C9;">}</span><br><br>
+      <span style="color:#888;">// Tap command</span><br>
+      <span style="color:#7C9;">[RelayCommand]</span><br>
+      <span style="color:#7C9;">private void</span> ToggleIngredient(IngredientItem item)<br>
+      <span style="color:#7C9;">{</span><br>
+      <span style="margin-left:20px;">item.IsChecked = !item.IsChecked;</span><br>
+      <span style="color:#7C9;">}</span>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:8px;">
+  <h3>Numbering method steps</h3>
+  <p>No model change needed — steps stay as <code>List&lt;string&gt;</code>. The numbering is handled entirely in the <strong>view template</strong> using the <code>ItemIndex</code> from the CollectionView (or a converter).</p>
+</div>
+
+<p style="margin-top:20px;color:#8888AA;"><em>Does this model approach look right to you?</em></p>

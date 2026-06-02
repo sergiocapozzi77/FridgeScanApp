@@ -13,6 +13,11 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     private readonly Func<string, IRecipeService> _recipeServiceFactory;
     private readonly RecipeAiService _recipeAiService;
 
+    public string TotalTimeDisplay =>
+        !string.IsNullOrEmpty(Recipe?.TotalTime)
+            ? Recipe.TotalTime
+            : $"{Recipe?.PrepTime} + {Recipe?.CookTime}";
+    
     [ObservableProperty]
     private SavedRecipe? recipe;
 
@@ -30,8 +35,10 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     public bool HasTotalTime => !string.IsNullOrEmpty(Recipe?.TotalTime);
     public bool HasNutrition => Recipe?.Nutritions is { Count: > 0 };
     public bool HasMetadata => MetadataChips.Count > 0;
-
-    public ObservableCollection<string> MetadataChips { get; } = new();
+    public string RecipeSourceInitial =>
+        string.IsNullOrEmpty(Recipe?.RecipeSource) ? "?" :
+            Recipe.RecipeSource[0].ToString().ToUpper();
+    public ObservableCollection<MetadataChip> MetadataChips { get; } = new();
     public ObservableCollection<IngredientItem> IngredientItems { get; } = new();
     public ObservableCollection<MethodStep> MethodSteps { get; } = new();
 
@@ -153,18 +160,14 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     {
         MetadataChips.Clear();
         if (Recipe == null) return;
-
-        if (HasServing)
-            MetadataChips.Add($"Serves: {Recipe.Serving}");
-        if (HasPrepTime)
-            MetadataChips.Add($"Prep: {Recipe.PrepTime}");
-        if (HasCookTime)
-            MetadataChips.Add($"Cook: {Recipe.CookTime}");
         if (HasTotalTime)
-            MetadataChips.Add($"Total: {Recipe.TotalTime}");
+            MetadataChips.Add(new MetadataChip { Icon = "\ue425", Value = Recipe.TotalTime, Label = "Total time" });
+        else if (HasPrepTime && HasCookTime)
+            MetadataChips.Add(new MetadataChip { Icon = "\ue425", Value = $"{Recipe.PrepTime} + {Recipe.CookTime}", Label = "Total time" });
         if (!string.IsNullOrEmpty(Recipe.Difficulty))
-            MetadataChips.Add(Recipe.Difficulty);
-
+            MetadataChips.Add(new MetadataChip { Icon = "\ue313", Value = Recipe.Difficulty, Label = "Difficulty" });
+        if (HasServing)
+            MetadataChips.Add(new MetadataChip { Icon = "\ue7fb", Value = $"{Recipe.Serving} servings", Label = "Serves" });
         OnPropertyChanged(nameof(HasMetadata));
     }
 
