@@ -115,6 +115,9 @@ public partial class ProductsViewModel : BaseViewModel
     {
         GroupedProducts.Clear();
 
+        if (productsManager.Products == null)
+            return;
+
         var groups = productsManager.Products
             .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category)
             .OrderBy(g => g.Key);
