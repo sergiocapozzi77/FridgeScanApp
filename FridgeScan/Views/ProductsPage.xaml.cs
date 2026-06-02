@@ -13,7 +13,58 @@ public partial class ProductsPage : ContentPage
 
         var vm = services.GetService<ProductsViewModel>();
         BindingContext = vm;
+
+        Loaded += OnLoaded;
     }
+
+    private void OnLoaded(object sender, EventArgs e)
+    {
+#if ANDROID
+        ApplyCursorColor();
+        if (addItemAutocomplete != null)
+            addItemAutocomplete.Focused += OnAutocompleteFocused;
+#endif
+    }
+
+#if ANDROID
+    private void ApplyCursorColor()
+    {
+        SetCursorColorRecursive(addItemAutocomplete);
+    }
+
+    private void OnAutocompleteFocused(object sender, FocusEventArgs e)
+    {
+        SetCursorColorRecursive(addItemAutocomplete);
+    }
+
+    private static void SetCursorColorRecursive(Microsoft.Maui.Controls.View? element)
+    {
+        if (element?.Handler?.PlatformView is Android.Views.View view)
+            SetCursorColor(view);
+    }
+
+    private static void SetCursorColor(Android.Views.View view)
+    {
+        if (view is Android.Widget.EditText editText)
+        {
+            var color = Android.Graphics.Color.ParseColor("#D0BCFF");
+            var drawable = new Android.Graphics.Drawables.ColorDrawable(color);
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Q)
+            {
+                editText.TextCursorDrawable = drawable;
+            }
+            return;
+        }
+
+        if (view is Android.Views.ViewGroup viewGroup)
+        {
+            for (int i = 0; i < viewGroup.ChildCount; i++)
+            {
+                SetCursorColor(viewGroup.GetChildAt(i));
+            }
+        }
+    }
+#endif
 
     private void SfAutocomplete_Completed(object sender, EventArgs e)
     {
