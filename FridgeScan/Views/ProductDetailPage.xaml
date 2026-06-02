@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FridgeScan.Views.ProductDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FridgeScan.ViewModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:DataType="vm:ProductDetailViewModel"
+    BackgroundColor="#0D0D2B"
+    Title="Edit Product">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="20,16,20,20">
+
+        <!-- Header -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="48,*,Auto"
+              Padding="0,0,0,24">
+            <!-- Back arrow -->
+            <Label Grid.Column="0"
+                   Text="&#xe5c4;"
+                   FontFamily="Material"
+                   FontSize="24"
+                   TextColor="#CCCCDD"
+                   WidthRequest="48"
+                   HeightRequest="48"
+                   Margin="-12,0,0,0"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <!-- Title -->
+            <Label Grid.Column="1"
+                   Text="Edit Product"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center" />
+        </Grid>
+
+        <!-- Form -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20">
+
+                <!-- NAME -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="NAME"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#8888AA"
+                           CharacterSpacing="0.5" />
+                    <Border BackgroundColor="#14142E"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="12,0"
+                            HeightRequest="48">
+                        <Entry Text="{Binding ProductName}"
+                               BackgroundColor="Transparent"
+                               TextColor="White"
+                               FontSize="16"
+                               Placeholder="Product name"
+                               PlaceholderColor="#666688" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- QUANTITY -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="QUANTITY"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#8888AA"
+                           CharacterSpacing="0.5" />
+                    <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                        <Border BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="Transparent"
+                                WidthRequest="40"
+                                HeightRequest="40">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DecreaseQuantityCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="&#xe15b;"
+                                   FontFamily="Material"
+                                   FontSize="20"
+                                   TextColor="#CCCCDD"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="{Binding Quantity}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               WidthRequest="36"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center" />
+                        <Border BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="Transparent"
+                                WidthRequest="40"
+                                HeightRequest="40">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding IncreaseQuantityCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="&#xe145;"
+                                   FontFamily="Material"
+                                   FontSize="20"
+                                   TextColor="#CCCCDD"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- EXPIRY DATE -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="EXPIRY DATE"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#8888AA"
+                           CharacterSpacing="0.5" />
+                    <Border BackgroundColor="#14142E"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="12,0"
+                            HeightRequest="48">
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <DatePicker Grid.Column="0"
+                                        Date="{Binding ExpiryDateValue}"
+                                        IsVisible="{Binding HasExpiryDate}"
+                                        TextColor="White"
+                                        FontSize="16"
+                                        BackgroundColor="Transparent" />
+                            <Label Grid.Column="0"
+                                   Text="No expiry set"
+                                   TextColor="#666688"
+                                   FontSize="14"
+                                   IsVisible="{Binding HasExpiryDate, Converter={StaticResource InvertBoolConverter}}" />
+                            <Label Grid.Column="1"
+                                   Text="&#xe5c9;"
+                                   FontFamily="Material"
+                                   FontSize="18"
+                                   TextColor="#666"
+                                   VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ClearExpiryCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                    </Border>
+                    <Label Text="Clear expiry date"
+                           FontSize="12"
+                           TextColor="#ff6b6b"
+                           HorizontalOptions="Start"
+                           Padding="4,2">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClearExpiryCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </VerticalStackLayout>
+
+                <!-- FROZEN TOGGLE -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="STORAGE"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#8888AA"
+                           CharacterSpacing="0.5" />
+                    <Border BackgroundColor="#14142E"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="12,0"
+                            HeightRequest="48">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                            <Label Grid.Column="0"
+                                   Text="ac_unit"
+                                   FontFamily="Material"
+                                   FontSize="18"
+                                   TextColor="#8888AA" />
+                            <Label Grid.Column="1"
+                                   Text="Frozen"
+                                   FontSize="16"
+                                   TextColor="White"
+                                   VerticalOptions="Center" />
+                            <Switch Grid.Column="2"
+                                    IsToggled="{Binding IsFrozen}"
+                                    OnColor="#27AE60" />
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- SAVE BUTTON -->
+                <Border BackgroundColor="#1E1E3A"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="Transparent"
+                        HeightRequest="48"
+                        Padding="18,0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SaveCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="Save"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="#CCCCDD"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center" />
+                </Border>
+
+                <!-- DELETE BUTTON -->
+                <Border BackgroundColor="#2A1E1E"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="Transparent"
+                        HeightRequest="48"
+                        Padding="18,0"
+                        Margin="0,0,0,40">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="Delete Product"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="#ff6b6b"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center" />
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
