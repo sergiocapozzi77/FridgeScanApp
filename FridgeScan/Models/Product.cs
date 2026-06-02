@@ -42,8 +42,8 @@ public partial class Product : ObservableRecipient
     // Computed properties
 
     public int? DaysUntilExpiry =>
-        expiryDate.HasValue
-            ? (int?)(expiryDate.Value.Date - DateTime.Today.Date).TotalDays
+        ExpiryDate.HasValue
+            ? (int?)(ExpiryDate.Value.Date - DateTime.Today.Date).TotalDays
             : null;
 
     public bool ShowExpiryBadge =>

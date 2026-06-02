@@ -18,7 +18,10 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
     private int quantity;
 
     [ObservableProperty]
-    private DateTime? expiryDate;
+    private DateTime expiryDateValue = DateTime.Today;
+
+    [ObservableProperty]
+    private bool hasExpiryDate;
 
     [ObservableProperty]
     private bool isFrozen;
@@ -27,6 +30,12 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
     {
         this.productService = productService;
         this.productsManager = productsManager;
+    }
+
+    partial void OnHasExpiryDateChanged(bool value)
+    {
+        if (!value)
+            ExpiryDateValue = DateTime.Today;
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -41,7 +50,9 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
             {
                 ProductName = originalProduct.Name;
                 Quantity = originalProduct.Quantity;
-                ExpiryDate = originalProduct.ExpiryDate;
+                HasExpiryDate = originalProduct.ExpiryDate.HasValue;
+                if (originalProduct.ExpiryDate.HasValue)
+                    ExpiryDateValue = originalProduct.ExpiryDate.Value;
                 IsFrozen = originalProduct.IsFrozen;
             }
         }
@@ -56,7 +67,7 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
         {
             originalProduct.Name = ProductName;
             originalProduct.Quantity = Quantity;
-            originalProduct.ExpiryDate = ExpiryDate;
+            originalProduct.ExpiryDate = HasExpiryDate ? ExpiryDateValue : null;
             originalProduct.IsFrozen = IsFrozen;
 
             await productService.UpdateProductAsync(originalProduct);
@@ -71,7 +82,7 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
     [RelayCommand]
     private void ClearExpiry()
     {
-        ExpiryDate = null;
+        HasExpiryDate = false;
     }
 
     [RelayCommand]
