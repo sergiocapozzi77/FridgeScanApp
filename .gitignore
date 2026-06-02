@@ -366,4 +366,4 @@ FodyWeavers.xsd
 
 # MCP server config (contains API keys)
 .mcp.json
-.idea/
+.idea/.superpowers/

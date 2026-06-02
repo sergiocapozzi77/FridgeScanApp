@@ -18,7 +18,8 @@ public partial class CookbookPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        _vm.LoadCookbooksCommand.Execute(null);
+        if (_vm.Cookbooks.Count == 0)
+            _vm.LoadCookbooksCommand.Execute(null);
     }
 
     private async void OnCookbookSelected(object? sender, SelectionChangedEventArgs e)
