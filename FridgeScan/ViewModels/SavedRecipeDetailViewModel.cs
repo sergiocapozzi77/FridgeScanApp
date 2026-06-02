@@ -32,6 +32,14 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     public bool HasMetadata => MetadataChips.Count > 0;
 
     public ObservableCollection<string> MetadataChips { get; } = new();
+    public ObservableCollection<IngredientItem> IngredientItems { get; } = new();
+    public ObservableCollection<MethodStep> MethodSteps { get; } = new();
+
+    [RelayCommand]
+    private void ToggleIngredient(IngredientItem item)
+    {
+        item.IsChecked = !item.IsChecked;
+    }
 
     public SavedRecipeDetailViewModel(
         CookbookService cookbookService,
@@ -75,6 +83,8 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
             IsLoading = true;
             Recipe = await _favouriteService.GetFavouriteByIdAsync(recipeId);
             NotifyVisibilityChanged();
+            BuildIngredientItems();
+            BuildMethodSteps();
         }
         finally
         {
@@ -118,6 +128,8 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
                 DishType = fullRecipe.DishType
             };
             NotifyVisibilityChanged();
+            BuildIngredientItems();
+            BuildMethodSteps();
         }
         finally
         {
@@ -230,5 +242,21 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         var target = available.First(c => c.Name == selected);
         Recipe.CookbookIds.Add(target.RowId);
         await _favouriteService.UpdateFavouriteCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
+    }
+
+    private void BuildIngredientItems()
+    {
+        IngredientItems.Clear();
+        if (Recipe?.Ingredients == null) return;
+        foreach (var ing in Recipe.Ingredients)
+            IngredientItems.Add(new IngredientItem(ing));
+    }
+
+    private void BuildMethodSteps()
+    {
+        MethodSteps.Clear();
+        if (Recipe?.MethodSteps == null) return;
+        for (int i = 0; i < Recipe.MethodSteps.Count; i++)
+            MethodSteps.Add(new MethodStep { Number = i + 1, Text = Recipe.MethodSteps[i] });
     }
 }
