@@ -82,9 +82,18 @@ namespace FridgeScan.Services
                         break;
                 }
 
-                return allRows.Select(r => new Product(r.Name, r.Category, r.Quantity)
+                return allRows.Select(r =>
                 {
-                    RowId = r.Id
+                    DateTime? expiry = null;
+                    if (!string.IsNullOrEmpty(r.Expiry) && DateTime.TryParse(r.Expiry, out var parsed))
+                        expiry = parsed;
+
+                    return new Product(r.Name, r.Category, r.Quantity)
+                    {
+                        RowId = r.Id,
+                        ExpiryDate = expiry,
+                        IsFrozen = r.Frozen
+                    };
                 }).ToList();
             }
             catch (Exception ex)
@@ -128,7 +137,9 @@ namespace FridgeScan.Services
                     {
                         name = product.Name,
                         quantity = product.Quantity,
-                        category = product.Category
+                        category = product.Category,
+                        expiry = product.ExpiryDate?.ToString("o"),
+                        frozen = product.IsFrozen
                     }
                 };
 
@@ -187,7 +198,9 @@ namespace FridgeScan.Services
                     data = new
                     {
                         quantity = product.Quantity,
-                        category = product.Category
+                        category = product.Category,
+                        expiry = product.ExpiryDate?.ToString("o"),
+                        frozen = product.IsFrozen
                     }
                 };
 
@@ -240,6 +253,8 @@ namespace FridgeScan.Services
             public string Name { get; set; }
             public int Quantity { get; set; }
             public string Category { get; set; }
+            public string Expiry { get; set; }
+            public bool Frozen { get; set; }
 
             [JsonPropertyName("$id")]
             public string Id { get; set; } // maps $id
