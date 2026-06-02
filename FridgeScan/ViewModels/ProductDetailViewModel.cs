@@ -52,13 +52,20 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
     {
         if (originalProduct == null) return;
 
-        originalProduct.Name = ProductName;
-        originalProduct.Quantity = Quantity;
-        originalProduct.ExpiryDate = ExpiryDate;
-        originalProduct.IsFrozen = IsFrozen;
+        try
+        {
+            originalProduct.Name = ProductName;
+            originalProduct.Quantity = Quantity;
+            originalProduct.ExpiryDate = ExpiryDate;
+            originalProduct.IsFrozen = IsFrozen;
 
-        await productService.UpdateProductAsync(originalProduct);
-        await Shell.Current.GoToAsync("..");
+            await productService.UpdateProductAsync(originalProduct);
+            await Shell.Current.GoToAsync("..");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", $"Failed to save: {ex.Message}", "OK");
+        }
     }
 
     [RelayCommand]
@@ -79,8 +86,22 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
 
         if (!confirmed) return;
 
-        productsManager.RemoveProduct(originalProduct);
-        await productService.DeleteProductAsync(originalProduct.RowId);
-        await Shell.Current.GoToAsync("//products");
+        try
+        {
+            var success = await productService.DeleteProductAsync(originalProduct.RowId);
+            if (success)
+            {
+                productsManager.RemoveProduct(originalProduct);
+                await Shell.Current.GoToAsync("//ProductsPage");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Error", "Failed to delete product.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", $"Failed to delete: {ex.Message}", "OK");
+        }
     }
 }
