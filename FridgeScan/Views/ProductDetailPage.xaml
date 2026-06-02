@@ -206,7 +206,8 @@
                                    Text="ac_unit"
                                    FontFamily="Material"
                                    FontSize="18"
-                                   TextColor="#8888AA" />
+                                   TextColor="#8888AA"
+                                   VerticalOptions="Center" />
                             <Label Grid.Column="1"
                                    Text="Frozen"
                                    FontSize="16"
