@@ -197,6 +197,7 @@ namespace FridgeScan.Services
                 {
                     data = new
                     {
+                        name = product.Name,
                         quantity = product.Quantity,
                         category = product.Category,
                         expiry = product.ExpiryDate?.ToString("o"),

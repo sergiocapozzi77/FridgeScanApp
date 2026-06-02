@@ -72,6 +72,28 @@
                     </Border>
                 </VerticalStackLayout>
 
+                <!-- CATEGORY -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="CATEGORY"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="#8888AA"
+                           CharacterSpacing="0.5" />
+                    <Border BackgroundColor="#14142E"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            Padding="12,0"
+                            HeightRequest="48">
+                        <Picker ItemsSource="{Binding AvailableCategories}"
+                                SelectedItem="{Binding Category}"
+                                TextColor="White"
+                                FontSize="16"
+                                BackgroundColor="Transparent"
+                                Title="Select category"
+                                TitleColor="#666688" />
+                    </Border>
+                </VerticalStackLayout>
+
                 <!-- QUANTITY -->
                 <VerticalStackLayout Spacing="6">
                     <Label Text="QUANTITY"

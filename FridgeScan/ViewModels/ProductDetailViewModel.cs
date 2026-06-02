@@ -18,6 +18,9 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
     private int quantity;
 
     [ObservableProperty]
+    private string category;
+
+    [ObservableProperty]
     private DateTime expiryDateValue = DateTime.Today;
 
     [ObservableProperty]
@@ -25,6 +28,15 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
 
     [ObservableProperty]
     private bool isFrozen;
+
+    public List<string> AvailableCategories { get; } = new()
+    {
+        "Baby", "Bakery", "Beverages", "Breakfast & Cereal", "Condiments & Dressing",
+        "Cooking & Baking", "Dairy", "Deli", "Frozen Foods", "Grains",
+        "Pasta & Sides", "Health & Personal Care", "Household & Cleaning", "Meat",
+        "Pet Supplies", "Produce", "Seafood", "Snacks", "Soups & Canned Food",
+        "Wine, Beer & Spirit", "Other"
+    };
 
     public ProductDetailViewModel(ProductService productService, ProductsManager productsManager)
     {
@@ -50,6 +62,7 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
             {
                 ProductName = originalProduct.Name;
                 Quantity = originalProduct.Quantity;
+                Category = originalProduct.Category;
                 HasExpiryDate = originalProduct.ExpiryDate.HasValue;
                 if (originalProduct.ExpiryDate.HasValue)
                     ExpiryDateValue = originalProduct.ExpiryDate.Value;
@@ -67,6 +80,7 @@ public partial class ProductDetailViewModel : BaseViewModel, IQueryAttributable
         {
             originalProduct.Name = ProductName;
             originalProduct.Quantity = Quantity;
+            originalProduct.Category = Category;
             originalProduct.ExpiryDate = HasExpiryDate ? ExpiryDateValue : null;
             originalProduct.IsFrozen = IsFrozen;
 
