@@ -17,6 +17,13 @@ public partial class ProductsPage : ContentPage
         Loaded += OnLoaded;
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        if (BindingContext is ProductsViewModel vm)
+            vm.RefreshGrouping();
+    }
+
     private void OnLoaded(object sender, EventArgs e)
     {
 #if ANDROID
