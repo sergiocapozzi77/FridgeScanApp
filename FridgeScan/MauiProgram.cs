@@ -39,6 +39,7 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<CookbookDetailViewModel>();
         builder.Services.AddSingleton<RecipePreviewViewModel>();
         builder.Services.AddSingleton<SavedRecipeDetailViewModel>();
+        builder.Services.AddSingleton<ProductDetailViewModel>();
 
         // Recipe import pipeline
         builder.Services.AddSingleton<IRecipeImageExtractor, RecipeImageExtractor>();
@@ -87,6 +88,7 @@ public static partial class MauiProgram
         builder.Services.AddTransient<Views.CookbookDetailPage>();
         builder.Services.AddTransient<Views.RecipePreviewPage>();
         builder.Services.AddTransient<Views.SavedRecipeDetailPage>();
+        builder.Services.AddTransient<Views.ProductDetailPage>();
 
 #if ANDROID || IOS || MACCATALYST
         // Initialize Syncfusion license (replace with your license key)
