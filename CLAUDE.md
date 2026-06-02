@@ -68,3 +68,151 @@ Secrets (API keys for Appwrite, OpenAI, Syncfusion license) are stored in a `sec
 Services: `ProductService`, `ActivityService`, `ProductsManager`, `RecipeGoodFoodService`, `GialloZafferanoService`, `RecipeAiService`, `JsonLdParser`, `EmailService`
 ViewModels: `ProductsViewModel`, `RecipeViewModel`, `RecipeDetailsViewModel`, `ActivitiesViewModel`, `ImportViewModel`
 Pages (transient): `ProductsPage`, `ImportPage`, `RecipePage`, `RecipeDetailsPage`
+
+## Material 3 Design System
+
+The app follows **Material 3 expressive** design — dark theme, content-first layouts, subtle tonal surfaces, and generous whitespace. No heavy shadows, thick borders, or bright accent colors. References: Spotify, Google Photos, Notion mobile, Apple Music, M3 Android apps.
+
+### Color tokens
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| Page background | `#0D0D2B` | All page surfaces |
+| Card surface | `#14142E` | Tonal card/elevated surface |
+| Primary text | `White` / `#FFFFFF` | Titles, headings |
+| Secondary text | `#CCCCDD` | Subtitles, button labels |
+| Muted text | `#8888AA` | Metadata, secondary info |
+| Subtle text | `#777777` | Card source/domain labels |
+| Icon default | `#CCCCDD` | Standard icons |
+| Icon destructive | `#ff6b6b` | Delete/remove actions |
+| Icon muted | `#666666` | Kebab/overflow menus |
+| Action surface | `#1E1E3A` | Icon buttons (edit, rename) |
+| Destructive surface | `#2A1E1E` | Delete icon buttons |
+
+### Typography
+
+- **Page titles**: 22sp Bold, White
+- **Card titles**: 14–15sp Bold, White (Multiline up to 2 lines, TailTruncation)
+- **Metadata / recipe counts**: 12–13sp, `#8888AA`
+- **Source labels**: 12sp, `#777777`
+- **Empty state title**: 16sp, `#8888AA`
+- **Empty state subtitle**: 13sp, `#8888AA` or `#666688`
+
+### Spacing system (consistent 4dp grid)
+
+| Element | Spacing |
+|---------|---------|
+| Page header padding | 20 top, 16 sides, 12–16 bottom |
+| CollectionView / list outer padding | 12dp sides, 0 vertical |
+| Card-to-card gap (grid) | 10dp (Margin="5" per card) |
+| Card-to-card gap (list) | 10dp vertical (Margin bottom on card) |
+| Card internal text padding | 12dp sides, 10 top, 12 bottom |
+| Section gaps | Whitespace only — no dividers or BoxViews |
+
+### Card design
+
+```xml
+<sfCards:SfCardView CornerRadius="16"
+                    Padding="0"
+                    BackgroundColor="#14142E"
+                    Margin="5">
+```
+
+- Corner radius: **16dp** (was 10)
+- Background: `#14142E` tonal surface (explicit, not auto)
+- Padding: **0** — content fills card edge-to-edge
+- Margin: **5dp** (gives 10dp gap between cards in 2-column grid)
+- No visible border or heavy shadow — rely on tonal contrast against page background
+- Imagery: edge-to-edge at card top (no padding wrapper between card edge and image)
+
+### Recipe list cards (horizontal layout)
+
+```xml
+<sfCards:SfCardView CornerRadius="12" Padding="0" BackgroundColor="#14142E">
+    <Grid ColumnDefinitions="100,*" HeightRequest="90">
+        <Image Grid.Column="0" Aspect="AspectFill" WidthRequest="100" HeightRequest="90" />
+        <!-- text content + kebab menu -->
+    </Grid>
+</sfCards:SfCardView>
+```
+
+### Buttons
+
+**Primary action (pill button)** — use Border + Label + TapGestureRecognizer, not Button control:
+
+```xml
+<Border BackgroundColor="#1E1E3A"
+        StrokeShape="RoundRectangle 20"
+        Stroke="Transparent"
+        HeightRequest="40"
+        Padding="18,0"
+        VerticalOptions="Center">
+    <Border.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding CommandName}" />
+    </Border.GestureRecognizers>
+    <Label Text="+ New"
+           FontSize="14"
+           FontAttributes="Bold"
+           TextColor="#CCCCDD"
+           VerticalOptions="Center"
+           HorizontalOptions="Center" />
+</Border>
+```
+
+**Icon action button (circle)** — 40×40dp with Material icon font:
+
+```xml
+<Border BackgroundColor="#1E1E3A"
+        StrokeShape="RoundRectangle 20"
+        Stroke="Transparent"
+        WidthRequest="40" HeightRequest="40">
+    <Label Text="&#xe3c9;"        <!-- Material icon codepoint -->
+           FontFamily="Material"
+           FontSize="18"
+           TextColor="#CCCCDD"
+           HorizontalOptions="Center"
+           VerticalOptions="Center" />
+</Border>
+```
+
+**Destructive icon button** — same shape, `BackgroundColor="#2A1E1E"`, `TextColor="#ff6b6b"`.
+
+### Icons
+
+The app uses **Material Icons** font (`FontFamily="Material"`) with Unicode codepoints:
+- Back arrow: `&#xe5c4;`
+- Edit/Rename: `&#xe3c9;`
+- Delete: `&#xe872;`
+- Kebab menu (⋯): `&#x22ef;` (or use regular text `⋯` at FontSize 18-20)
+- Touch targets: minimum 40×40dp for all interactive icons
+
+### Navigation header pattern
+
+- No Shell navigation bar (content handles its own back navigation)
+- Back button: 48×48dp transparent touch target with Material arrow icon, `TextColor="#CCCCDD"`, negative left margin to align with content
+- Title: inline with actions in a single horizontal Grid row
+- Actions: 40dp circle Border buttons on the right side
+- Recipe count: below title, indented 36dp to align with title text
+
+### Page structure
+
+```xml
+<ContentPage BackgroundColor="#0D0D2B" Title="...">
+    <Grid RowDefinitions="Auto,*">
+        <!-- Header row -->
+        <!-- Content row (CollectionView with Margin="12,0") -->
+        <!-- Optional: SfBusyIndicator overlay -->
+    </Grid>
+</ContentPage>
+```
+
+### General principles
+
+- **Dark theme only** — all pages use dark backgrounds with light text
+- **No dividers** — rely on whitespace for visual separation (no BoxView elements)
+- **No heavy shadows** — cards use subtle tonal surface contrast, not elevation
+- **No bright accents** — avoid #4a90d9 or similar saturated colors for UI chrome
+- **Edge-to-edge imagery** — images fill card edges, no padding wrapper around them
+- **Content-first** — let content (images, text) be the visual focus, not containers
+- **Consistent tokens** — reuse the color, spacing, and typography tokens above on every new page
+- **Material icons** — use Material font codepoints for all icons; 40dp minimum touch target
