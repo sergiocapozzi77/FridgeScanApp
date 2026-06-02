@@ -13,7 +13,7 @@
     xmlns:controls="clr-namespace:FridgeScan.Controls"
     x:Name="ProductsPageRoot"
     x:DataType="vm:ProductsViewModel"
-    BackgroundColor="#0D0D2B">
+    BackgroundColor="#0D1023">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -23,7 +23,7 @@
 
     <Grid RowDefinitions="*,Auto">
         <!-- Main content area -->
-        <Grid Padding="10" Grid.Row="0">
+        <Grid Padding="12,0" Grid.Row="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
