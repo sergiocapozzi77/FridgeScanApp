@@ -56,7 +56,7 @@ public class RecipeImportService
             Name = merged.Name ?? "Unknown Recipe",
             Url = url,
             Ingredients = merged.Ingredients ?? new List<string>(),
-            MethodSteps = merged.MethodSteps ?? new List<string>(),
+            MethodSteps = merged.MethodSteps ?? new List<InstructionSection>(),
             PrepTime = merged.PrepTime ?? string.Empty,
             CookTime = merged.CookTime ?? string.Empty,
             Serving = merged.Servings ?? string.Empty,
