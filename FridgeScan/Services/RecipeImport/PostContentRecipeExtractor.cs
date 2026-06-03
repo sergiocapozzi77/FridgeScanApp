@@ -81,7 +81,9 @@ public class PostContentRecipeExtractor : RecipeExtractor
                         steps.Add(text);
                 }
             }
-            result.MethodSteps = steps;
+            result.MethodSteps = steps.Count > 0
+                ? new List<InstructionSection> { new() { Steps = steps } }
+                : null;
         }
 
         var hasData = (result.Ingredients?.Count > 0) || (result.MethodSteps?.Count > 0);

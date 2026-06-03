@@ -74,7 +74,9 @@ public class MicrodataRecipeExtractor : RecipeExtractor
                     steps.Add(text);
             }
         }
-        result.MethodSteps = steps;
+        result.MethodSteps = steps.Count > 0
+            ? new List<InstructionSection> { new() { Steps = steps } }
+            : null;
 
         var ingCount = result.Ingredients?.Count ?? 0;
         var stepCount = result.MethodSteps?.Count ?? 0;

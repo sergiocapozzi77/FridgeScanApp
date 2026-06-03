@@ -106,22 +106,24 @@ public class NextDataRecipeExtractor : RecipeExtractor
         return result;
     }
 
-    private static List<string> ParseMethodSteps(JToken? method)
+    private static List<InstructionSection>? ParseMethodSteps(JToken? method)
     {
-        var result = new List<string>();
-        if (method is not JArray sections) return result;
+        var steps = new List<string>();
+        if (method is not JArray sections) return null;
 
         foreach (var section in sections)
         {
-            if (section["steps"] is not JArray steps) continue;
-            foreach (var step in steps)
+            if (section["steps"] is not JArray stepItems) continue;
+            foreach (var step in stepItems)
             {
                 var text = SanitizeText(SafeString(step["description"]) ?? SafeString(step["text"]));
                 if (!string.IsNullOrWhiteSpace(text))
-                    result.Add(text);
+                    steps.Add(text);
             }
         }
 
-        return result;
+        return steps.Count > 0
+            ? new List<InstructionSection> { new() { Steps = steps } }
+            : null;
     }
 }
