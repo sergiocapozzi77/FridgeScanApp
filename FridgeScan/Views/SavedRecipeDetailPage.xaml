@@ -5,8 +5,15 @@
     x:Name="thisPage"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundColor="#0D1023"
     Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid>
 
@@ -313,67 +320,75 @@
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:MethodStep">
+                                <Grid>
+                                    <!-- Section header -->
+                                    <VerticalStackLayout IsVisible="{Binding IsSectionHeader}" Padding="0,8,0,4">
+                                        <Label Text="{Binding Text}" FontSize="15" FontAttributes="Bold"
+                                               TextColor="#8888AA" />
+                                    </VerticalStackLayout>
 
-                                <Border
-                                    Margin="0,0,0,10"
-                                    Padding="16"
-                                    BackgroundColor="#131629"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 20">
+                                    <!-- Step card -->
+                                    <Border
+                                        Margin="0,0,0,10"
+                                        Padding="16"
+                                        BackgroundColor="#131629"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 20"
+                                        IsVisible="{Binding IsSectionHeader, Converter={StaticResource InvertBool}}">
 
-                                    <Grid
-                                        ColumnDefinitions="44,*,Auto"
-                                        ColumnSpacing="14">
+                                        <Grid
+                                            ColumnDefinitions="44,*,Auto"
+                                            ColumnSpacing="14">
 
-                                        <!-- Step number badge -->
-                                        <Border
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            BackgroundColor="#2D2B6B"
-                                            StrokeThickness="0"
-                                            StrokeShape="RoundRectangle 10"
-                                            VerticalOptions="Start">
+                                            <!-- Step number badge -->
+                                            <Border
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                BackgroundColor="#2D2B6B"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 10"
+                                                VerticalOptions="Start">
+                                                <Label
+                                                    Text="{Binding Number}"
+                                                    FontAttributes="Bold"
+                                                    FontSize="16"
+                                                    TextColor="White"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center" />
+                                            </Border>
+
+                                            <!-- Step text -->
                                             <Label
-                                                Text="{Binding Number}"
-                                                FontAttributes="Bold"
-                                                FontSize="16"
-                                                TextColor="White"
-                                                HorizontalOptions="Center"
+                                                Grid.Column="1"
+                                                Text="{Binding Text}"
+                                                FontSize="15"
+                                                TextColor="#DDDDDD"
+                                                LineBreakMode="WordWrap"
                                                 VerticalOptions="Center" />
-                                        </Border>
 
-                                        <!-- Step text -->
-                                        <Label
-                                            Grid.Column="1"
-                                            Text="{Binding Text}"
-                                            FontSize="15"
-                                            TextColor="#DDDDDD"
-                                            LineBreakMode="WordWrap"
-                                            VerticalOptions="Center" />
+                                            <!-- Timer (shown only when StepDuration is set) -->
+                                            <VerticalStackLayout
+                                                Grid.Column="2"
+                                                Spacing="2"
+                                                VerticalOptions="Start"
+                                                IsVisible="{Binding HasDuration}">
+                                                <Label
+                                                    FontFamily="Material"
+                                                    Text="&#xe425;"
+                                                    FontSize="16"
+                                                    TextColor="#888888"
+                                                    HorizontalOptions="Center" />
+                                                <Label
+                                                    Text="{Binding StepDuration}"
+                                                    FontSize="12"
+                                                    TextColor="#888888"
+                                                    HorizontalOptions="Center" />
+                                            </VerticalStackLayout>
 
-                                        <!-- Timer (shown only when StepDuration is set) -->
-                                        <VerticalStackLayout
-                                            Grid.Column="2"
-                                            Spacing="2"
-                                            VerticalOptions="Start"
-                                            IsVisible="{Binding HasDuration}">
-                                            <Label
-                                                FontFamily="Material"
-                                                Text="&#xe425;"
-                                                FontSize="16"
-                                                TextColor="#888888"
-                                                HorizontalOptions="Center" />
-                                            <Label
-                                                Text="{Binding StepDuration}"
-                                                FontSize="12"
-                                                TextColor="#888888"
-                                                HorizontalOptions="Center" />
-                                        </VerticalStackLayout>
+                                        </Grid>
 
-                                    </Grid>
-
-                                </Border>
-
+                                    </Border>
+                                </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
 
