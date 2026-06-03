@@ -47,7 +47,7 @@ public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
             TotalTime = GetString(query, "TotalTime"),
             RecipeSource = GetString(query, "RecipeSource"),
             Ingredients = GetStringList(query, "Ingredients"),
-            MethodSteps = GetStringList(query, "MethodSteps")
+            MethodSteps = GetInstructionSectionsFromQuery(query, "MethodSteps")
         };
         _ = LoadCookbooksAsync();
     }
@@ -133,5 +133,12 @@ public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
         if (query.TryGetValue(key, out var val) && val is List<string> list)
             return list;
         return new List<string>();
+    }
+
+    private static List<InstructionSection> GetInstructionSectionsFromQuery(IDictionary<string, object> query, string key)
+    {
+        if (query.TryGetValue(key, out var val) && val is List<string> list && list.Count > 0)
+            return new List<InstructionSection> { new() { Steps = list } };
+        return new List<InstructionSection>();
     }
 }

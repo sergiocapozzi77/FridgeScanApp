@@ -91,7 +91,7 @@ namespace FridgeScan.Services
                 {
                     // merge fields into provided recipe
                     recipe.Ingredients = parsed.Ingredients ?? new List<string>();
-                    recipe.MethodSteps = parsed.MethodSteps ?? new List<string>();
+                    recipe.MethodSteps = parsed.MethodSteps ?? new List<InstructionSection>();
                     recipe.PrepTime = parsed.PrepTime ?? recipe.PrepTime;
                     recipe.CookTime = parsed.CookTime ?? recipe.CookTime;
                     recipe.Serving = parsed.Serving ?? recipe.Serving;

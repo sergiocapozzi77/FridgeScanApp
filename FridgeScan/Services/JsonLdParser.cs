@@ -66,16 +66,7 @@ public class JsonLdParser
                         .ToList()
                     ?? new List<string>(),
 
-                MethodSteps =
-                    recipeSchema?["recipeInstructions"]?
-                        .Select(step => ExtractStepText(step))
-                        .Where(s => !string.IsNullOrWhiteSpace(s))
-                        .ToList()
-                    ?? postData?["methodSteps"]?
-                        .Select(m => SanitizeText(m["content"]?[0]?["data"]?["value"]?.ToString()))
-                        .Where(s => !string.IsNullOrWhiteSpace(s))
-                        .ToList()
-                    ?? new List<string>(),
+                MethodSteps = ExtractInstructionSections(recipeSchema, postData),
 
                 Nutritions =
                     recipeSchema?["nutrition"]?
@@ -133,6 +124,28 @@ public class JsonLdParser
 
         // Case 2: step is a string or something else
         return SanitizeText(step?.ToString());
+    }
+
+    private List<InstructionSection>? ExtractInstructionSections(JObject? recipeSchema, JObject? postData)
+    {
+        var steps = new List<string>();
+
+        if (recipeSchema?["recipeInstructions"] is JArray instructions)
+        {
+            steps.AddRange(instructions
+                .Select(step => ExtractStepText(step))
+                .Where(s => !string.IsNullOrWhiteSpace(s)));
+        }
+        else if (postData?["methodSteps"] is JArray methodSteps)
+        {
+            steps.AddRange(methodSteps
+                .Select(m => SanitizeText(m["content"]?[0]?["data"]?["value"]?.ToString()))
+                .Where(s => !string.IsNullOrWhiteSpace(s)));
+        }
+
+        return steps.Count > 0
+            ? new List<InstructionSection> { new() { Steps = steps } }
+            : null;
     }
 
     private JObject ExtractRecipeSchema(HtmlDocument doc)
