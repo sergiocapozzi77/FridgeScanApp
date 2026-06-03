@@ -27,6 +27,7 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
     [ObservableProperty] private bool isCookbookPanelVisible;
     [ObservableProperty] private bool isSaving;
     [ObservableProperty] private Cookbook? selectedCookbook;
+    public ObservableCollection<MethodStep> DisplaySteps { get; } = new();
 
     partial void OnSelectedCookbookChanged(Cookbook? value)
     {
@@ -116,6 +117,7 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
             if (ImportedRecipe != null)
             {
                 HasRecipe = true;
+                BuildDisplaySteps();
                 PageTitle = ImportedRecipe.Name ?? "Imported Recipe";
                 Logger.Debug(Tag, $"ImportRecipeAsync: success — name='{ImportedRecipe.Name}', source='{ImportedRecipe.RecipeSource}'");
             }
@@ -138,6 +140,22 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
         {
             IsLoading = false;
             Logger.Debug(Tag, $"ImportRecipeAsync: finished — HasRecipe={HasRecipe}, HasError={HasError}");
+        }
+    }
+
+    private void BuildDisplaySteps()
+    {
+        DisplaySteps.Clear();
+        if (ImportedRecipe?.MethodSteps == null) return;
+        int stepNumber = 1;
+        foreach (var section in ImportedRecipe.MethodSteps)
+        {
+            if (!string.IsNullOrWhiteSpace(section.Name))
+                DisplaySteps.Add(new MethodStep { Text = section.Name, IsSectionHeader = true });
+            foreach (var step in section.Steps)
+            {
+                DisplaySteps.Add(new MethodStep { Number = stepNumber++, Text = step });
+            }
         }
     }
 
