@@ -86,12 +86,10 @@ public class FavouriteService
                     totalTime = favourite.TotalTime ?? string.Empty,
                     recipeSource = favourite.RecipeSource ?? string.Empty,
                     ingredients = favourite.Ingredients,
-                    methodSteps = favourite.MethodSteps.Select(s =>
+                    methodSteps = new List<string>
                     {
-                        var parts = new List<string> { s.Name ?? string.Empty };
-                        parts.AddRange(s.Steps);
-                        return parts;
-                    }).ToList(),
+                        JsonSerializer.Serialize(favourite.MethodSteps)
+                    },
                     imageUrlBig = favourite.ImageUrlBig ?? string.Empty
                 }
             };
@@ -223,8 +221,6 @@ public class FavouriteService
         if (!row.Data.TryGetValue(key, out var el))
             return new List<InstructionSection>();
 
-        // ---- New format: array of section arrays ----
-        // [["Section name", "step1", "step2"], ["", "step3", "step4"]]
         if (el.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
             using var enumerator = el.EnumerateArray();
@@ -234,28 +230,25 @@ public class FavouriteService
 
             var first = enumerator.Current;
 
-            // New format: first element is an inner array → array-of-sections
-            if (first.ValueKind == System.Text.Json.JsonValueKind.Array)
-            {
-                var sections = new List<InstructionSection>();
-                // Process the first item we already read
-                sections.Add(ReadSectionArray(first));
-                while (enumerator.MoveNext())
-                    sections.Add(ReadSectionArray(enumerator.Current));
-                return sections;
-            }
-
-            // Old format: array of plain strings → wrap in a single unnamed section
+            // New format: single-element array containing a JSON string of serialized sections
             if (first.ValueKind == System.Text.Json.JsonValueKind.String)
             {
-                var steps = new List<string>();
-                steps.Add(first.GetString() ?? string.Empty);
+                var allStrings = new List<string> { first.GetString() ?? string.Empty };
                 while (enumerator.MoveNext())
-                    steps.Add(enumerator.Current.GetString() ?? string.Empty);
-                return new List<InstructionSection> { new() { Steps = steps } };
+                    allStrings.Add(enumerator.Current.GetString() ?? string.Empty);
+
+                // If single element looks like JSON, deserialize as InstructionSection list
+                if (allStrings.Count == 1 && allStrings[0].StartsWith('['))
+                {
+                    try { return JsonSerializer.Deserialize<List<InstructionSection>>(allStrings[0]) ?? new(); }
+                    catch { /* fall through to flat string array handling */ }
+                }
+
+                // Old format: array of plain strings → wrap in a single unnamed section
+                return new List<InstructionSection> { new() { Steps = allStrings.Where(s => !string.IsNullOrEmpty(s)).ToList() } };
             }
 
-            // Array of section objects (if SDK auto-deserialized or direct)
+            // Array of section objects (edge case)
             if (first.ValueKind == System.Text.Json.JsonValueKind.Object)
             {
                 var sections = new List<InstructionSection>();
@@ -266,14 +259,14 @@ public class FavouriteService
             }
         }
 
-        // ---- Fallback: stored as JSON string (from a short-lived serialization attempt) ----
+        // Fallback: stored as bare JSON string (from a brief serialization attempt)
         if (el.ValueKind == System.Text.Json.JsonValueKind.String)
         {
             var json = el.GetString();
             if (!string.IsNullOrWhiteSpace(json))
             {
                 try { return JsonSerializer.Deserialize<List<InstructionSection>>(json) ?? new(); }
-                catch { /* not section data, try old string array */ }
+                catch { /* not section data */ }
                 try
                 {
                     var oldSteps = JsonSerializer.Deserialize<List<string>>(json);
@@ -285,17 +278,6 @@ public class FavouriteService
         }
 
         return new List<InstructionSection>();
-    }
-
-    private static InstructionSection ReadSectionArray(System.Text.Json.JsonElement arr)
-    {
-        var parts = new List<string>();
-        foreach (var item in arr.EnumerateArray())
-            parts.Add(item.GetString() ?? string.Empty);
-
-        var name = parts.Count > 0 && !string.IsNullOrEmpty(parts[0]) ? parts[0] : null;
-        var steps = parts.Count > 1 ? parts.Skip(1).Where(s => !string.IsNullOrEmpty(s)).ToList() : new List<string>();
-        return new InstructionSection { Name = name, Steps = steps };
     }
 
     private static InstructionSection ReadSectionObject(System.Text.Json.JsonElement obj)
