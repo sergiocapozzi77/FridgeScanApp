@@ -49,10 +49,7 @@ public class JsonLdRecipeExtractor : RecipeExtractor
 
         if (schema["recipeInstructions"] is JArray instructions)
         {
-            result.MethodSteps = instructions
-                .Select(ExtractInstructionText)
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .ToList();
+            result.MethodSteps = ExtractInstructions(instructions);
         }
 
         if (schema["nutrition"] is JObject nutrition)
@@ -167,7 +164,45 @@ public class JsonLdRecipeExtractor : RecipeExtractor
         return imageToken.ToString();
     }
 
-    private static string ExtractInstructionText(JToken step)
+    private static List<InstructionSection>? ExtractInstructions(JArray instructions)
+    {
+        var sections = new List<InstructionSection>();
+
+        foreach (var item in instructions)
+        {
+            // HowToSection: has name + itemListElement array of HowToStep
+            if (item is JObject obj && obj["itemListElement"] is JArray subSteps)
+            {
+                var section = new InstructionSection
+                {
+                    Name = SanitizeText(SafeString(obj["name"])),
+                    Steps = subSteps
+                        .Select(ExtractSingleStepText)
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .ToList()
+                };
+                if (section.Steps.Count > 0)
+                    sections.Add(section);
+                continue;
+            }
+
+            // HowToStep with text, or plain string
+            var stepText = ExtractSingleStepText(item);
+            if (!string.IsNullOrWhiteSpace(stepText))
+            {
+                // Coalesce into the last unnamed section if one exists
+                var last = sections.LastOrDefault();
+                if (last != null && last.Name == null)
+                    last.Steps.Add(stepText);
+                else
+                    sections.Add(new InstructionSection { Name = null, Steps = new List<string> { stepText } });
+            }
+        }
+
+        return sections.Count > 0 ? sections : null;
+    }
+
+    private static string ExtractSingleStepText(JToken step)
     {
         if (step is JObject obj && obj.TryGetValue("text", out var textToken))
             return SanitizeText(SafeString(textToken));
@@ -176,5 +211,5 @@ public class JsonLdRecipeExtractor : RecipeExtractor
             return SanitizeText(jv.ToString());
 
         return SanitizeText(step?.ToString());
-}
+    }
 }
