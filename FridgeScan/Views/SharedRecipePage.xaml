@@ -6,7 +6,14 @@
     xmlns:button="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:models="clr-namespace:FridgeScan.Models"
-    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels">
+    xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto" Padding="20">
 
@@ -66,12 +73,23 @@
                     </CollectionView>
 
                     <Label FontSize="16" FontAttributes="Bold" Text="Method" Margin="0,8,0,0" />
-                    <CollectionView ItemsSource="{Binding ImportedRecipe.MethodSteps}" SelectionMode="None">
+                    <CollectionView ItemsSource="{Binding DisplaySteps}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <Grid ColumnDefinitions="Auto,*" Padding="4,4" ColumnSpacing="8">
-                                    <Label Grid.Column="0" FontSize="14" Text="&#x2022;" VerticalOptions="Start" />
-                                    <Label Grid.Column="1" FontSize="14" Text="{Binding .}" LineBreakMode="WordWrap" />
+                            <DataTemplate x:DataType="models:MethodStep">
+                                <Grid>
+                                    <!-- Section header -->
+                                    <VerticalStackLayout IsVisible="{Binding IsSectionHeader}" Padding="4,8,4,4">
+                                        <Label Text="{Binding Text}" FontSize="15" FontAttributes="Bold"
+                                               TextColor="#8888AA" />
+                                    </VerticalStackLayout>
+                                    <!-- Step row (bullet) -->
+                                    <Grid IsVisible="{Binding IsSectionHeader, Converter={StaticResource InvertBool}}"
+                                          ColumnDefinitions="Auto,*" Padding="4,4" ColumnSpacing="8">
+                                        <Label Grid.Column="0" FontSize="14" Text="&#x2022;"
+                                               VerticalOptions="Start" />
+                                        <Label Grid.Column="1" FontSize="14" Text="{Binding Text}"
+                                               LineBreakMode="WordWrap" />
+                                    </Grid>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
