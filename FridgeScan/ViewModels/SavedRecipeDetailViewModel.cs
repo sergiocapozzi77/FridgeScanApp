@@ -260,7 +260,15 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     {
         MethodSteps.Clear();
         if (Recipe?.MethodSteps == null) return;
-        for (int i = 0; i < Recipe.MethodSteps.Count; i++)
-            MethodSteps.Add(new MethodStep { Number = i + 1, Text = Recipe.MethodSteps[i] });
+        int stepNumber = 1;
+        foreach (var section in Recipe.MethodSteps)
+        {
+            if (!string.IsNullOrWhiteSpace(section.Name))
+                MethodSteps.Add(new MethodStep { Text = section.Name, IsSectionHeader = true });
+            foreach (var step in section.Steps)
+            {
+                MethodSteps.Add(new MethodStep { Number = stepNumber++, Text = step });
+            }
+        }
     }
 }
