@@ -187,7 +187,7 @@ public class FavouriteService
             RecipeSource = GetStringOrNull(row, "recipeSource"),
             CookbookIds = GetStringList(row, "cookbookIds"),
             Ingredients = GetStringList(row, "ingredients"),
-            MethodSteps = GetStringList(row, "methodSteps")
+            MethodSteps = GetInstructionSections(row, "methodSteps")
         };
     }
 
@@ -211,6 +211,55 @@ public class FavouriteService
             return list;
         }
         return new List<string>();
+    }
+
+    private static List<InstructionSection> GetInstructionSections(AppwriteRow row, string key)
+    {
+        if (row.Data.TryGetValue(key, out var el) && el.ValueKind == System.Text.Json.JsonValueKind.Array)
+        {
+            using var enumerator = el.EnumerateArray();
+
+            if (!enumerator.MoveNext())
+                return new List<InstructionSection>();
+
+            var first = enumerator.Current;
+
+            // Old format: array of plain strings → wrap in a single unnamed section
+            if (first.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                var steps = new List<string>();
+                steps.Add(first.GetString() ?? string.Empty);
+                while (enumerator.MoveNext())
+                    steps.Add(enumerator.Current.GetString() ?? string.Empty);
+                return new List<InstructionSection> { new() { Steps = steps } };
+            }
+
+            // New format: array of section objects [{Name, Steps}, ...]
+            if (first.ValueKind == System.Text.Json.JsonValueKind.Object)
+            {
+                var sections = new List<InstructionSection>();
+                sections.Add(ReadSectionObject(first));
+                while (enumerator.MoveNext())
+                    sections.Add(ReadSectionObject(enumerator.Current));
+                return sections;
+            }
+        }
+        return new List<InstructionSection>();
+    }
+
+    private static InstructionSection ReadSectionObject(System.Text.Json.JsonElement obj)
+    {
+        var name = obj.TryGetProperty("Name", out var n) ? n.GetString() : null;
+        var steps = new List<string>();
+        if (obj.TryGetProperty("Steps", out var s) && s.ValueKind == System.Text.Json.JsonValueKind.Array)
+        {
+            foreach (var step in s.EnumerateArray())
+            {
+                var str = step.GetString();
+                if (str != null) steps.Add(str);
+            }
+        }
+        return new InstructionSection { Name = name, Steps = steps };
     }
 
     private static string GenerateId(int length = 20)
