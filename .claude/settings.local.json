@@ -22,7 +22,14 @@
       "Bash(git rm *)",
       "Bash(git push *)",
       "Bash(C:\\\\Users\\\\sergi\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.1.0\\\\skills\\\\brainstorming\\\\scripts\\\\stop-server.sh *)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "WebFetch(domain:aniagotuje.pl)",
+      "Bash(curl -s -L -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/134.0.0.0 Safari/537.36\" -H \"Accept: text/html,application/xhtml+xml\" \"https://aniagotuje.pl/przepis/ciasto-rabarbarowe\")",
+      "Bash(curl -s -L -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/134.0.0.0 Safari/537.36\" \"https://aniagotuje.pl/przepis/ciasto-rabarbarowe\")",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s -L -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/134.0.0.0 Safari/537.36\" \"https://aniagotuje.pl/przepis/ciasto-rabarbarowe\" -o /tmp/aniagotuje.html)",
+      "Bash(python3)",
+      "Skill(update-config)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -6,6 +6,7 @@ namespace FridgeScan.Views;
 public partial class CookbookPage : ContentPage
 {
     private readonly CookbookViewModel _vm;
+    private const string Tag = "FridgeScan.CookbookPage";
 
     public CookbookPage()
     {
@@ -41,7 +42,7 @@ public partial class CookbookPage : ContentPage
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error navigating to cookbook: {ex.Message}");
+                Logger.Error(Tag, $"Error navigating to cookbook: {ex.Message}");
             }
         }
     }

@@ -1,3 +1,4 @@
+using FridgeScan.Helpers;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 
@@ -5,6 +6,8 @@ namespace FridgeScan.Services.RecipeImport;
 
 public class NextDataRecipeExtractor : RecipeExtractor
 {
+    private const string Tag = "FridgeScan.NextDataExtractor";
+
     public override int Priority => 80;
 
     public override Task<RecipeExtractionResult> ExtractAsync(string html, Uri baseUrl)
@@ -15,21 +18,28 @@ public class NextDataRecipeExtractor : RecipeExtractor
 
         var scriptNode = doc.DocumentNode.SelectSingleNode("//script[@id='__NEXT_DATA__']");
         if (scriptNode == null)
+        {
+            Logger.Debug(Tag, $"no __NEXT_DATA__ script tag ({baseUrl.Host})");
             return Task.FromResult(result);
+        }
 
         JObject root;
         try
         {
             root = JObject.Parse(scriptNode.InnerText);
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Debug(Tag, $"__NEXT_DATA__ JSON parse error: {ex.Message}");
             return Task.FromResult(result);
         }
 
         var pp = root["props"]?["pageProps"];
         if (pp == null)
+        {
+            Logger.Debug(Tag, "__NEXT_DATA__ has no props.pageProps");
             return Task.FromResult(result);
+        }
 
         var schema = pp["schema"];
         if (schema is JArray schemaArr)
@@ -63,6 +73,10 @@ public class NextDataRecipeExtractor : RecipeExtractor
 
         var hasData = (result.Ingredients?.Count > 0) || (result.MethodSteps?.Count > 0);
         result.Success = hasData;
+
+        var ingCount = result.Ingredients?.Count ?? 0;
+        var stepCount = result.MethodSteps?.Count ?? 0;
+        Logger.Debug(Tag, $"extracted name='{result.Name}', ingredients={ingCount}, steps={stepCount}, success={hasData} ({baseUrl.Host})");
 
         return Task.FromResult(result);
     }

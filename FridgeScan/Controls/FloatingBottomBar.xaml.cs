@@ -4,6 +4,8 @@ namespace FridgeScan.Controls;
 
 public partial class FloatingBottomBar : ContentView
 {
+    private const string Tag = "FridgeScan.FloatingBottomBar";
+
     private readonly List<TabItem> _tabs = new();
     private string _activeRoute = "";
     private bool _subscribed;
@@ -118,7 +120,7 @@ public partial class FloatingBottomBar : ContentView
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"FloatingBottomBar navigation failed: {ex.Message}");
+                Logger.Error(Tag, $"FloatingBottomBar navigation failed: {ex.Message}");
             }
         };
         border.GestureRecognizers.Add(tapGesture);

@@ -67,13 +67,14 @@ public class MainActivity : MauiAppCompatActivity
 
     private static async Task NavigateToSharedRecipeAsync(string escapedUrl)
     {
+        const string Tag = "FridgeScan.MainActivity";
         try
         {
             await Shell.Current.GoToAsync($"SharedRecipePage?url={escapedUrl}");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"ShareIntent navigation failed: {ex}");
+            Logger.Error(Tag, $"ShareIntent navigation failed: {ex}");
         }
     }
 

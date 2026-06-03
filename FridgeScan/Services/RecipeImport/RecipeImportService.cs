@@ -2,6 +2,8 @@ namespace FridgeScan.Services.RecipeImport;
 
 public class RecipeImportService
 {
+    private const string Tag = "FridgeScan.RecipeImport";
+
     private readonly IReadOnlyList<IRecipeExtractor> _extractors;
     private readonly IRecipeImageExtractor _imageExtractor;
     private readonly IRecipeHtmlFetcher? _webViewFetcher;
@@ -33,9 +35,19 @@ public class RecipeImportService
         var extractTasks = _extractors.Select(e => e.ExtractAsync(html, baseUrl));
         var results = await Task.WhenAll(extractTasks);
 
+        // Log per-extractor results
+        for (int i = 0; i < _extractors.Count; i++)
+        {
+            var r = results[i];
+            Logger.Debug(Tag, $"extractor #{_extractors[i].Priority} success={r.Success}, name='{r.Name}', ingredients={r.Ingredients?.Count ?? 0}, steps={r.MethodSteps?.Count ?? 0}");
+        }
+
         var merged = MergeResults(results);
         if (!merged.Success)
+        {
+            Logger.Debug(Tag, $"merge: all {results.Length} extractors returned empty results — cannot import");
             return null;
+        }
 
         var images = await _imageExtractor.ExtractImagesAsync(html, baseUrl);
 
@@ -53,6 +65,8 @@ public class RecipeImportService
             RecipeSource = merged.RecipeSource ?? "import",
             Nutritions = merged.Nutritions ?? new List<string>(),
         };
+
+        Logger.Debug(Tag, $"imported recipe: name='{recipe.Name}', ingredients={recipe.Ingredients.Count}, steps={recipe.MethodSteps.Count}, source='{recipe.RecipeSource}'");
 
         return recipe;
     }
@@ -134,23 +148,19 @@ public class RecipeImportService
         catch (HttpRequestException ex) when (ex.StatusCode.HasValue)
         {
             var httpStatus = (int)ex.StatusCode;
-            System.Diagnostics.Debug.WriteLine(
-                $"RecipeImportService: HTTP {httpStatus} fetching {url}");
+            Logger.Debug(Tag, $"HTTP {httpStatus} fetching {url}");
 
             // ---- Attempt 2: WebView fallback for server errors (bot protection) ----
             if (_webViewFetcher != null)
             {
-                System.Diagnostics.Debug.WriteLine(
-                    "RecipeImportService: WebView fallback...");
+                Logger.Debug(Tag, "WebView fallback...");
                 var webHtml = await _webViewFetcher.FetchHtmlAsync(url);
                 if (webHtml != null)
                 {
-                    System.Diagnostics.Debug.WriteLine(
-                        $"RecipeImportService: WebView fallback succeeded ({webHtml.Length} chars)");
+                    Logger.Debug(Tag, $"WebView fallback succeeded ({webHtml.Length} chars)");
                     return webHtml;
                 }
-                System.Diagnostics.Debug.WriteLine(
-                    "RecipeImportService: WebView fallback also failed");
+                Logger.Debug(Tag, "WebView fallback also failed");
             }
 
             LastErrorMessage = httpStatus switch
@@ -166,19 +176,19 @@ public class RecipeImportService
         catch (HttpRequestException)
         {
             // Connection-level error (DNS, TLS, etc.) — WebView won't help
-            System.Diagnostics.Debug.WriteLine($"RecipeImportService: connection error fetching {url}");
+            Logger.Debug(Tag, $"connection error fetching {url}");
             LastErrorMessage = "Could not connect to the website. Check your internet connection.";
             return null;
         }
         catch (TaskCanceledException)
         {
-            System.Diagnostics.Debug.WriteLine($"RecipeImportService: timeout fetching {url}");
+            Logger.Debug(Tag, $"timeout fetching {url}");
             LastErrorMessage = "Request timed out. The website may be too slow or unreachable.";
             return null;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"RecipeImportService: fetch failed: {ex.Message} [{url}]");
+            Logger.Error(Tag, $"fetch failed: {ex.Message} [{url}]");
             LastErrorMessage = "Could not import recipe from this URL.";
             return null;
         }

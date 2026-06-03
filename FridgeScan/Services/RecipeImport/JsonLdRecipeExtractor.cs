@@ -1,3 +1,4 @@
+using FridgeScan.Helpers;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 
@@ -5,6 +6,8 @@ namespace FridgeScan.Services.RecipeImport;
 
 public class JsonLdRecipeExtractor : RecipeExtractor
 {
+    private const string Tag = "FridgeScan.JsonLdExtractor";
+
     public override int Priority => 100;
 
     public override Task<RecipeExtractionResult> ExtractAsync(string html, Uri baseUrl)
@@ -15,7 +18,10 @@ public class JsonLdRecipeExtractor : RecipeExtractor
 
         var schema = ExtractRecipeSchema(doc);
         if (schema == null)
+        {
+            Logger.Debug(Tag, $"no JSON-LD Recipe schema found ({baseUrl.Host})");
             return Task.FromResult(result);
+        }
 
         result.Success = true;
         result.RecipeSource = baseUrl.Host;
@@ -57,19 +63,28 @@ public class JsonLdRecipeExtractor : RecipeExtractor
                 .ToList();
         }
 
+        var ingCount = result.Ingredients?.Count ?? 0;
+        var stepCount = result.MethodSteps?.Count ?? 0;
+        Logger.Debug(Tag, $"extracted name='{result.Name}', ingredients={ingCount}, steps={stepCount} ({baseUrl.Host})");
+
         return Task.FromResult(result);
     }
 
     private static JObject? ExtractRecipeSchema(HtmlDocument doc)
     {
         var scriptNodes = doc.DocumentNode.SelectNodes("//script[@type='application/ld+json']");
-        if (scriptNodes == null) return null;
+        if (scriptNodes == null)
+        {
+            Logger.Debug(Tag, "no <script type='application/ld+json'> nodes found");
+            return null;
+        }
 
         foreach (var node in scriptNodes)
         {
             try
             {
                 var json = JToken.Parse(node.InnerText);
+                var typeNames = json["@type"]?.ToString() ?? "(no @type)";
 
                 if (json is JArray arr)
                 {
@@ -84,8 +99,13 @@ public class JsonLdRecipeExtractor : RecipeExtractor
                     var found = FindRecipeInNode(json);
                     if (found != null) return found;
                 }
+
+                Logger.Debug(Tag, $"JSON-LD block has @type={typeNames} but no Recipe entry found");
             }
-            catch { /* skip malformed JSON */ }
+            catch (Exception ex)
+            {
+                Logger.Debug(Tag, $"JSON-LD parse error: {ex.Message}");
+            }
         }
 
         return null;
@@ -136,12 +156,13 @@ public class JsonLdRecipeExtractor : RecipeExtractor
         {
             var first = arr.FirstOrDefault();
             if (first == null) return string.Empty;
-            if (first["url"] != null) return first["url"]!.ToString();
+            if (first is JObject firstObj && firstObj["url"] != null)
+                return firstObj["url"]!.ToString();
             return first.ToString();
         }
 
-        if (imageToken is JObject obj && obj["url"] != null)
-            return obj["url"]!.ToString();
+        if (imageToken is JObject jObj && jObj["url"] != null)
+            return jObj["url"]!.ToString();
 
         return imageToken.ToString();
     }

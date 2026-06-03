@@ -5,6 +5,8 @@ namespace FridgeScan.Services;
 
 public class FavouriteService
 {
+    private const string Tag = "FridgeScan.FavouriteService";
+
     private readonly HttpClient _http;
     private const string Endpoint = "https://fra.cloud.appwrite.io/v1";
     private const string ProjectId = "6954045e003c75c1c3bf";
@@ -30,7 +32,7 @@ public class FavouriteService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error fetching favourites: {ex.Message}");
+            Logger.Error(Tag, $"Error fetching favourites: {ex.Message}");
             return new List<SavedRecipe>();
         }
     }
@@ -45,7 +47,7 @@ public class FavouriteService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error fetching all favourites: {ex.Message}");
+            Logger.Error(Tag, $"Error fetching all favourites: {ex.Message}");
             return new List<SavedRecipe>();
         }
     }
@@ -60,7 +62,7 @@ public class FavouriteService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error fetching favourite: {ex.Message}");
+            Logger.Error(Tag, $"Error fetching favourite: {ex.Message}");
             return null;
         }
     }
@@ -92,7 +94,7 @@ public class FavouriteService
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await response.Content.ReadAsStringAsync();
-                System.Diagnostics.Debug.WriteLine($"Save favourite API error ({response.StatusCode}): {errorBody}");
+                Logger.Error(Tag, $"Save favourite API error ({response.StatusCode}): {errorBody}");
             }
             response.EnsureSuccessStatusCode();
             var row = await response.Content.ReadFromJsonAsync<AppwriteRow>();
@@ -101,7 +103,7 @@ public class FavouriteService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error saving favourite: {ex.Message}");
+            Logger.Error(Tag, $"Error saving favourite: {ex.Message}");
             return null;
         }
     }
@@ -118,7 +120,7 @@ public class FavouriteService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error updating favourite cookbooks: {ex.Message}");
+            Logger.Error(Tag, $"Error updating favourite cookbooks: {ex.Message}");
             return false;
         }
     }
@@ -134,7 +136,7 @@ public class FavouriteService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error deleting favourite: {ex.Message}");
+            Logger.Error(Tag, $"Error deleting favourite: {ex.Message}");
             return false;
         }
     }

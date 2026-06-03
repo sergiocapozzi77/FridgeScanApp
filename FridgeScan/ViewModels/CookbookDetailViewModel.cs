@@ -8,6 +8,8 @@ namespace FridgeScan.ViewModels;
 
 public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
 {
+    private const string Tag = "FridgeScan.CookbookDetailViewModel";
+
     private readonly CookbookService _cookbookService;
     private readonly FavouriteService _favouriteService;
 
@@ -67,7 +69,7 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading recipes: {ex.Message}");
+            Logger.Error(Tag, $"Error loading recipes: {ex.Message}");
         }
         finally
         {

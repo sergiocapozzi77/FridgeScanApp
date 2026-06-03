@@ -6,6 +6,8 @@ namespace FridgeScan.ViewModels;
 
 public partial class RecipeViewModel : BaseViewModel
 {
+    private const string Tag = "FridgeScan.RecipeViewModel";
+
     private const string MealTypeKey = "selected_meal_type";
     private const string DifficultyKey = "selected_difficulty";
     private const string TotalTimeKey = "selected_total_time";
@@ -215,7 +217,7 @@ public partial class RecipeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading recipes: {ex}");
+            Logger.Error(Tag, $"Error loading recipes: {ex}");
             await Toast.Make("Failed to load recipe suggestions. " + ex.Message, ToastDuration.Long).Show();
         }
         finally
@@ -265,7 +267,7 @@ public partial class RecipeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading recipes: {ex}");
+            Logger.Error(Tag, $"Error loading recipes: {ex}");
             await Toast.Make("Failed to load recipe suggestions. " + ex.Message, ToastDuration.Long).Show();
         }
         finally

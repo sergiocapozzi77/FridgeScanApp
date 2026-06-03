@@ -13,6 +13,7 @@ global using Microsoft.Extensions.Logging;
 global using FridgeScan.Models;
 global using FridgeScan.Services;
 global using System.Linq;
+global using FridgeScan.Helpers;
 
 #if ANDROID || IOS || MACCATALYST
 global using Syncfusion.Maui.ListView;

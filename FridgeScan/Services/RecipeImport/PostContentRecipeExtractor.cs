@@ -1,3 +1,4 @@
+using FridgeScan.Helpers;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 
@@ -5,6 +6,8 @@ namespace FridgeScan.Services.RecipeImport;
 
 public class PostContentRecipeExtractor : RecipeExtractor
 {
+    private const string Tag = "FridgeScan.PostContentExtractor";
+
     public override int Priority => 70;
 
     public override Task<RecipeExtractionResult> ExtractAsync(string html, Uri baseUrl)
@@ -15,15 +18,19 @@ public class PostContentRecipeExtractor : RecipeExtractor
 
         var scriptNode = doc.DocumentNode.SelectSingleNode("//script[@id='__POST_CONTENT__']");
         if (scriptNode == null)
+        {
+            Logger.Debug(Tag, $"no __POST_CONTENT__ script tag ({baseUrl.Host})");
             return Task.FromResult(result);
+        }
 
         JObject root;
         try
         {
             root = JObject.Parse(scriptNode.InnerText);
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.Debug(Tag, $"__POST_CONTENT__ JSON parse error: {ex.Message}");
             return Task.FromResult(result);
         }
 
@@ -79,6 +86,10 @@ public class PostContentRecipeExtractor : RecipeExtractor
 
         var hasData = (result.Ingredients?.Count > 0) || (result.MethodSteps?.Count > 0);
         result.Success = hasData;
+
+        var ingCount = result.Ingredients?.Count ?? 0;
+        var stepCount = result.MethodSteps?.Count ?? 0;
+        Logger.Debug(Tag, $"extracted name='{result.Name}', ingredients={ingCount}, steps={stepCount}, success={hasData} ({baseUrl.Host})");
 
         return Task.FromResult(result);
     }

@@ -5,6 +5,8 @@ namespace FridgeScan.Services;
 
 public class CookbookService
 {
+    private const string Tag = "FridgeScan.CookbookService";
+
     private readonly HttpClient _http;
     private const string Endpoint = "https://fra.cloud.appwrite.io/v1";
     private const string ProjectId = "6954045e003c75c1c3bf";
@@ -32,7 +34,7 @@ public class CookbookService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error fetching cookbooks: {ex.Message}");
+            Logger.Error(Tag, $"Error fetching cookbooks: {ex.Message}");
             return new List<Cookbook>();
         }
     }
@@ -54,7 +56,7 @@ public class CookbookService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error creating cookbook: {ex.Message}");
+            Logger.Error(Tag, $"Error creating cookbook: {ex.Message}");
             return null;
         }
     }
@@ -70,7 +72,7 @@ public class CookbookService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error deleting cookbook: {ex.Message}");
+            Logger.Error(Tag, $"Error deleting cookbook: {ex.Message}");
             return false;
         }
     }
@@ -87,7 +89,7 @@ public class CookbookService
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error renaming cookbook: {ex.Message}");
+            Logger.Error(Tag, $"Error renaming cookbook: {ex.Message}");
             return false;
         }
     }

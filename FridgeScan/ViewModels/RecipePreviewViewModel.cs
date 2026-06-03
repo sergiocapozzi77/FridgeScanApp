@@ -8,6 +8,8 @@ namespace FridgeScan.ViewModels;
 
 public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
 {
+    private const string Tag = "FridgeScan.RecipePreviewViewModel";
+
     private readonly CookbookService _cookbookService;
     private readonly FavouriteService _favouriteService;
 
@@ -106,7 +108,7 @@ public partial class RecipePreviewViewModel : BaseViewModel, IQueryAttributable
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error saving: {ex.Message}");
+            Logger.Error(Tag, $"Error saving: {ex.Message}");
             await Shell.Current.DisplayAlert("Error", "Failed to save recipe.", "OK");
         }
         finally

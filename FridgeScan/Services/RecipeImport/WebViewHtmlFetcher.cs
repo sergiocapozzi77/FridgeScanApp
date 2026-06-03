@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace FridgeScan.Services.RecipeImport;
 
 /// <summary>
@@ -13,6 +11,8 @@ namespace FridgeScan.Services.RecipeImport;
 /// </summary>
 public class WebViewHtmlFetcher : IRecipeHtmlFetcher, IDisposable
 {
+    private const string Tag = "FridgeScan.WebViewHtmlFetcher";
+
     private readonly TimeSpan _timeout;
     private bool _disposed;
 
@@ -25,14 +25,14 @@ public class WebViewHtmlFetcher : IRecipeHtmlFetcher, IDisposable
 
     public async Task<string?> FetchHtmlAsync(string url, CancellationToken ct = default)
     {
-        Debug.WriteLine($"[WebViewHtmlFetcher] Fetching {url} via platform WebView");
+        Logger.Debug(Tag, $"Fetching {url} via platform WebView");
 
 #if ANDROID
         return await FetchOnAndroidAsync(url, ct);
 #elif IOS || MACCATALYST
         return await FetchOnIosAsync(url, ct);
 #else
-        Debug.WriteLine("[WebViewHtmlFetcher] not supported on this platform");
+        Logger.Debug(Tag, "not supported on this platform");
         return await Task.FromResult<string?>(null);
 #endif
     }
@@ -65,9 +65,9 @@ public class WebViewHtmlFetcher : IRecipeHtmlFetcher, IDisposable
             await MainThread.InvokeOnMainThreadAsync(() => webView.LoadUrl(url));
 
             var result = await tcs.Task.WaitAsync(_timeout);
-            Debug.WriteLine(result is not null
-                ? $"[WebViewHtmlFetcher] Android WebView returned {result.Length} chars"
-                : "[WebViewHtmlFetcher] Android WebView returned null");
+            Logger.Debug(Tag, result is not null
+                ? $"Android WebView returned {result.Length} chars"
+                : "Android WebView returned null");
             return result;
         }
         finally
@@ -174,9 +174,9 @@ public class WebViewHtmlFetcher : IRecipeHtmlFetcher, IDisposable
                 webView.LoadRequest(new Foundation.NSUrlRequest(new Foundation.NSUrl(url))));
 
             var result = await tcs.Task.WaitAsync(_timeout);
-            Debug.WriteLine(result is not null
-                ? $"[WebViewHtmlFetcher] iOS WebView returned {result.Length} chars"
-                : "[WebViewHtmlFetcher] iOS WebView returned null");
+            Logger.Debug(Tag, result is not null
+                ? $"iOS WebView returned {result.Length} chars"
+                : "iOS WebView returned null");
             return result;
         }
         finally
@@ -205,7 +205,7 @@ public class WebViewHtmlFetcher : IRecipeHtmlFetcher, IDisposable
                 {
                     if (error is not null)
                     {
-                        Debug.WriteLine($"[WebViewHtmlFetcher] iOS JS error: {error}");
+                        Logger.Debug(Tag, $"iOS JS error: {error}");
                         _tcs.TrySetResult(null);
                     }
                     else
@@ -220,7 +220,7 @@ public class WebViewHtmlFetcher : IRecipeHtmlFetcher, IDisposable
             WebKit.WKNavigation navigation,
             Foundation.NSError error)
         {
-            Debug.WriteLine($"[WebViewHtmlFetcher] iOS navigation failed: {error}");
+            Logger.Debug(Tag, $"iOS navigation failed: {error}");
             _tcs.TrySetResult(null);
         }
 
@@ -228,7 +228,7 @@ public class WebViewHtmlFetcher : IRecipeHtmlFetcher, IDisposable
             WebKit.WKWebView webView,
             Foundation.NSError error)
         {
-            Debug.WriteLine($"[WebViewHtmlFetcher] iOS provisional nav failed: {error}");
+            Logger.Debug(Tag, $"iOS provisional nav failed: {error}");
             _tcs.TrySetResult(null);
         }
     }
