@@ -86,7 +86,7 @@ public class FavouriteService
                     totalTime = favourite.TotalTime ?? string.Empty,
                     recipeSource = favourite.RecipeSource ?? string.Empty,
                     ingredients = favourite.Ingredients,
-                    methodSteps = favourite.MethodSteps,
+                    methodSteps = JsonSerializer.Serialize(favourite.MethodSteps),
                     imageUrlBig = favourite.ImageUrlBig ?? string.Empty
                 }
             };
@@ -215,7 +215,38 @@ public class FavouriteService
 
     private static List<InstructionSection> GetInstructionSections(AppwriteRow row, string key)
     {
-        if (row.Data.TryGetValue(key, out var el) && el.ValueKind == System.Text.Json.JsonValueKind.Array)
+        if (!row.Data.TryGetValue(key, out var el))
+            return new List<InstructionSection>();
+
+        // Case 1: Stored as a JSON string (new format — serialized InstructionSection array)
+        if (el.ValueKind == System.Text.Json.JsonValueKind.String)
+        {
+            var json = el.GetString();
+            if (string.IsNullOrWhiteSpace(json)) return new List<InstructionSection>();
+            try
+            {
+                return JsonSerializer.Deserialize<List<InstructionSection>>(json)
+                       ?? new List<InstructionSection>();
+            }
+            catch
+            {
+                // Fallback: might be an old-style JSON array of strings stored as a string
+                try
+                {
+                    var oldSteps = JsonSerializer.Deserialize<List<string>>(json);
+                    return oldSteps is { Count: > 0 }
+                        ? new List<InstructionSection> { new() { Steps = oldSteps } }
+                        : new List<InstructionSection>();
+                }
+                catch
+                {
+                    return new List<InstructionSection>();
+                }
+            }
+        }
+
+        // Case 2: Direct JSON array (backward compat — old format or SDK auto-deserialized)
+        if (el.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
             using var enumerator = el.EnumerateArray();
 
@@ -234,7 +265,7 @@ public class FavouriteService
                 return new List<InstructionSection> { new() { Steps = steps } };
             }
 
-            // New format: array of section objects [{Name, Steps}, ...]
+            // Array of section objects [{Name, Steps}, ...]
             if (first.ValueKind == System.Text.Json.JsonValueKind.Object)
             {
                 var sections = new List<InstructionSection>();
@@ -244,6 +275,7 @@ public class FavouriteService
                 return sections;
             }
         }
+
         return new List<InstructionSection>();
     }
 
