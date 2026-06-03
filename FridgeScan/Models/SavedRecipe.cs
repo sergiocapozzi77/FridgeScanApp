@@ -17,6 +17,6 @@ public class SavedRecipe
     public string? RecipeSource { get; set; }
     public List<string> CookbookIds { get; set; } = new();
     public List<string> Ingredients { get; set; } = new();
-    public List<string> MethodSteps { get; set; } = new();
+    public List<InstructionSection> MethodSteps { get; set; } = new();
     public List<string> Nutritions { get; set; } = new();
 }

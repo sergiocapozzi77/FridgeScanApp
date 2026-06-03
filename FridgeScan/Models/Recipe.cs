@@ -20,7 +20,7 @@ namespace FridgeScan.Models
         public string Serving { get; set; }
         public string CookTime { get; set; }
         public List<string> Ingredients { get; set; } = new();
-        public List<string> MethodSteps { get; set; } = new();
+        public List<InstructionSection> MethodSteps { get; set; } = new();
         public List<string> Nutritions { get; set; } = new();
         public string DishType { get; internal set; }
     }
