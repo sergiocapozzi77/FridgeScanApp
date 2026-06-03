@@ -15,7 +15,7 @@ public class RecipeExtractionResult
     public float? RatingValue { get; set; }
     public int? RatingCount { get; set; }
     public List<string>? Ingredients { get; set; }
-    public List<string>? MethodSteps { get; set; }
+    public List<InstructionSection>? MethodSteps { get; set; }
     public List<string>? Nutritions { get; set; }
     public bool IsPremium { get; set; }
     public string? ContentType { get; set; }
