@@ -127,7 +127,12 @@
                                     Text="{Binding Recipe.RecipeSource}"
                                     FontSize="14"
                                     TextColor="#CCCCCC"
-                                    VerticalOptions="Center" />
+                                    VerticalOptions="Center" 
+                                    >
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding OpenRecipeUrlCommand}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
 
                             </HorizontalStackLayout>
 
@@ -447,7 +452,8 @@
             HeightRequest="60" />
 
         <controls:CookbookPickerControl
-            IsVisible="{Binding IsCookbookPickerVisible}"
+            x:Name="CookbookPicker"
+            IsPickerVisible="{Binding IsCookbookPickerVisible, Mode=TwoWay}"
             PreSelectedCookbookIds="{Binding PreSelectedCookbookIds}" />
 
     </Grid>

@@ -112,6 +112,8 @@ public partial class SharedRecipeViewModel : BaseViewModel, IQueryAttributable
 
         try
         {
+            await Task.Delay(1000);
+            
             ImportedRecipe = await _importService.ImportFromUrlAsync(url);
 
             if (ImportedRecipe != null)

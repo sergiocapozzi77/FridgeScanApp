@@ -111,6 +111,21 @@ public class FavouriteService
         }
     }
 
+    public async Task<List<SavedRecipe>> GetOrphanFavouritesAsync(List<string> validCookbookIds)
+    {
+        try
+        {
+            var all = await GetAllFavouritesAsync();
+            return all.Where(r => r.CookbookIds.Count == 0 || !r.CookbookIds.Any(id => validCookbookIds.Contains(id)))
+                      .ToList();
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Tag, $"Error fetching orphan favourites: {ex.Message}");
+            return new List<SavedRecipe>();
+        }
+    }
+
     public async Task<bool> UpdateFavouriteCookbooksAsync(string favouriteId, List<string> cookbookIds)
     {
         try

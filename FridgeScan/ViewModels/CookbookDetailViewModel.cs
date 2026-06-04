@@ -22,7 +22,17 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
     [ObservableProperty]
     private bool isLoading;
 
+    [ObservableProperty]
+    private bool isUncategorised;
+
+    public bool HasActions => !IsUncategorised;
+
     private string _cookbookId = string.Empty;
+
+    partial void OnIsUncategorisedChanged(bool value)
+    {
+        OnPropertyChanged(nameof(HasActions));
+    }
 
     public CookbookDetailViewModel(CookbookService cookbookService, FavouriteService favouriteService)
     {
@@ -38,10 +48,12 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
         }
         if (query.TryGetValue("CookbookName", out var name))
         {
+            var cookbookName = name?.ToString() ?? string.Empty;
+            IsUncategorised = _cookbookId == Cookbook.UncategorisedId;
             Cookbook = new Cookbook
             {
                 RowId = _cookbookId,
-                Name = name?.ToString() ?? string.Empty
+                Name = IsUncategorised ? "Uncategorised" : cookbookName
             };
         }
         _ = LoadRecipesAsync();
@@ -59,7 +71,19 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
         try
         {
             IsLoading = true;
-            var list = await _favouriteService.GetFavouritesByCookbookIdAsync(_cookbookId);
+
+            List<SavedRecipe> list;
+            if (_cookbookId == Cookbook.UncategorisedId)
+            {
+                var allCookbooks = await _cookbookService.GetCookbooksAsync();
+                var validIds = allCookbooks.Select(c => c.RowId).ToList();
+                list = await _favouriteService.GetOrphanFavouritesAsync(validIds);
+            }
+            else
+            {
+                list = await _favouriteService.GetFavouritesByCookbookIdAsync(_cookbookId);
+            }
+
             Recipes = new ObservableCollection<SavedRecipe>(list);
             if (Cookbook != null)
             {
@@ -90,9 +114,19 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
     [RelayCommand]
     private async Task EditRecipe(SavedRecipe recipe)
     {
-        var action = await Shell.Current.DisplayActionSheet(
-            recipe.Name ?? "Recipe", "Cancel", null,
-            "Remove from cookbook", "Move to another cookbook");
+        string action;
+        if (IsUncategorised)
+        {
+            action = await Shell.Current.DisplayActionSheet(
+                recipe.Name ?? "Recipe", "Cancel", null,
+                "Add to cookbook");
+        }
+        else
+        {
+            action = await Shell.Current.DisplayActionSheet(
+                recipe.Name ?? "Recipe", "Cancel", null,
+                "Remove from cookbook", "Move to another cookbook");
+        }
 
         switch (action)
         {
@@ -100,6 +134,7 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
                 await RemoveRecipeFromCookbook(recipe);
                 break;
             case "Move to another cookbook":
+            case "Add to cookbook":
                 await MoveRecipeToCookbook(recipe);
                 break;
         }
@@ -154,6 +189,7 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
     [RelayCommand]
     private async Task RenameCookbook()
     {
+        if (IsUncategorised) return;
         if (Cookbook == null) return;
         var newName = await Shell.Current.DisplayPromptAsync("Rename",
             "Enter new name:", "Rename", "Cancel", initialValue: Cookbook.Name);
@@ -170,6 +206,7 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
     [RelayCommand]
     private async Task DeleteCookbook()
     {
+        if (IsUncategorised) return;
         if (Cookbook == null) return;
         var confirmed = await Shell.Current.DisplayAlert("Delete",
             $"Delete \"{Cookbook.Name}\"? Recipes will be kept.", "Delete", "Cancel");

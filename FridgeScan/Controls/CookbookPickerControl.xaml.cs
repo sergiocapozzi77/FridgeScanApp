@@ -8,17 +8,17 @@ public partial class CookbookPickerControl : ContentView
 {
     private readonly CookbookService? _cookbookService;
 
-    public static readonly BindableProperty IsVisibleProperty =
-        BindableProperty.Create(nameof(IsVisible), typeof(bool), typeof(CookbookPickerControl), false,
-            propertyChanged: OnIsVisibleChanged);
+    public static readonly BindableProperty IsPickerVisibleProperty =
+        BindableProperty.Create(nameof(IsPickerVisible), typeof(bool), typeof(CookbookPickerControl), false,
+            propertyChanged: OnVisibleChanged);
 
     public static readonly BindableProperty PreSelectedCookbookIdsProperty =
         BindableProperty.Create(nameof(PreSelectedCookbookIds), typeof(IList<string>), typeof(CookbookPickerControl), null);
 
-    public bool IsVisible
+    public bool IsPickerVisible
     {
-        get => (bool)GetValue(IsVisibleProperty);
-        set => SetValue(IsVisibleProperty, value);
+        get => (bool)GetValue(IsPickerVisibleProperty);
+        set => SetValue(IsPickerVisibleProperty, value);
     }
 
     public IList<string> PreSelectedCookbookIds
@@ -42,7 +42,7 @@ public partial class CookbookPickerControl : ContentView
         _cookbookService = services?.GetService<CookbookService>();
     }
 
-    private static async void OnIsVisibleChanged(BindableObject bindable, object oldValue, object newValue)
+    private static async void OnVisibleChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (CookbookPickerControl)bindable;
         if ((bool)newValue)
@@ -107,13 +107,13 @@ public partial class CookbookPickerControl : ContentView
             .Select(c => c.RowId)
             .ToList();
 
-        IsVisible = false;
+        IsPickerVisible = false;
         Saved?.Invoke(this, selectedIds);
     }
 
     private void OnCancelClicked(object? sender, TappedEventArgs e)
     {
-        IsVisible = false;
+        IsPickerVisible = false;
         Cancelled?.Invoke(this, EventArgs.Empty);
     }
 

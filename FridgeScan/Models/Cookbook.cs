@@ -5,6 +5,7 @@ namespace FridgeScan.Models;
 
 public class Cookbook : INotifyPropertyChanged
 {
+    public const string UncategorisedId = "__uncategorised__";
     public string RowId { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public int RecipeCount { get; set; }

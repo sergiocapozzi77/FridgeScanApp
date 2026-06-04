@@ -48,7 +48,27 @@ public partial class CookbookViewModel : BaseViewModel
                     .ToList()!;
             }
 
-            Cookbooks = new ObservableCollection<Cookbook>(allCookbooks);
+            var list = new List<Cookbook>(allCookbooks);
+
+            // Add virtual "Uncategorised" cookbook for orphan recipes
+            var validIds = allCookbooks.Select(c => c.RowId).ToList();
+            var orphanRecipes = await _favouriteService.GetOrphanFavouritesAsync(validIds);
+            if (orphanRecipes.Count > 0)
+            {
+                list.Insert(0, new Cookbook
+                {
+                    RowId = Cookbook.UncategorisedId,
+                    Name = "Uncategorised",
+                    RecipeCount = orphanRecipes.Count,
+                    PreviewImageUrls = orphanRecipes
+                        .Select(r => r.ImageUrl)
+                        .Where(url => !string.IsNullOrWhiteSpace(url))
+                        .Take(4)
+                        .ToList()!
+                });
+            }
+
+            Cookbooks = new ObservableCollection<Cookbook>(list);
         }
         catch (Exception ex)
         {
@@ -76,6 +96,8 @@ public partial class CookbookViewModel : BaseViewModel
     [RelayCommand]
     private async Task RenameCookbook(Cookbook cookbook)
     {
+        if (cookbook.RowId == Cookbook.UncategorisedId) return;
+
         var newName = await Shell.Current.DisplayPromptAsync("Rename", "Enter new name:", "Rename", "Cancel",
             initialValue: cookbook.Name);
         if (string.IsNullOrWhiteSpace(newName)) return;
@@ -96,6 +118,8 @@ public partial class CookbookViewModel : BaseViewModel
     [RelayCommand]
     private async Task DeleteCookbook(Cookbook cookbook)
     {
+        if (cookbook.RowId == Cookbook.UncategorisedId) return;
+
         var confirmed = await Shell.Current.DisplayAlert("Delete Cookbook",
             $"Delete \"{cookbook.Name}\"? Recipes will be kept but unlinked.", "Delete", "Cancel");
         if (!confirmed) return;

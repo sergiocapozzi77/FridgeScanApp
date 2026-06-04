@@ -5,7 +5,7 @@
              x:Class="FridgeScan.Controls.CookbookPickerControl"
              x:Name="PickerControl">
 
-    <Grid IsVisible="{Binding IsVisible, Source={x:Reference PickerControl}}">
+    <Grid IsVisible="{Binding IsPickerVisible, Source={x:Reference PickerControl}}">
 
         <!-- Semi-transparent backdrop -->
         <BoxView Color="#80000000">
