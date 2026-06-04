@@ -15,8 +15,6 @@ public partial class BarcodeScannerPage : ContentPage
     public BarcodeScannerPage()
     {
         InitializeComponent();
-
-        BackButton.Text = "<";
     }
 
     protected override async void OnAppearing()
