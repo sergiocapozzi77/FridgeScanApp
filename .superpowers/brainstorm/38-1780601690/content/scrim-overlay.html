@@ -1,0 +1,111 @@
+<div style="text-align:center;margin-bottom:16px;">
+  <h2>Barcode Scanner — Viewfinder Scrim Overlay</h2>
+  <p class="subtitle">Dark semi-transparent overlay with a center cutout for the barcode</p>
+</div>
+
+<div class="split" style="gap:24px;">
+
+  <!-- WITHOUT SCRIM -->
+  <div class="mockup" style="flex:1;">
+    <div class="mockup-header" style="background:#333;color:white;">Without Scrim</div>
+    <div class="mockup-body" style="padding:0;">
+      <div style="background:#0D0D2B;border-radius:24px;padding:8px;max-width:320px;margin:0 auto;">
+        <div style="background:#0D0D2B;border-radius:16px;overflow:hidden;min-height:500px;position:relative;">
+
+          <!-- Camera view - plain -->
+          <div style="background:#1a1a2e;height:500px;position:relative;">
+
+            <!-- Toolbar -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0;">
+              <div style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin:4px 0 0 4px;">
+                <span style="font-size:24px;color:#CCCCDD;">&#8592;</span>
+              </div>
+              <div style="display:flex;gap:8px;margin:12px 12px 0 0;">
+                <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:16px;color:#CCCCDD;">🔄</span>
+                </div>
+                <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:16px;color:#CCCCDD;">🔦</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Plain camera - bright, no contrast -->
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <div style="font-size:40px;opacity:0.6;">📷</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:2px;">SCAN BARCODE</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WITH SCRIM -->
+  <div class="mockup" style="flex:1;">
+    <div class="mockup-header" style="background:#006400;color:white;">WITH Scrim Overlay</div>
+    <div class="mockup-body" style="padding:0;">
+      <div style="background:#0D0D2B;border-radius:24px;padding:8px;max-width:320px;margin:0 auto;">
+        <div style="background:#0D0D2B;border-radius:16px;overflow:hidden;min-height:500px;position:relative;">
+
+          <!-- Camera view -->
+          <div style="background:#1a1a2e;height:500px;position:relative;">
+
+            <!-- Toolbar -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0;position:relative;z-index:3;">
+              <div style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin:4px 0 0 4px;">
+                <span style="font-size:24px;color:#CCCCDD;">&#8592;</span>
+              </div>
+              <div style="display:flex;gap:8px;margin:12px 12px 0 0;">
+                <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:16px;color:#CCCCDD;">🔄</span>
+                </div>
+                <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:16px;color:#CCCCDD;">🔦</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scrim overlay: 4 bars creating a center cutout -->
+            <!-- TOP bar -->
+            <div style="position:absolute;top:0;left:0;right:0;height:190px;background:rgba(0,0,0,0.55);z-index:1;"></div>
+            <!-- BOTTOM bar -->
+            <div style="position:absolute;bottom:0;left:0;right:0;height:190px;background:rgba(0,0,0,0.55);z-index:1;"></div>
+            <!-- LEFT bar -->
+            <div style="position:absolute;top:190px;left:0;width:40px;bottom:190px;background:rgba(0,0,0,0.55);z-index:1;"></div>
+            <!-- RIGHT bar -->
+            <div style="position:absolute;top:190px;right:0;width:40px;bottom:190px;background:rgba(0,0,0,0.55);z-index:1;"></div>
+
+            <!-- Center cutout square with subtle border corners -->
+            <div style="position:absolute;top:190px;left:40px;right:40px;bottom:190px;z-index:2;display:flex;align-items:center;justify-content:center;">
+              <!-- Corner markers -->
+              <div style="position:absolute;top:-2px;left:-2px;width:24px;height:24px;border-top:3px solid rgba(255,255,255,0.7);border-left:3px solid rgba(255,255,255,0.7);border-radius:3px;"></div>
+              <div style="position:absolute;top:-2px;right:-2px;width:24px;height:24px;border-top:3px solid rgba(255,255,255,0.7);border-right:3px solid rgba(255,255,255,0.7);border-radius:3px;"></div>
+              <div style="position:absolute;bottom:-2px;left:-2px;width:24px;height:24px;border-bottom:3px solid rgba(255,255,255,0.7);border-left:3px solid rgba(255,255,255,0.7);border-radius:3px;"></div>
+              <div style="position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border-bottom:3px solid rgba(255,255,255,0.7);border-right:3px solid rgba(255,255,255,0.7);border-radius:3px;"></div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:2px;">ALIGN BARCODE</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:24px;padding:16px;background:#1a1a2e;border-radius:12px;">
+  <h3 style="margin:0 0 8px;font-size:14px;color:#ccc;">XAML Implementation Approach</h3>
+  <p style="margin:0;font-size:12px;color:#888;">
+    Use 4 <code>BoxView</code> elements overlaid on the camera, layered as:<br><br>
+    <strong>Z-order (bottom → top):</strong><br>
+    1. <code>barcode:CameraView</code> — camera feed<br>
+    2. <code>GraphicsView</code> — barcode detection bounding boxes<br>
+    3. <strong>4x BoxView scrim bars</strong> — rgba(0,0,0,0.55) with a center cutout<br>
+    4. Corner markers (4 small Borders with white edging)<br>
+    5. Toolbar (back, flip, torch buttons)<br>
+    6. ProductPanel overlay<br><br>
+    The scrim uses a <code>Grid</code> with 3 rows × 3 columns: fixed-height top bar, center row with fixed-width side bars, fixed-height bottom bar — creating the transparent center square.
+  </p>
+</div>

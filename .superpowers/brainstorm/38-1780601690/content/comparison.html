@@ -1,0 +1,129 @@
+<div style="text-align:center;margin-bottom:16px;">
+  <h2>Barcode Scanner Page — Redesign</h2>
+  <p class="subtitle">Before vs After — aligned with M3 design tokens</p>
+</div>
+
+<div class="split" style="gap:24px;">
+
+  <!-- BEFORE -->
+  <div class="mockup" style="flex:1;">
+    <div class="mockup-header" style="background:#8B0000;color:white;">BEFORE</div>
+    <div class="mockup-body" style="padding:0;">
+
+      <!-- Phone frame -->
+      <div style="background:#000;border-radius:24px;padding:8px;max-width:320px;margin:0 auto;">
+        <div style="background:#000;border-radius:20px;overflow:hidden;min-height:480px;position:relative;">
+
+          <!-- Camera view area -->
+          <div style="background:#1a1a2e;height:480px;position:relative;">
+
+            <!-- Old toolbar row -->
+            <div style="display:flex;gap:4px;padding:12px 10px 0;align-items:center;">
+              <!-- Old back button: SfButton with "<"" -->
+              <div style="width:50px;height:50px;border-radius:25px;background:#333;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;">&lt;</div>
+              <div style="width:50px;height:50px;border-radius:25px;background:#333;display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:16px;color:#fff;">🔄</span>
+              </div>
+              <div style="width:50px;height:50px;border-radius:25px;background:#333;display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:16px;color:#fff;">🔦</span>
+              </div>
+            </div>
+
+            <!-- Scanner overlay indicator -->
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border:2px solid rgba(255,255,255,0.3);border-radius:12px;"></div>
+
+            <!-- Old product panel -->
+            <div style="position:absolute;bottom:20px;left:16px;right:16px;background:rgba(255,255,255,0.8);border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center;">
+              <div style="width:60px;height:60px;background:#ddd;border-radius:4px;flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="font-size:15px;font-weight:bold;color:#000;">Product Name</div>
+                <div style="display:flex;gap:8px;margin-top:6px;">
+                  <div style="background:#eee;padding:4px 16px;border-radius:4px;font-size:12px;color:#333;">Add</div>
+                  <div style="background:#eee;padding:4px 16px;border-radius:4px;font-size:12px;color:#333;">Cancel</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;text-align:left;font-size:12px;color:#666;">
+        ❌ SfButton back button<br>
+        ❌ #CCFFFFFF product panel with black text<br>
+        ❌ Overcomplicated 6-column grid<br>
+        ❌ Default SfButton styling<br>
+        ❌ No M3 color tokens
+      </div>
+    </div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="mockup" style="flex:1;">
+    <div class="mockup-header" style="background:#006400;color:white;">AFTER</div>
+    <div class="mockup-body" style="padding:0;">
+
+      <!-- Phone frame -->
+      <div style="background:#0D0D2B;border-radius:24px;padding:8px;max-width:320px;margin:0 auto;">
+        <div style="background:#0D0D2B;border-radius:20px;overflow:hidden;min-height:480px;position:relative;">
+
+          <!-- Camera view area -->
+          <div style="background:#1a1a2e;height:480px;position:relative;">
+
+            <!-- New toolbar -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:0;">
+
+              <!-- New back button: Material icon, 48dp transparent target -->
+              <div style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin:4px 0 0 4px;">
+                <span style="font-size:24px;color:#CCCCDD;cursor:pointer;">&#8592;</span>
+              </div>
+
+              <!-- Camera controls: 40dp circle buttons -->
+              <div style="display:flex;gap:8px;margin:12px 12px 0 0;">
+                <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:16px;color:#CCCCDD;">🔄</span>
+                </div>
+                <div style="width:40px;height:40px;border-radius:20px;background:#1E1E3A;display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:16px;color:#CCCCDD;">🔦</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scanner overlay indicator -->
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border:2px solid rgba(255,255,255,0.3);border-radius:12px;"></div>
+
+            <!-- New M3 product panel -->
+            <div style="position:absolute;bottom:20px;left:16px;right:16px;background:#14142E;border-radius:16px;padding:12px;display:flex;gap:12px;align-items:center;">
+              <div style="width:60px;height:60px;background:#333;border-radius:4px;flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <div style="font-size:15px;font-weight:bold;color:#fff;">Product Name</div>
+                <div style="display:flex;gap:8px;margin-top:6px;">
+                  <div style="background:#1E1E3A;padding:4px 16px;border-radius:16px;font-size:12px;font-weight:bold;color:#CCCCDD;">Add</div>
+                  <div style="background:#2A1E1E;padding:4px 16px;border-radius:16px;font-size:12px;font-weight:bold;color:#ff6b6b;">Cancel</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;text-align:left;font-size:12px;color:#666;">
+        ✅ Material arrow icon in 48dp transparent touch target<br>
+        ✅ #14142E M3 card surface with white text<br>
+        ✅ 40dp circle Border buttons (identical to edit/delete pattern)<br>
+        ✅ M3 pill buttons for Add (action) / Cancel (destructive)<br>
+        ✅ #1E1E3A / #2A1E1E background tokens<br>
+        ✅ Removed SfButton dependency entirely
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:24px;padding:16px;background:#1a1a2e;border-radius:12px;text-align:center;">
+  <p style="margin:0;font-size:14px;color:#ccc;">
+    <strong>Changes are purely visual / XAML-only</strong><br>
+    <span style="font-size:12px;color:#888;">No code-behind logic changes — same event handlers, same camera logic</span>
+  </p>
+</div>

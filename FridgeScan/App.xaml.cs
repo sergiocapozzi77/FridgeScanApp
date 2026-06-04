@@ -42,4 +42,28 @@ public partial class App : Application
 	{
 		return new Window(new AppShell());
 	}
+
+    /// <summary>
+    /// When the app resumes from background, pop any modal pages (e.g. SharedRecipePage)
+    /// that were left open on top of the navigation stack.
+    /// </summary>
+    protected override void OnResume()
+    {
+        base.OnResume();
+
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            try
+            {
+                if (Shell.Current?.CurrentPage != null)
+                {
+                    await Shell.Current.CurrentPage.Navigation.PopModalAsync(animated: false);
+                }
+            }
+            catch
+            {
+                // No modal to pop — that's fine
+            }
+        });
+    }
 }

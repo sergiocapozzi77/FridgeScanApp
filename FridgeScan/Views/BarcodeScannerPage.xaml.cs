@@ -32,11 +32,6 @@ public partial class BarcodeScannerPage : ContentPage
         Barcode.CameraEnabled = false;
     }
 
-    private void ContentPage_Unloaded(object sender, EventArgs e)
-    {
-        //Barcode.Handler?.DisconnectHandler();
-    }
-
     private async void CameraView_OnDetectionFinished(object sender, OnDetectionFinishedEventArg e)
     {
         _drawable.barcodeResults = e.BarcodeResults;
@@ -63,12 +58,12 @@ public partial class BarcodeScannerPage : ContentPage
         }
     }
 
-    private async void BackButton_Clicked(object sender, EventArgs e)
+    private async void OnBackClicked(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("..");
     }
 
-    private void CameraButton_Clicked(object sender, EventArgs e)
+    private void OnFlipCameraClicked(object sender, EventArgs e)
     {
         if (Barcode.CameraFacing == CameraFacing.Back)
             Barcode.CameraFacing = CameraFacing.Front;
@@ -76,7 +71,7 @@ public partial class BarcodeScannerPage : ContentPage
             Barcode.CameraFacing = CameraFacing.Back;
     }
 
-    private void TorchButton_Clicked(object sender, EventArgs e)
+    private void OnTorchClicked(object sender, EventArgs e)
     {
         if (Barcode.TorchOn)
             Barcode.TorchOn = false;
@@ -114,9 +109,6 @@ public partial class BarcodeScannerPage : ContentPage
 
         ProductPanel.IsVisible = true;
 
-        // Animate width from 0 → 300 (or whatever you want)
-        await ProductPanel.WidthRequestTo(300, 250);
-
         // Fade + slide up
         await Task.WhenAll(
             ProductPanel.FadeTo(1, 250),
@@ -128,20 +120,19 @@ public partial class BarcodeScannerPage : ContentPage
     {
         await Task.WhenAll(
             ProductPanel.FadeTo(0, 200),
-            ProductPanel.TranslateTo(0, 20, 200),
-            ProductPanel.WidthRequestTo(0, 200)
+            ProductPanel.TranslateTo(0, 20, 200)
         );
 
         ProductPanel.IsVisible = false;
     }
 
-    private void CancelButton_Clicked(object sender, EventArgs e)
+    private async void OnCancelClicked(object sender, EventArgs e)
     {
         lastBarcode = "";
-        HideProductPanel();
+        await HideProductPanel();
     }
 
-    private async void AddButton_Clicked(object sender, EventArgs e)
+    private async void OnAddClicked(object sender, EventArgs e)
     {
         WeakReferenceMessenger.Default.Send(new ProductMessage(currentProduct));
         await Shell.Current.GoToAsync("..");
