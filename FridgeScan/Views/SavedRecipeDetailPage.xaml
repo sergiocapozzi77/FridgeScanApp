@@ -5,6 +5,7 @@
     x:Name="thisPage"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:models="clr-namespace:FridgeScan.Models"
+    xmlns:controls="clr-namespace:FridgeScan.Controls"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundColor="#0D1023"
     Shell.NavBarIsVisible="False">
@@ -100,20 +101,24 @@
                                 TextColor="White"
                                 LineBreakMode="WordWrap" />
 
-                            <!-- Source row: avatar circle + source name -->
+                            <!-- Source row: link icon button + source name -->
                             <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
 
                                 <Border
                                     WidthRequest="26"
                                     HeightRequest="26"
-                                    BackgroundColor="#8B7CFF"
+                                    BackgroundColor="#1E1E3A"
                                     StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 13">
+                                    StrokeShape="RoundRectangle 13"
+                                    IsVisible="{Binding HasRecipeUrl}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding OpenRecipeUrlCommand}" />
+                                    </Border.GestureRecognizers>
                                     <Label
-                                        Text="{Binding RecipeSourceInitial}"
-                                        FontSize="12"
-                                        FontAttributes="Bold"
-                                        TextColor="White"
+                                        Text="&#xe157;"
+                                        FontFamily="Material"
+                                        FontSize="14"
+                                        TextColor="#CCCCDD"
                                         HorizontalOptions="Center"
                                         VerticalOptions="Center" />
                                 </Border>
@@ -201,11 +206,11 @@
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 22">
                             <HorizontalStackLayout Spacing="8">
-                                <Label FontFamily="Material" Text="&#xe87d;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
+                                <Label FontFamily="Material" Text="&#xe86d;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
                                 <Label Text="CookBook" TextColor="White" FontSize="14" VerticalOptions="Center" />
                             </HorizontalStackLayout>
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SaveRecipeCommand}" />
+                                <TapGestureRecognizer Command="{Binding ShowCookbookPickerCommand}" />
                             </Border.GestureRecognizers>
                         </Border>
 
@@ -440,6 +445,10 @@
             VerticalOptions="Center"
             WidthRequest="60"
             HeightRequest="60" />
+
+        <controls:CookbookPickerControl
+            IsVisible="{Binding IsCookbookPickerVisible}"
+            PreSelectedCookbookIds="{Binding PreSelectedCookbookIds}" />
 
     </Grid>
 

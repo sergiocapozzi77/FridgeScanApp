@@ -13,6 +13,16 @@ public partial class SavedRecipeDetailPage : ContentPage
         InitializeComponent();
         var services = Application.Current?.Handler?.MauiContext?.Services;
         BindingContext = services?.GetService<SavedRecipeDetailViewModel>();
+
+        // Wire up the cookbook picker save event
+        CookbookPicker.Saved += OnCookbookPickerSaved;
+    }
+
+    private async void OnCookbookPickerSaved(object? sender, IList<string> selectedIds)
+    {
+        var vm = ViewModel;
+        if (vm == null) return;
+        await vm.SaveCookbookSelectionAsync(selectedIds);
     }
 
     private void OnIngredientTapped(object sender, EventArgs e)
@@ -25,14 +35,17 @@ public partial class SavedRecipeDetailPage : ContentPage
 
     private async void OnOverflowClicked(object sender, EventArgs e)
     {
+        var vm = ViewModel;
+        if (vm == null) return;
+
         var action = await DisplayActionSheet(null, "Cancel", null, "Delete recipe", "Add to cookbook");
         switch (action)
         {
             case "Delete recipe":
-                ViewModel.DeleteRecipeCommand.Execute(null);
+                vm.DeleteRecipeCommand.Execute(null);
                 break;
             case "Add to cookbook":
-                ViewModel.AddToCookbookCommand.Execute(null);
+                vm.ShowCookbookPickerCommand.Execute(null);
                 break;
         }
     }

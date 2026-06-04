@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FridgeScan.Models;
@@ -17,7 +18,7 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         !string.IsNullOrEmpty(Recipe?.TotalTime)
             ? Recipe.TotalTime
             : $"{Recipe?.PrepTime} + {Recipe?.CookTime}";
-    
+
     [ObservableProperty]
     private SavedRecipe? recipe;
 
@@ -26,6 +27,13 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
 
     [ObservableProperty]
     private bool isSavedRecipe;
+
+    // Cookbook picker state
+    [ObservableProperty]
+    private bool isCookbookPickerVisible;
+
+    private IList<string> _preSelectedCookbookIds = new List<string>();
+    public IList<string> PreSelectedCookbookIds => _preSelectedCookbookIds;
 
     // Computed visibility flags for conditional sections
     public bool HasDescription => !string.IsNullOrEmpty(Recipe?.Description);
@@ -38,6 +46,7 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     public string RecipeSourceInitial =>
         string.IsNullOrEmpty(Recipe?.RecipeSource) ? "?" :
             Recipe.RecipeSource[0].ToString().ToUpper();
+    public bool HasRecipeUrl => !string.IsNullOrEmpty(Recipe?.Url);
     public ObservableCollection<MetadataChip> MetadataChips { get; } = new();
     public ObservableCollection<IngredientItem> IngredientItems { get; } = new();
     public ObservableCollection<MethodStep> MethodSteps { get; } = new();
@@ -47,6 +56,54 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     {
         if (item == null) return;
         item.IsChecked = !item.IsChecked;
+    }
+
+    [RelayCommand]
+    private async Task OpenRecipeUrl()
+    {
+        if (!string.IsNullOrEmpty(Recipe?.Url))
+        {
+            try
+            {
+                await Launcher.OpenAsync(new Uri(Recipe.Url));
+            }
+            catch
+            {
+                await Shell.Current.DisplayAlert("Error", "Could not open the recipe URL.", "OK");
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void ShowCookbookPicker()
+    {
+        _preSelectedCookbookIds = Recipe?.CookbookIds ?? new List<string>();
+        OnPropertyChanged(nameof(PreSelectedCookbookIds));
+        IsCookbookPickerVisible = true;
+    }
+
+    /// <summary>
+    /// Called by the page after the CookbookPickerControl fires its Saved event.
+    /// Persists the selected cookbook IDs and shows a toast confirmation.
+    /// </summary>
+    public async Task SaveCookbookSelectionAsync(IList<string> selectedIds)
+    {
+        if (Recipe == null) return;
+
+        try
+        {
+            Recipe.CookbookIds = selectedIds.ToList();
+            if (IsSavedRecipe && !string.IsNullOrEmpty(Recipe.RowId))
+            {
+                await _favouriteService.UpdateFavouriteCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
+            }
+
+            await Toast.Make("Cookbooks updated!").Show();
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", "Failed to update cookbooks.", "OK");
+        }
     }
 
     public SavedRecipeDetailViewModel(
@@ -153,6 +210,7 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         OnPropertyChanged(nameof(HasCookTime));
         OnPropertyChanged(nameof(HasTotalTime));
         OnPropertyChanged(nameof(HasNutrition));
+        OnPropertyChanged(nameof(HasRecipeUrl));
         RebuildMetadataChips();
     }
 
@@ -161,40 +219,14 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         MetadataChips.Clear();
         if (Recipe == null) return;
         if (HasTotalTime)
-            MetadataChips.Add(new MetadataChip { Icon = "\ue425", Value = Recipe.TotalTime, Label = "Total time" });
+            MetadataChips.Add(new MetadataChip { Icon = "", Value = Recipe.TotalTime, Label = "Total time" });
         else if (HasPrepTime && HasCookTime)
-            MetadataChips.Add(new MetadataChip { Icon = "\ue425", Value = $"{Recipe.PrepTime} + {Recipe.CookTime}", Label = "Total time" });
+            MetadataChips.Add(new MetadataChip { Icon = "", Value = $"{Recipe.PrepTime} + {Recipe.CookTime}", Label = "Total time" });
         if (!string.IsNullOrEmpty(Recipe.Difficulty))
-            MetadataChips.Add(new MetadataChip { Icon = "\ue313", Value = Recipe.Difficulty, Label = "Difficulty" });
+            MetadataChips.Add(new MetadataChip { Icon = "", Value = Recipe.Difficulty, Label = "Difficulty" });
         if (HasServing)
-            MetadataChips.Add(new MetadataChip { Icon = "\ue7fb", Value = $"{Recipe.Serving} servings", Label = "Serves" });
+            MetadataChips.Add(new MetadataChip { Icon = "", Value = $"{Recipe.Serving} servings", Label = "Serves" });
         OnPropertyChanged(nameof(HasMetadata));
-    }
-
-    [RelayCommand]
-    private async Task RemoveFromCookbook()
-    {
-        if (Recipe == null || Recipe.CookbookIds.Count == 0) return;
-
-        var allCookbooks = await _cookbookService.GetCookbooksAsync();
-        var relevantCookbooks = allCookbooks
-            .Where(c => Recipe.CookbookIds.Contains(c.RowId))
-            .Select(c => c.Name)
-            .ToArray();
-
-        var selected = await Shell.Current.DisplayActionSheet(
-            "Remove from...", "Cancel", null, relevantCookbooks);
-
-        if (selected == null || selected == "Cancel") return;
-
-        var target = allCookbooks.First(c => c.Name == selected);
-        Recipe.CookbookIds.Remove(target.RowId);
-
-        var success = await _favouriteService.UpdateFavouriteCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
-        if (success && Recipe.CookbookIds.Count == 0)
-        {
-            await Shell.Current.GoToAsync("..");
-        }
     }
 
     [RelayCommand]
@@ -220,32 +252,6 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         {
             await Shell.Current.GoToAsync("..");
         }
-    }
-
-    [RelayCommand]
-    private async Task AddToCookbook()
-    {
-        if (Recipe == null) return;
-
-        var allCookbooks = await _cookbookService.GetCookbooksAsync();
-        var available = allCookbooks
-            .Where(c => !Recipe.CookbookIds.Contains(c.RowId))
-            .ToArray();
-
-        if (available.Length == 0)
-        {
-            await Shell.Current.DisplayAlert("Info", "Recipe is already in all cookbooks.", "OK");
-            return;
-        }
-
-        var selected = await Shell.Current.DisplayActionSheet(
-            "Add to...", "Cancel", null, available.Select(c => c.Name).ToArray());
-
-        if (selected == null || selected == "Cancel") return;
-
-        var target = available.First(c => c.Name == selected);
-        Recipe.CookbookIds.Add(target.RowId);
-        await _favouriteService.UpdateFavouriteCookbooksAsync(Recipe.RowId, Recipe.CookbookIds);
     }
 
     private void BuildIngredientItems()

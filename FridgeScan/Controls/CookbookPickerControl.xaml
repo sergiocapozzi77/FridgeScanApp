@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FridgeScan.Models"
+             x:Class="FridgeScan.Controls.CookbookPickerControl"
+             x:Name="PickerControl">
+
+    <Grid IsVisible="{Binding IsVisible, Source={x:Reference PickerControl}}">
+
+        <!-- Semi-transparent backdrop -->
+        <BoxView Color="#80000000">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnBackdropTapped" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <!-- Bottom sheet -->
+        <VerticalStackLayout
+            VerticalOptions="End"
+            Padding="20"
+            Spacing="14"
+            BackgroundColor="#14142E">
+
+            <!-- Title -->
+            <Label
+                Text="Choose Cookbook"
+                FontSize="18"
+                FontAttributes="Bold"
+                TextColor="White" />
+
+            <!-- Cookbook chips -->
+            <CollectionView
+                ItemsSource="{Binding AllCookbooks, Source={x:Reference PickerControl}}"
+                SelectionMode="None"
+                HeightRequest="44">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Cookbook">
+                        <Border
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="#555"
+                            StrokeThickness="1"
+                            BackgroundColor="Transparent"
+                            Padding="16,8"
+                            HeightRequest="36">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="#4a90d9" />
+                                    <Setter Property="Stroke" Value="#4a90d9" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCookbookTapped" />
+                            </Border.GestureRecognizers>
+                            <Label
+                                Text="{Binding Name}"
+                                FontSize="13"
+                                TextColor="White"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- + New Cookbook -->
+            <Border
+                StrokeShape="RoundRectangle 20"
+                Stroke="#555"
+                StrokeThickness="1"
+                BackgroundColor="Transparent"
+                Padding="16,8"
+                HeightRequest="36"
+                HorizontalOptions="Start">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCreateNewCookbook" />
+                </Border.GestureRecognizers>
+                <Label
+                    Text="+ New Cookbook"
+                    FontSize="13"
+                    TextColor="#8888AA" />
+            </Border>
+
+            <!-- Save / Cancel buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+
+                <Border
+                    Grid.Column="0"
+                    BackgroundColor="#2A2A4A"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="Transparent"
+                    HeightRequest="44"
+                    Padding="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCancelClicked" />
+                    </Border.GestureRecognizers>
+                    <Label
+                        Text="Cancel"
+                        TextColor="#CCCCDD"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Border>
+
+                <Border
+                    Grid.Column="1"
+                    BackgroundColor="#1E1E3A"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="Transparent"
+                    HeightRequest="44"
+                    Padding="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSaveClicked" />
+                    </Border.GestureRecognizers>
+                    <Label
+                        Text="Save"
+                        TextColor="#CCCCDD"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Border>
+
+            </Grid>
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentView>

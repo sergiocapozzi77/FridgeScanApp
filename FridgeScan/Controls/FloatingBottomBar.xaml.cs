@@ -59,7 +59,7 @@ public partial class FloatingBottomBar : ContentView
             ("", "Recipe",    "//recipe"),
             ("", "Import",    "//import"),
             ("", "Activity",  "//activities"),
-            ("", "Cookbooks", "//cookbook"),
+            ("", "clear", "//cookbook"),
         };
 
         foreach (var (glyph, label, route) in tabs)
