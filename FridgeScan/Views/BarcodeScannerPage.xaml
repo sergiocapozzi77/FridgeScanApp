@@ -54,22 +54,25 @@
             </Grid>
         </Grid>
 
-        <!-- Layer 4: Back button — Material icon, 48dp transparent touch target -->
-        <Label Text="&#xe5c4;"
-               FontFamily="Material"
-               FontSize="24"
-               TextColor="#CCCCDD"
-               WidthRequest="48"
-               HeightRequest="48"
-               Margin="-12,0,0,0"
-               HorizontalTextAlignment="Center"
-               VerticalTextAlignment="Center"
-               VerticalOptions="Start"
-               HorizontalOptions="Start">
-            <Label.GestureRecognizers>
+        <!-- Layer 4: Back button — 40dp circle Border, matches flip/torch style -->
+        <Border BackgroundColor="#1E1E3A"
+                StrokeShape="RoundRectangle 20"
+                Stroke="Transparent"
+                WidthRequest="40"
+                HeightRequest="40"
+                Margin="10,12,0,0"
+                VerticalOptions="Start"
+                HorizontalOptions="Start">
+            <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnBackClicked" />
-            </Label.GestureRecognizers>
-        </Label>
+            </Border.GestureRecognizers>
+            <Label Text="&#xe5c4;"
+                   FontFamily="Material"
+                   FontSize="18"
+                   TextColor="#CCCCDD"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+        </Border>
 
         <!-- Layer 4: Camera toolbar (flip + torch) — 40dp circle Borders -->
         <HorizontalStackLayout HorizontalOptions="End"

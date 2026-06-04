@@ -151,6 +151,7 @@ public partial class BarcodeScannerPage : ContentPage
             WeakReferenceMessenger.Default.Send(new ProductMessage(currentProduct));
             lastBarcode = "";
             await HideProductPanel();
+            await Toast.Make($"{currentProduct.Name} saved with expiry {selectedDate.Value:dd MMM yyyy}").Show();
         }
     }
 
@@ -160,6 +161,7 @@ public partial class BarcodeScannerPage : ContentPage
         WeakReferenceMessenger.Default.Send(new ProductMessage(currentProduct));
         lastBarcode = "";
         await HideProductPanel();
+        await Toast.Make($"{currentProduct.Name} saved without expiry").Show();
     }
 }
 
