@@ -29,7 +29,11 @@
       "Bash(python3 -c ' *)",
       "Bash(curl -s -L -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/134.0.0.0 Safari/537.36\" \"https://aniagotuje.pl/przepis/ciasto-rabarbarowe\" -o /tmp/aniagotuje.html)",
       "Bash(python3)",
-      "Skill(update-config)"
+      "Skill(update-config)",
+      "Bash(dotnet nuget *)",
+      "Read(//usr/share/dotnet/**)",
+      "Bash(dotnet list *)",
+      "Bash(dotnet add *)"
     ]
   },
   "enableAllProjectMcpServers": true,

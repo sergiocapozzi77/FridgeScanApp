@@ -202,7 +202,7 @@
                             StrokeShape="RoundRectangle 22">
                             <HorizontalStackLayout Spacing="8">
                                 <Label FontFamily="Material" Text="&#xe87d;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
-                                <Label Text="Save" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                                <Label Text="CookBook" TextColor="White" FontSize="14" VerticalOptions="Center" />
                             </HorizontalStackLayout>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SaveRecipeCommand}" />

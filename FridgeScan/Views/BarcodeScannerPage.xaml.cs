@@ -132,10 +132,34 @@ public partial class BarcodeScannerPage : ContentPage
         await HideProductPanel();
     }
 
-    private async void OnAddClicked(object sender, EventArgs e)
+    private async void OnExpiryDateSelected(object sender, EventArgs e)
     {
+        // Get selected date from the calendar
+        DateTime? selectedDate = null;
+
+        if (e is Syncfusion.Maui.Calendar.CalendarSelectionChangedEventArgs args)
+        {
+            if (args.NewValue is DateTime date)
+                selectedDate = date;
+            else if (args.NewValue is System.Collections.IList list && list.Count > 0)
+                selectedDate = list[0] as DateTime?;
+        }
+
+        if (selectedDate.HasValue)
+        {
+            currentProduct.ExpiryDate = selectedDate.Value;
+            WeakReferenceMessenger.Default.Send(new ProductMessage(currentProduct));
+            lastBarcode = "";
+            await HideProductPanel();
+        }
+    }
+
+    private async void OnSaveWithoutExpiryClicked(object sender, EventArgs e)
+    {
+        currentProduct.ExpiryDate = null;
         WeakReferenceMessenger.Default.Send(new ProductMessage(currentProduct));
-        await Shell.Current.GoToAsync("..");
+        lastBarcode = "";
+        await HideProductPanel();
     }
 }
 

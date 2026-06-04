@@ -57,7 +57,7 @@ public partial class ProductsViewModel : BaseViewModel
 
         WeakReferenceMessenger.Default.Register<ProductMessage>(this, (r, m) =>
         {
-            AddItem(m.Value.Name, m.Value.Category);
+            AddItem(m.Value.Name, m.Value.Category, m.Value.ExpiryDate);
         });
 
         AddItemCommand = new Command(OnAddItem);
@@ -239,7 +239,7 @@ public partial class ProductsViewModel : BaseViewModel
         NewItemName = null;
     }
 
-    async void AddItem(string name, string? category = null)
+    async void AddItem(string name, string? category = null, DateTime? expiryDate = null)
     {
         if (string.IsNullOrEmpty(name))
             return;
@@ -251,6 +251,8 @@ public partial class ProductsViewModel : BaseViewModel
         if (existing != null)
         {
             existing.Quantity += 1;
+            if (expiryDate.HasValue)
+                existing.ExpiryDate = expiryDate;
             await productService.UpdateProductAsync(existing);
             return;
         }
@@ -264,6 +266,8 @@ public partial class ProductsViewModel : BaseViewModel
         }
 
         var product = new Product(trimmed, category, 1);
+        if (expiryDate.HasValue)
+            product.ExpiryDate = expiryDate;
 
         productsManager.AddProduct(product);
         AddProductToGroups(product);

@@ -13,5 +13,6 @@ namespace FridgeScan.Models
         public string Category { get; set; }
         public string ImageUrl { get; set; }
         public string? ThumbUrl { get; internal set; }
+        public DateTime? ExpiryDate { get; set; }
     }
 }

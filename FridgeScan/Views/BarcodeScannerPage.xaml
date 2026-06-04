@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:barcode="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
+    xmlns:sfCal="clr-namespace:Syncfusion.Maui.Calendar;assembly=Syncfusion.Maui.Calendar"
     BackgroundColor="#0D0D2B"
     Title="Barcode Scanner"
     Shell.PresentationMode="ModalAnimated">
@@ -107,66 +108,104 @@
             </Border>
         </HorizontalStackLayout>
 
-        <!-- Layer 5: Product panel — M3 card, appears on barcode detection -->
+        <!-- Layer 5: Product panel with expiry calendar — full-screen overlay -->
         <Border x:Name="ProductPanel"
-                Margin="16,0,16,20"
-                Padding="12"
-                BackgroundColor="#14142E"
-                HeightRequest="160"
+                BackgroundColor="#0D0D2B"
                 HorizontalOptions="Fill"
-                VerticalOptions="End"
+                VerticalOptions="Fill"
                 IsVisible="False"
-                Opacity="0">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="16" />
-            </Border.StrokeShape>
-            <HorizontalStackLayout Spacing="15">
-                <Image x:Name="ProductImage"
-                       Aspect="AspectFit"
-                       HeightRequest="80"
-                       WidthRequest="80" />
-                <VerticalStackLayout Spacing="10"
-                                     VerticalOptions="Center">
-                    <Label x:Name="ProductName"
-                           FontSize="15"
-                           FontAttributes="Bold"
-                           TextColor="White"
-                           MaxLines="2"
-                           LineBreakMode="WordWrap" />
-                    <HorizontalStackLayout Spacing="10">
-                        <Border BackgroundColor="#1E1E3A"
-                                StrokeShape="RoundRectangle 16"
-                                Stroke="Transparent"
-                                HeightRequest="32"
-                                Padding="16,0">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnAddClicked" />
-                            </Border.GestureRecognizers>
-                            <Label Text="Add"
-                                   FontSize="13"
-                                   FontAttributes="Bold"
-                                   TextColor="#CCCCDD"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center" />
-                        </Border>
-                        <Border BackgroundColor="#2A1E1E"
-                                StrokeShape="RoundRectangle 16"
-                                Stroke="Transparent"
-                                HeightRequest="32"
-                                Padding="16,0">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnCancelClicked" />
-                            </Border.GestureRecognizers>
-                            <Label Text="Cancel"
-                                   FontSize="13"
-                                   FontAttributes="Bold"
-                                   TextColor="#ff6b6b"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center" />
-                        </Border>
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-            </HorizontalStackLayout>
+                Opacity="0"
+                Padding="0">
+            <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="20,0,20,24">
+
+                <!-- Product header: image + name + instruction -->
+                <Grid Grid.Row="0"
+                      ColumnDefinitions="Auto,*"
+                      Padding="0,56,0,0"
+                      Margin="0,0,0,4">
+                    <Border Grid.Column="0"
+                            WidthRequest="56"
+                            HeightRequest="56"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            BackgroundColor="#14142E"
+                            Padding="0">
+                        <Image x:Name="ProductImage"
+                               Aspect="AspectFit"
+                               WidthRequest="56"
+                               HeightRequest="56" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1"
+                                         VerticalOptions="Center"
+                                         Margin="14,0,0,0"
+                                         Spacing="2">
+                        <Label x:Name="ProductName"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               MaxLines="1"
+                               LineBreakMode="TailTruncation" />
+                        <Label Text="Tap a date to set expiry"
+                               FontSize="13"
+                               TextColor="#8888AA" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Section title -->
+                <Label Grid.Row="1"
+                       Text="Expiry date"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#CCCCDD"
+                       Margin="0,0,0,8" />
+
+                <!-- Calendar month view -->
+                <sfCal:SfCalendar Grid.Row="2"
+                                  x:Name="ExpiryCalendar"
+                                  SelectionChanged="OnExpiryDateSelected"
+                                  SelectionMode="Single"
+                                  CornerRadius="16"
+                                  Margin="0,0,0,8" />
+
+                <!-- Bottom buttons -->
+                <HorizontalStackLayout Grid.Row="3"
+                                       Spacing="12"
+                                       HorizontalOptions="Center"
+                                       Margin="0,8,0,0">
+                    <!-- Save without expiry -->
+                    <Border BackgroundColor="#1E1E3A"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="Transparent"
+                            HeightRequest="44"
+                            Padding="20,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSaveWithoutExpiryClicked" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Save without expiry"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#CCCCDD"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
+                    </Border>
+                    <!-- Cancel -->
+                    <Border BackgroundColor="#2A1E1E"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="Transparent"
+                            HeightRequest="44"
+                            Padding="20,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCancelClicked" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Cancel"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="#ff6b6b"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
+                    </Border>
+                </HorizontalStackLayout>
+            </Grid>
         </Border>
     </Grid>
 </ContentPage>
