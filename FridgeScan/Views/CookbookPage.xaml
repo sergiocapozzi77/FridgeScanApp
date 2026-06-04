@@ -53,7 +53,7 @@
                             <sfCards:SfCardView Margin="5"
                                                 CornerRadius="16"
                                                 Padding="0"
-                                                BackgroundColor="#14142E">
+                                                BackgroundColor="#161638">
                                 <VerticalStackLayout Padding="0" Spacing="0">
                                     <views:CookbookMosaic ImageUrls="{Binding PreviewImageUrls}" HeightRequest="150" />
                                     <VerticalStackLayout Padding="12,10,12,12">
