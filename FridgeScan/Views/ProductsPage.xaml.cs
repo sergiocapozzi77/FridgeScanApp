@@ -23,7 +23,19 @@ public partial class ProductsPage : ContentPage
     {
         base.OnAppearing();
         if (BindingContext is ProductsViewModel vm)
+        {
             vm.RefreshAfterEdit();
+            UpdateFilterPillAppearance(vm);
+            UpdateSortPillAppearance(vm);
+            UpdateFilterSegmentHighlight();
+            UpdateSortSegmentHighlight();
+
+            // Hide panels on return
+            vm.IsFilterExpanded = false;
+            vm.IsSortExpanded = false;
+            FilterPanel.IsVisible = false;
+            SortPanel.IsVisible = false;
+        }
     }
 
     private void OnLoaded(object sender, EventArgs e)
@@ -255,6 +267,7 @@ public partial class ProductsPage : ContentPage
         {
             vm.ActiveFilter = ProductFilterMode.ExpiringSoon;
             UpdateFilterPillAppearance(vm);
+            UpdateFilterSegmentHighlight();
             ClosePanels();
         }
     }
@@ -265,6 +278,7 @@ public partial class ProductsPage : ContentPage
         {
             vm.ActiveFilter = ProductFilterMode.Expired;
             UpdateFilterPillAppearance(vm);
+            UpdateFilterSegmentHighlight();
             ClosePanels();
         }
     }
@@ -275,6 +289,7 @@ public partial class ProductsPage : ContentPage
         {
             vm.ActiveFilter = ProductFilterMode.None;
             UpdateFilterPillAppearance(vm);
+            UpdateFilterSegmentHighlight();
             ClosePanels();
         }
     }
@@ -308,6 +323,7 @@ public partial class ProductsPage : ContentPage
         {
             vm.ActiveSort = ProductSortMode.Alphabetical;
             UpdateSortPillAppearance(vm);
+            UpdateSortSegmentHighlight();
             ClosePanels();
         }
     }
@@ -318,6 +334,7 @@ public partial class ProductsPage : ContentPage
         {
             vm.ActiveSort = ProductSortMode.ByExpiry;
             UpdateSortPillAppearance(vm);
+            UpdateSortSegmentHighlight();
             ClosePanels();
         }
     }
@@ -349,5 +366,44 @@ public partial class ProductsPage : ContentPage
             FilterPanel.IsVisible = false;
             SortPanel.IsVisible = false;
         }
+    }
+
+    // ── Segment highlight helpers ──────────────────────────────────
+
+    private void UpdateFilterSegmentHighlight()
+    {
+        if (BindingContext is not ProductsViewModel vm) return;
+
+        bool isExpiring = vm.ActiveFilter == ProductFilterMode.ExpiringSoon;
+        bool isExpired = vm.ActiveFilter == ProductFilterMode.Expired;
+        bool isAll = vm.ActiveFilter == ProductFilterMode.None;
+
+        FilterSegmentExpiring.BackgroundColor = isExpiring
+            ? Color.FromArgb("#2A2E58") : Colors.Transparent;
+        FilterLabelExpiring.TextColor = isExpiring ? Colors.White : Color.FromArgb("#8888AA");
+
+        FilterSegmentExpired.BackgroundColor = isExpired
+            ? Color.FromArgb("#2A2E58") : Colors.Transparent;
+        FilterLabelExpired.TextColor = isExpired ? Colors.White : Color.FromArgb("#8888AA");
+
+        FilterSegmentAll.BackgroundColor = isAll
+            ? Color.FromArgb("#2A2E58") : Colors.Transparent;
+        FilterLabelAll.TextColor = isAll ? Colors.White : Color.FromArgb("#8888AA");
+    }
+
+    private void UpdateSortSegmentHighlight()
+    {
+        if (BindingContext is not ProductsViewModel vm) return;
+
+        bool isAZ = vm.ActiveSort == ProductSortMode.Alphabetical;
+        bool isExpiry = vm.ActiveSort == ProductSortMode.ByExpiry;
+
+        SortSegmentAZ.BackgroundColor = isAZ
+            ? Color.FromArgb("#2A2E58") : Colors.Transparent;
+        SortLabelAZ.TextColor = isAZ ? Colors.White : Color.FromArgb("#8888AA");
+
+        SortSegmentExpiry.BackgroundColor = isExpiry
+            ? Color.FromArgb("#2A2E58") : Colors.Transparent;
+        SortLabelExpiry.TextColor = isExpiry ? Colors.White : Color.FromArgb("#8888AA");
     }
 }
