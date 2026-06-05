@@ -12,11 +12,20 @@ public partial class ImportPage : ContentPage
     {
         InitializeComponent();
 
+        // Start invisible for fade-in entrance animation
+        Content.Opacity = 0;
+
         // Try to resolve viewmodel from the MAUI service provider
         var services = Application.Current?.Handler?.MauiContext?.Services;
         _vm = services.GetService<ImportViewModel>();
 
         BindingContext = _vm;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await PageAnimations.FadeIn(Content);
     }
 
     private async void OnImportClicked(object sender, EventArgs e)

@@ -38,15 +38,12 @@
                        FontAttributes="Bold"
                        TextColor="White"
                        CharacterSpacing="-0.3" />
-                <Label Text="Keep track of products and expiry dates"
-                       FontSize="13"
-                       TextColor="#8888AA" />
             </VerticalStackLayout>
 
             <!-- Action toolbar: Search, Filter, Sort pills -->
             <Grid x:Name="ToolbarGrid"
                   RowDefinitions="Auto,Auto"
-                  Margin="4,8,4,12">
+                  Margin="0,4,4,0">
 
                 <!-- Row 0: Toolbar pills (collapsed vs expanded) -->
                 <Grid Grid.Row="0" x:Name="ToolbarRow" HeightRequest="36">
@@ -367,7 +364,7 @@
                     Stroke="Transparent"
                     HeightRequest="48"
                     Padding="12,0"
-                    Margin="0,0,0,5">
+                    Margin="0,0,0,10">
                 <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center">
                     <!-- + icon container -->
                     <Border BackgroundColor="#2A2E58"

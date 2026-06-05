@@ -11,16 +11,21 @@ public partial class CookbookPage : ContentPage
     public CookbookPage()
     {
         InitializeComponent();
+
+        // Start invisible for fade-in entrance animation
+        Content.Opacity = 0;
+
         var services = Application.Current?.Handler?.MauiContext?.Services;
         _vm = services.GetService<CookbookViewModel>()!;
         BindingContext = _vm;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         if (_vm.Cookbooks.Count == 0)
             _vm.LoadCookbooksCommand.Execute(null);
+        await PageAnimations.FadeIn(Content);
     }
 
     private async void OnCookbookSelected(object? sender, SelectionChangedEventArgs e)

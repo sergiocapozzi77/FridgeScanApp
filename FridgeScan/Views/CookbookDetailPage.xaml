@@ -9,6 +9,7 @@
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
     BackgroundColor="#0D0D2B"
+    Shell.PresentationMode="Animated"
     Title="{Binding Cookbook.Name}">
 
     <ContentPage.Resources>

@@ -6,6 +6,9 @@ public partial class RecipePage : ContentPage
     {
         InitializeComponent();
 
+        // Start invisible for fade-in entrance animation
+        Content.Opacity = 0;
+
         var services = Application.Current?.Handler?.MauiContext?.Services;
 
         var vm = services.GetService<RecipeViewModel>();
@@ -23,9 +26,10 @@ public partial class RecipePage : ContentPage
         (sender as InputView).Text = "";
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         _viewModel?.RefreshSelectedIngredients();
+        await PageAnimations.FadeIn(Content);
     }
 }

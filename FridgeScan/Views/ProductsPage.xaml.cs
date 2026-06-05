@@ -9,6 +9,9 @@ public partial class ProductsPage : ContentPage
     {
         InitializeComponent();
 
+        // Start invisible for fade-in entrance animation
+        Content.Opacity = 0;
+
         var services = Application.Current?.Handler?.MauiContext?.Services;
 
         var vm = services.GetService<ProductsViewModel>();
@@ -20,9 +23,11 @@ public partial class ProductsPage : ContentPage
         SearchEntry.HandlerChanged += OnSearchEntryHandlerChanged;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // Run existing state restoration first so it happens invisibly on first load
         if (BindingContext is ProductsViewModel vm)
         {
             vm.RefreshAfterEdit();
@@ -40,6 +45,9 @@ public partial class ProductsPage : ContentPage
             FilterPanel.IsVisible = false;
             SortPanel.IsVisible = false;
         }
+
+        // Fade in on first appearance only (subsequent tab switches are instant)
+        await PageAnimations.FadeIn(Content);
     }
 
     private void OnLoaded(object sender, EventArgs e)
