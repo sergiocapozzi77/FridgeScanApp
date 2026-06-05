@@ -3,12 +3,10 @@
     x:Class="FridgeScan.Views.CookbookDetailPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:sfCards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     xmlns:converters="clr-namespace:FridgeScan.Converters"
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:viewmodel="clr-namespace:FridgeScan.ViewModels"
-    xmlns:controls="clr-namespace:FridgeScan.Controls"
     BackgroundColor="#0D0D2B"
     Shell.PresentationMode="Animated"
     Title="{Binding Cookbook.Name}">
@@ -119,13 +117,11 @@
                             Stroke="#14FFFFFF"
                             StrokeThickness="1">
                         <Grid ColumnDefinitions="130,*" HeightRequest="100">
-                            <controls:ProgressiveImage Grid.Column="0"
-                                                        Source="{Binding ImageUrl}"
-                                                        Aspect="AspectFill"
-                                                        CornerRadius="0"
-                                                        PlaceholderColor="#161638"
-                                                        WidthRequest="130"
-                                                        HeightRequest="100" />
+                            <Image Grid.Column="0"
+                                   Source="{Binding ImageUrl}"
+                                   Aspect="AspectFill"
+                                   WidthRequest="130"
+                                   HeightRequest="100" />
                             <Grid Grid.Column="1"
                                   ColumnDefinitions="*,Auto"
                                   Padding="12, 4">
