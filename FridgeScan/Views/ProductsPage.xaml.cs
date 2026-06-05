@@ -5,8 +5,6 @@ namespace FridgeScan.Views;
 
 public partial class ProductsPage : ContentPage
 {
-    private bool isSearchAnimating;
-
     public ProductsPage()
     {
         InitializeComponent();
@@ -30,9 +28,12 @@ public partial class ProductsPage : ContentPage
             UpdateFilterSegmentHighlight();
             UpdateSortSegmentHighlight();
 
-            // Hide panels on return
+            // Hide panels on return, reset search
+            vm.IsSearchExpanded = false;
             vm.IsFilterExpanded = false;
             vm.IsSortExpanded = false;
+            CollapsedToolbar.IsVisible = true;
+            ExpandedToolbar.IsVisible = false;
             FilterPanel.IsVisible = false;
             SortPanel.IsVisible = false;
         }
@@ -127,90 +128,49 @@ public partial class ProductsPage : ContentPage
         }
     }
 
-    // ── Toolbar pill event handlers ──────────────────────────────
+    // ── Search expand / collapse ─────────────────────────────────
 
-    private async void OnSearchPillTapped(object sender, EventArgs e)
+    private void OnSearchPillTapped(object sender, EventArgs e)
     {
-        if (isSearchAnimating) return;
-
         if (BindingContext is not ProductsViewModel vm) return;
 
-        isSearchAnimating = true;
-        try
-        {
-            // Collapse any open filter/sort panels
-            vm.IsFilterExpanded = false;
-            vm.IsSortExpanded = false;
+        // Collapse any open filter/sort panels
+        vm.IsFilterExpanded = false;
+        vm.IsSortExpanded = false;
+        FilterPanel.IsVisible = false;
+        SortPanel.IsVisible = false;
 
-            // Show search expanded, hide collapsed pills
-            SearchExpanded.IsVisible = true;
-            SearchExpanded.Opacity = 0;
+        // Switch to expanded toolbar
+        CollapsedToolbar.IsVisible = false;
+        ExpandedToolbar.IsVisible = true;
+        vm.IsSearchExpanded = true;
 
-            // Fade out the collapsed toolbar pills
-            await CollapsedToolbar.FadeTo(0, 150, Easing.CubicIn);
+        // Sync expanded pill labels with current state
+        FilterLabelEx.Text = FilterLabel.Text;
+        SortLabelEx.Text = SortLabel.Text;
+        FilterPillExpanded.BackgroundColor = FilterPill.BackgroundColor;
+        SortPillExpanded.BackgroundColor = SortPill.BackgroundColor;
 
-            // Show the search bar
-            await SearchExpanded.FadeTo(1, 200, Easing.CubicOut);
-
-            // Show secondary pills (Filter + Sort on second row)
-            SecondaryPills.IsVisible = true;
-            SecondaryPills.Opacity = 0;
-            await SecondaryPills.FadeTo(1, 200, Easing.CubicOut);
-
-            CollapsedToolbar.IsVisible = false;
-            vm.IsSearchExpanded = true;
-        }
-        finally
-        {
-            isSearchAnimating = false;
-        }
-
-        // Focus search entry after animation settles
+        // Focus search entry
         SearchEntry.Focus();
     }
 
-    private async void OnSearchDismissTapped(object sender, EventArgs e)
+    private void OnSearchDismissTapped(object sender, EventArgs e)
     {
-        if (isSearchAnimating) return;
-
         if (BindingContext is not ProductsViewModel vm) return;
 
-        isSearchAnimating = true;
-        try
-        {
-            // Clear search text
-            vm.SearchText = string.Empty;
-            SearchEntry.Unfocus();
+        vm.SearchText = string.Empty;
+        SearchEntry.Unfocus();
 
-            // Hide secondary pills
-            await SecondaryPills.FadeTo(0, 150, Easing.CubicIn);
-            SecondaryPills.IsVisible = false;
-
-            // Hide search bar
-            await SearchExpanded.FadeTo(0, 150, Easing.CubicIn);
-            SearchExpanded.IsVisible = false;
-
-            // Show collapsed pills
-            CollapsedToolbar.IsVisible = true;
-            CollapsedToolbar.Opacity = 0;
-            await CollapsedToolbar.FadeTo(1, 200, Easing.CubicOut);
-
-            vm.IsSearchExpanded = false;
-        }
-        finally
-        {
-            isSearchAnimating = false;
-        }
+        // Switch back to collapsed toolbar
+        ExpandedToolbar.IsVisible = false;
+        CollapsedToolbar.IsVisible = true;
+        vm.IsSearchExpanded = false;
     }
 
     // ── Filter / Sort toggle handlers ────────────────────────────
 
     private void OnFilterPillTapped(object sender, EventArgs e)
-    {
-        ToggleFilterPanel();
-    }
-
-    private void OnSecondaryFilterTapped(object sender, EventArgs e)
     {
         ToggleFilterPanel();
     }
@@ -226,18 +186,15 @@ public partial class ProductsPage : ContentPage
             // Toggle filter panel
             vm.IsFilterExpanded = !vm.IsFilterExpanded;
             FilterPanel.IsVisible = vm.IsFilterExpanded;
-            FilterPill.BackgroundColor = vm.IsFilterExpanded
+            var bg = vm.IsFilterExpanded
                 ? Color.FromArgb("#2A2E58")
                 : Color.FromArgb("#1E1E3A");
+            FilterPill.BackgroundColor = bg;
+            FilterPillExpanded.BackgroundColor = bg;
         }
     }
 
     private void OnSortPillTapped(object sender, EventArgs e)
-    {
-        ToggleSortPanel();
-    }
-
-    private void OnSecondarySortTapped(object sender, EventArgs e)
     {
         ToggleSortPanel();
     }
@@ -253,9 +210,11 @@ public partial class ProductsPage : ContentPage
             // Toggle sort panel
             vm.IsSortExpanded = !vm.IsSortExpanded;
             SortPanel.IsVisible = vm.IsSortExpanded;
-            SortPill.BackgroundColor = vm.IsSortExpanded
+            var bg = vm.IsSortExpanded
                 ? Color.FromArgb("#2A2E58")
                 : Color.FromArgb("#1E1E3A");
+            SortPill.BackgroundColor = bg;
+            SortPillExpanded.BackgroundColor = bg;
         }
     }
 
@@ -297,22 +256,29 @@ public partial class ProductsPage : ContentPage
     private void UpdateFilterPillAppearance(ProductsViewModel vm)
     {
         bool isActive = vm.ActiveFilter != ProductFilterMode.None;
-        FilterDot.IsVisible = isActive;
-        FilterLabel.Text = vm.ActiveFilter switch
+        var labelText = vm.ActiveFilter switch
         {
             ProductFilterMode.ExpiringSoon => "Expiring",
             ProductFilterMode.Expired => "Expired",
             _ => "Filter"
         };
-        FilterIcon.TextColor = isActive
-            ? Color.FromArgb("#D0BCFF")
-            : Color.FromArgb("#CCCCDD");
-        FilterLabel.TextColor = isActive
-            ? Color.FromArgb("#D0BCFF")
-            : Color.FromArgb("#CCCCDD");
-        FilterPill.BackgroundColor = isActive
-            ? Color.FromArgb("#2A2E58")
-            : Color.FromArgb("#1E1E3A");
+        var iconColor = isActive
+            ? Color.FromArgb("#D0BCFF") : Color.FromArgb("#CCCCDD");
+        var textColor = isActive
+            ? Color.FromArgb("#D0BCFF") : Color.FromArgb("#CCCCDD");
+        var bgColor = isActive
+            ? Color.FromArgb("#2A2E58") : Color.FromArgb("#1E1E3A");
+
+        // Collapsed pills
+        FilterDot.IsVisible = isActive;
+        FilterLabel.Text = labelText;
+        FilterIcon.TextColor = iconColor;
+        FilterLabel.TextColor = textColor;
+        FilterPill.BackgroundColor = bgColor;
+
+        // Expanded toolbar copy
+        FilterLabelEx.Text = labelText;
+        FilterPillExpanded.BackgroundColor = bgColor;
     }
 
     // ── Sort segment selection handlers ──────────────────────────
@@ -342,17 +308,24 @@ public partial class ProductsPage : ContentPage
     private void UpdateSortPillAppearance(ProductsViewModel vm)
     {
         bool isActive = vm.ActiveSort != ProductSortMode.Alphabetical;
+        var labelText = isActive ? "Expiry" : "Sort";
+        var iconColor = isActive
+            ? Color.FromArgb("#D0BCFF") : Color.FromArgb("#CCCCDD");
+        var textColor = isActive
+            ? Color.FromArgb("#D0BCFF") : Color.FromArgb("#CCCCDD");
+        var bgColor = isActive
+            ? Color.FromArgb("#2A2E58") : Color.FromArgb("#1E1E3A");
+
+        // Collapsed pills
         SortDot.IsVisible = isActive;
-        SortLabel.Text = isActive ? "Expiry" : "Sort";
-        SortIcon.TextColor = isActive
-            ? Color.FromArgb("#D0BCFF")
-            : Color.FromArgb("#CCCCDD");
-        SortLabel.TextColor = isActive
-            ? Color.FromArgb("#D0BCFF")
-            : Color.FromArgb("#CCCCDD");
-        SortPill.BackgroundColor = isActive
-            ? Color.FromArgb("#2A2E58")
-            : Color.FromArgb("#1E1E3A");
+        SortLabel.Text = labelText;
+        SortIcon.TextColor = iconColor;
+        SortLabel.TextColor = textColor;
+        SortPill.BackgroundColor = bgColor;
+
+        // Expanded toolbar copy
+        SortLabelEx.Text = labelText;
+        SortPillExpanded.BackgroundColor = bgColor;
     }
 
     // ── Panel helper ─────────────────────────────────────────────

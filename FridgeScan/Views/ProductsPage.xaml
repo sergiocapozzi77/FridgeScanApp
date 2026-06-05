@@ -46,200 +46,212 @@
             <!-- Action toolbar: Search, Filter, Sort pills -->
             <Grid x:Name="ToolbarGrid"
                   RowDefinitions="Auto,Auto"
-                  Margin="4,8,4,12"
-                  ColumnSpacing="8">
+                  Margin="4,8,4,12">
 
-                <!-- Row 0: Default pill row -->
-                <Grid Grid.Row="0"
-                      x:Name="CollapsedToolbar"
-                      ColumnDefinitions="2*,*,*"
-                      ColumnSpacing="8">
+                <!-- Row 0: Toolbar pills (collapsed vs expanded) -->
+                <Grid Grid.Row="0" x:Name="ToolbarRow" HeightRequest="36">
 
-                    <!-- Search pill -->
-                    <Border Grid.Column="0"
-                            x:Name="SearchPill"
-                            BackgroundColor="#1E1E3A"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="Transparent"
-                            HeightRequest="36"
-                            Padding="14,0">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSearchPillTapped" />
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                    <!-- Collapsed: icon-only search + auto-sized filter/sort -->
+                    <HorizontalStackLayout x:Name="CollapsedToolbar"
+                                            Spacing="8"
+                                            VerticalOptions="Center">
+                        <!-- Search icon button (no text) -->
+                        <Border x:Name="SearchPill"
+                                BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="Transparent"
+                                WidthRequest="36"
+                                HeightRequest="36"
+                                Padding="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSearchPillTapped" />
+                            </Border.GestureRecognizers>
                             <Label Text="&#xe8b6;"
                                    FontFamily="Material"
-                                   FontSize="14"
+                                   FontSize="16"
                                    TextColor="#8888AA"
+                                   HorizontalOptions="Center"
                                    VerticalOptions="Center" />
-                            <Label Text="Search"
-                                   FontSize="12"
-                                   TextColor="#8888AA"
-                                   VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Border>
+                        </Border>
 
-                    <!-- Filter pill -->
-                    <Border Grid.Column="1"
-                            x:Name="FilterPill"
-                            BackgroundColor="#1E1E3A"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="Transparent"
-                            HeightRequest="36"
-                            Padding="14,0">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnFilterPillTapped" />
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                            <Label x:Name="FilterIcon"
-                                   Text="&#xe152;"
-                                   FontFamily="Material"
-                                   FontSize="14"
-                                   TextColor="#CCCCDD"
-                                   VerticalOptions="Center" />
-                            <Label x:Name="FilterLabel"
-                                   Text="Filter"
-                                   FontSize="12"
-                                   TextColor="#CCCCDD"
-                                   VerticalOptions="Center" />
-                            <!-- Active indicator dot -->
-                            <Border x:Name="FilterDot"
-                                    IsVisible="False"
-                                    WidthRequest="6"
-                                    HeightRequest="6"
-                                    BackgroundColor="#D0BCFF"
-                                    StrokeShape="RoundRectangle 3"
-                                    Stroke="Transparent"
-                                    VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Border>
-
-                    <!-- Sort pill -->
-                    <Border Grid.Column="2"
-                            x:Name="SortPill"
-                            BackgroundColor="#1E1E3A"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="Transparent"
-                            HeightRequest="36"
-                            Padding="14,0">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSortPillTapped" />
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                            <Label x:Name="SortIcon"
-                                   Text="&#xe164;"
-                                   FontFamily="Material"
-                                   FontSize="14"
-                                   TextColor="#CCCCDD"
-                                   VerticalOptions="Center" />
-                            <Label x:Name="SortLabel"
-                                   Text="Sort"
-                                   FontSize="12"
-                                   TextColor="#CCCCDD"
-                                   VerticalOptions="Center" />
-                            <Border x:Name="SortDot"
-                                    IsVisible="False"
-                                    WidthRequest="6"
-                                    HeightRequest="6"
-                                    BackgroundColor="#D0BCFF"
-                                    StrokeShape="RoundRectangle 3"
-                                    Stroke="Transparent"
-                                    VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Border>
-                </Grid>
-
-                <!-- Row 1: Expanded panels / secondary pills -->
-                <Grid Grid.Row="1" x:Name="ToolbarRow1">
-
-                    <!-- Search expanded bar (full width) -->
-                    <Border x:Name="SearchExpanded"
-                            IsVisible="False"
-                            BackgroundColor="#1E1E3A"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="#D0BCFF"
-                            HeightRequest="36"
-                            Padding="12,0">
-                        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                            <Label Grid.Column="0"
-                                   Text="&#xe8b6;"
-                                   FontFamily="Material"
-                                   FontSize="14"
-                                   TextColor="#D0BCFF"
-                                   VerticalOptions="Center" />
-                            <Entry Grid.Column="1"
-                                   x:Name="SearchEntry"
-                                   Placeholder="Search products..."
-                                   PlaceholderColor="#666688"
-                                   TextColor="White"
-                                   FontSize="12"
-                                   BackgroundColor="Transparent"
-                                   Text="{Binding SearchText, Mode=TwoWay}"
-                                   VerticalOptions="Center"
-                                   Margin="8,0,0,0" />
-                            <Border Grid.Column="2"
-                                    x:Name="SearchDismiss"
-                                    BackgroundColor="Transparent"
-                                    StrokeShape="RoundRectangle 12"
-                                    Stroke="Transparent"
-                                    WidthRequest="24"
-                                    HeightRequest="24"
-                                    VerticalOptions="Center">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnSearchDismissTapped" />
-                                </Border.GestureRecognizers>
-                                <Label Text="&#xe5cd;"
+                        <!-- Filter pill (auto-width) -->
+                        <Border x:Name="FilterPill"
+                                BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="Transparent"
+                                HeightRequest="36"
+                                Padding="14,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnFilterPillTapped" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label x:Name="FilterIcon"
+                                       Text="&#xe152;"
                                        FontFamily="Material"
                                        FontSize="14"
-                                       TextColor="#8888AA"
-                                       HorizontalOptions="Center"
+                                       TextColor="#CCCCDD"
                                        VerticalOptions="Center" />
-                            </Border>
-                        </Grid>
-                    </Border>
+                                <Label x:Name="FilterLabel"
+                                       Text="Filter"
+                                       FontSize="12"
+                                       TextColor="#CCCCDD"
+                                       VerticalOptions="Center" />
+                                <Border x:Name="FilterDot"
+                                        IsVisible="False"
+                                        WidthRequest="6"
+                                        HeightRequest="6"
+                                        BackgroundColor="#D0BCFF"
+                                        StrokeShape="RoundRectangle 3"
+                                        Stroke="Transparent"
+                                        VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
 
-                    <!-- Secondary Filter/Sort pills (shown when search is expanded) -->
-                    <HorizontalStackLayout x:Name="SecondaryPills"
-                                            IsVisible="False"
-                                            Spacing="8"
-                                            Margin="0,6,0,0">
+                        <!-- Sort pill (auto-width) -->
+                        <Border x:Name="SortPill"
+                                BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="Transparent"
+                                HeightRequest="36"
+                                Padding="14,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSortPillTapped" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label x:Name="SortIcon"
+                                       Text="&#xe164;"
+                                       FontFamily="Material"
+                                       FontSize="14"
+                                       TextColor="#CCCCDD"
+                                       VerticalOptions="Center" />
+                                <Label x:Name="SortLabel"
+                                       Text="Sort"
+                                       FontSize="12"
+                                       TextColor="#CCCCDD"
+                                       VerticalOptions="Center" />
+                                <Border x:Name="SortDot"
+                                        IsVisible="False"
+                                        WidthRequest="6"
+                                        HeightRequest="6"
+                                        BackgroundColor="#D0BCFF"
+                                        StrokeShape="RoundRectangle 3"
+                                        Stroke="Transparent"
+                                        VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <!-- Expanded: search bar + filter + sort on one row -->
+                    <Grid x:Name="ExpandedToolbar"
+                          IsVisible="False"
+                          ColumnDefinitions="Auto,*,Auto,Auto"
+                          ColumnSpacing="8"
+                          VerticalOptions="Center">
+                        <!-- Search icon prefix -->
                         <Border BackgroundColor="#1E1E3A"
                                 StrokeShape="RoundRectangle 18"
                                 Stroke="Transparent"
-                                HeightRequest="34"
-                                Padding="12,0">
+                                WidthRequest="36"
+                                HeightRequest="36"
+                                Padding="0">
+                            <Label Text="&#xe8b6;"
+                                   FontFamily="Material"
+                                   FontSize="16"
+                                   TextColor="#D0BCFF"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+
+                        <!-- Search text field -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="#D0BCFF"
+                                HeightRequest="36"
+                                Padding="0"
+                                VerticalOptions="Center">
+                            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center" Margin="10,0,4,0">
+                                <Entry x:Name="SearchEntry"
+                                       Placeholder="Search products..."
+                                       PlaceholderColor="#666688"
+                                       TextColor="White"
+                                       FontSize="12"
+                                       BackgroundColor="Transparent"
+                                       Text="{Binding SearchText, Mode=TwoWay}"
+                                       VerticalOptions="Center" />
+                                <Border Grid.Column="1"
+                                        x:Name="SearchDismiss"
+                                        BackgroundColor="Transparent"
+                                        StrokeShape="RoundRectangle 12"
+                                        Stroke="Transparent"
+                                        WidthRequest="24"
+                                        HeightRequest="24"
+                                        VerticalOptions="Center">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnSearchDismissTapped" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="&#xe5cd;"
+                                           FontFamily="Material"
+                                           FontSize="14"
+                                           TextColor="#8888AA"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Filter pill (expanded copy, same appearance) -->
+                        <Border Grid.Column="2"
+                                x:Name="FilterPillExpanded"
+                                BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="Transparent"
+                                HeightRequest="36"
+                                Padding="12,0"
+                                VerticalOptions="Center">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnSecondaryFilterTapped" />
+                                <TapGestureRecognizer Tapped="OnFilterPillTapped" />
                             </Border.GestureRecognizers>
-                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
                                 <Label Text="&#xe152;"
                                        FontFamily="Material"
                                        FontSize="13"
                                        TextColor="#CCCCDD" />
-                                <Label Text="Filter"
+                                <Label x:Name="FilterLabelEx"
+                                       Text="Filter"
                                        FontSize="11"
                                        TextColor="#CCCCDD" />
                             </HorizontalStackLayout>
                         </Border>
-                        <Border BackgroundColor="#1E1E3A"
+
+                        <!-- Sort pill (expanded copy) -->
+                        <Border Grid.Column="3"
+                                x:Name="SortPillExpanded"
+                                BackgroundColor="#1E1E3A"
                                 StrokeShape="RoundRectangle 18"
                                 Stroke="Transparent"
-                                HeightRequest="34"
-                                Padding="12,0">
+                                HeightRequest="36"
+                                Padding="12,0"
+                                VerticalOptions="Center">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnSecondarySortTapped" />
+                                <TapGestureRecognizer Tapped="OnSortPillTapped" />
                             </Border.GestureRecognizers>
-                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
                                 <Label Text="&#xe164;"
                                        FontFamily="Material"
                                        FontSize="13"
                                        TextColor="#CCCCDD" />
-                                <Label Text="Sort"
+                                <Label x:Name="SortLabelEx"
+                                       Text="Sort"
                                        FontSize="11"
                                        TextColor="#CCCCDD" />
                             </HorizontalStackLayout>
                         </Border>
-                    </HorizontalStackLayout>
+                    </Grid>
+                </Grid>
+
+                <!-- Row 1: Filter / Sort segment panels -->
+                <Grid Grid.Row="1" x:Name="ToolbarRow1" Margin="0,6,0,0">
 
                     <!-- Filter segment panel -->
                     <Border x:Name="FilterPanel"
@@ -248,21 +260,20 @@
                             StrokeShape="RoundRectangle 12"
                             Stroke="#2A2E58"
                             Padding="4"
-                            HeightRequest="36"
-                            HorizontalOptions="Start"
-                            Margin="0,6,0,0">
+                            HeightRequest="40"
+                            HorizontalOptions="Start">
                         <HorizontalStackLayout Spacing="3" VerticalOptions="Center">
                             <Border x:Name="FilterSegmentExpiring"
                                     BackgroundColor="#2A2E58"
                                     StrokeShape="RoundRectangle 9"
                                     Stroke="Transparent"
-                                    Padding="12,7">
+                                    Padding="14,8">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnFilterSegmentExpiringTapped" />
                                 </Border.GestureRecognizers>
                                 <Label x:Name="FilterLabelExpiring"
                                        Text="Expiring soon"
-                                       FontSize="11"
+                                       FontSize="12"
                                        TextColor="White"
                                        VerticalOptions="Center" />
                             </Border>
@@ -270,13 +281,13 @@
                                     BackgroundColor="Transparent"
                                     StrokeShape="RoundRectangle 9"
                                     Stroke="Transparent"
-                                    Padding="12,7">
+                                    Padding="14,8">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnFilterSegmentExpiredTapped" />
                                 </Border.GestureRecognizers>
                                 <Label x:Name="FilterLabelExpired"
                                        Text="Expired"
-                                       FontSize="11"
+                                       FontSize="12"
                                        TextColor="#8888AA"
                                        VerticalOptions="Center" />
                             </Border>
@@ -284,13 +295,13 @@
                                     BackgroundColor="Transparent"
                                     StrokeShape="RoundRectangle 9"
                                     Stroke="Transparent"
-                                    Padding="12,7">
+                                    Padding="14,8">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnFilterSegmentAllTapped" />
                                 </Border.GestureRecognizers>
                                 <Label x:Name="FilterLabelAll"
                                        Text="All"
-                                       FontSize="11"
+                                       FontSize="12"
                                        TextColor="#8888AA"
                                        VerticalOptions="Center" />
                             </Border>
@@ -304,21 +315,20 @@
                             StrokeShape="RoundRectangle 12"
                             Stroke="#2A2E58"
                             Padding="4"
-                            HeightRequest="36"
-                            HorizontalOptions="End"
-                            Margin="0,6,0,0">
+                            HeightRequest="40"
+                            HorizontalOptions="End">
                         <HorizontalStackLayout Spacing="3" VerticalOptions="Center">
                             <Border x:Name="SortSegmentAZ"
                                     BackgroundColor="#2A2E58"
                                     StrokeShape="RoundRectangle 9"
                                     Stroke="Transparent"
-                                    Padding="12,7">
+                                    Padding="14,8">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnSortSegmentAZTapped" />
                                 </Border.GestureRecognizers>
                                 <Label x:Name="SortLabelAZ"
                                        Text="A-Z"
-                                       FontSize="11"
+                                       FontSize="12"
                                        TextColor="White"
                                        VerticalOptions="Center" />
                             </Border>
@@ -326,13 +336,13 @@
                                     BackgroundColor="Transparent"
                                     StrokeShape="RoundRectangle 9"
                                     Stroke="Transparent"
-                                    Padding="12,7">
+                                    Padding="14,8">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnSortSegmentExpiryTapped" />
                                 </Border.GestureRecognizers>
                                 <Label x:Name="SortLabelExpiry"
                                        Text="By expiry"
-                                       FontSize="11"
+                                       FontSize="12"
                                        TextColor="#8888AA"
                                        VerticalOptions="Center" />
                             </Border>
