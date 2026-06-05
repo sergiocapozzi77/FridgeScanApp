@@ -19,7 +19,7 @@
 
     <Grid>
 
-        <ScrollView x:Name="ContentPanel">
+        <ScrollView>
 
             <VerticalStackLayout Spacing="0">
 

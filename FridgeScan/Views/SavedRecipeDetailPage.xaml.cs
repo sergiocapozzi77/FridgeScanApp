@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using FridgeScan.Models;
 using FridgeScan.ViewModels;
 
@@ -6,7 +5,8 @@ namespace FridgeScan.Views;
 
 public partial class SavedRecipeDetailPage : ContentPage
 {
-    private SavedRecipeDetailViewModel? ViewModel => BindingContext as SavedRecipeDetailViewModel;
+
+    private SavedRecipeDetailViewModel ViewModel => BindingContext as SavedRecipeDetailViewModel;
 
     public SavedRecipeDetailPage()
     {
@@ -15,52 +15,8 @@ public partial class SavedRecipeDetailPage : ContentPage
         var services = Application.Current?.Handler?.MauiContext?.Services;
         BindingContext = services?.GetService<SavedRecipeDetailViewModel>();
 
+        // Wire up the cookbook picker save event
         CookbookPicker.Saved += OnCookbookPickerSaved;
-    }
-
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-        var vm = ViewModel;
-        if (vm == null) return;
-
-        // Keep content invisible until ViewModel data finishes loading
-        ContentPanel.Opacity = 0;
-
-        vm.PropertyChanged += OnViewModelPropertyChanged;
-
-        // Already loaded (back-navigation)
-        if (vm.Recipe != null)
-        {
-            vm.PropertyChanged -= OnViewModelPropertyChanged;
-            await FadeInContentAsync();
-        }
-    }
-
-    protected override void OnDisappearing()
-    {
-        base.OnDisappearing();
-        var vm = ViewModel;
-        if (vm != null)
-            vm.PropertyChanged -= OnViewModelPropertyChanged;
-    }
-
-    private async void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(SavedRecipeDetailViewModel.IsLoading)) return;
-
-        var vm = ViewModel;
-        if (vm == null || vm.IsLoading) return;
-
-        vm.PropertyChanged -= OnViewModelPropertyChanged;
-        await FadeInContentAsync();
-    }
-
-    private async Task FadeInContentAsync()
-    {
-        await Task.Delay(50);
-        if (ContentPanel != null)
-            await ContentPanel.FadeTo(1, 350, Easing.CubicOut);
     }
 
     private async void OnCookbookPickerSaved(object? sender, IList<string> selectedIds)
