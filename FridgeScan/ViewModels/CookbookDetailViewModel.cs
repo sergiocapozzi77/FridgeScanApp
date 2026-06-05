@@ -104,11 +104,34 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
     [RelayCommand]
     private async Task OpenRecipe(SavedRecipe recipe)
     {
-        var parameters = new Dictionary<string, object>
+        // Show loading indicator while prefetching recipe data.
+        // Navigating only when data is ready avoids a freeze on the
+        // target page — it appears with content already populated.
+        IsLoading = true;
+        try
         {
-            { "RecipeId", recipe.RowId }
-        };
-        await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
+            var fullRecipe = await _favouriteService.GetFavouriteByIdAsync(recipe.RowId);
+
+            var parameters = new Dictionary<string, object>
+            {
+                { "Recipe", fullRecipe }
+            };
+            await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(Tag, $"Error prefetching recipe: {ex.Message}");
+            // Fallback: navigate anyway — SavedRecipeDetailPage will load by ID
+            var parameters = new Dictionary<string, object>
+            {
+                { "RecipeId", recipe.RowId }
+            };
+            await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     [RelayCommand]

@@ -120,7 +120,19 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
 
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        // Case 1: Saved recipe — loaded by ID from FavouriteService
+        // Case 1: Pre-loaded recipe (prefetched by CookbookDetailViewModel)
+        //          Content is ready immediately — no async loading needed.
+        if (query.TryGetValue("Recipe", out var recipeObj) && recipeObj is SavedRecipe preloaded)
+        {
+            IsSavedRecipe = true;
+            Recipe = preloaded;
+            NotifyVisibilityChanged();
+            BuildIngredientItems();
+            BuildMethodSteps();
+            return;
+        }
+
+        // Case 2: Saved recipe — loaded by ID from FavouriteService
         if (query.TryGetValue("RecipeId", out var id))
         {
             IsSavedRecipe = true;
@@ -128,7 +140,7 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
             return;
         }
 
-        // Case 2: Web/AI recipe — loaded from scraping or AI service
+        // Case 3: Web/AI recipe — loaded from scraping or AI service
         if (query.ContainsKey("RecipeUrl") && query.ContainsKey("provider") && query.ContainsKey("Recipe"))
         {
             IsSavedRecipe = false;

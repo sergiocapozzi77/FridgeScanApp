@@ -19,70 +19,7 @@
 
     <Grid>
 
-        <!-- SKELETON (visible during loading, fades out when data arrives) -->
-        <ScrollView x:Name="Skeleton">
-            <VerticalStackLayout Spacing="0" Padding="0,0,0,40">
-
-                <!-- Hero skeleton -->
-                <Grid HeightRequest="340" BackgroundColor="#14142E">
-                    <VerticalStackLayout VerticalOptions="End" Padding="20,0,20,20" Spacing="8">
-                        <Border BackgroundColor="#2A2A50"
-                                HeightRequest="30" WidthRequest="260"
-                                StrokeShape="RoundRectangle 15" Stroke="Transparent"
-                                HorizontalOptions="Start" />
-                        <Border BackgroundColor="#2A2A50"
-                                HeightRequest="16" WidthRequest="160"
-                                StrokeShape="RoundRectangle 8" Stroke="Transparent"
-                                HorizontalOptions="Start" />
-                    </VerticalStackLayout>
-                </Grid>
-
-                <VerticalStackLayout Padding="16,20,16,40" Spacing="20">
-
-                    <!-- Metadata chips skeleton -->
-                    <HorizontalStackLayout Spacing="10">
-                        <Border BackgroundColor="#1C1F3A" WidthRequest="100" HeightRequest="48"
-                                StrokeShape="RoundRectangle 16" Stroke="Transparent" />
-                        <Border BackgroundColor="#1C1F3A" WidthRequest="120" HeightRequest="48"
-                                StrokeShape="RoundRectangle 16" Stroke="Transparent" />
-                        <Border BackgroundColor="#1C1F3A" WidthRequest="80" HeightRequest="48"
-                                StrokeShape="RoundRectangle 16" Stroke="Transparent" />
-                    </HorizontalStackLayout>
-
-                    <!-- Description skeleton -->
-                    <VerticalStackLayout Spacing="8">
-                        <Border BackgroundColor="#1C1F3A" HeightRequest="14"
-                                StrokeShape="RoundRectangle 7" Stroke="Transparent" />
-                        <Border BackgroundColor="#1C1F3A" HeightRequest="14" WidthRequest="220"
-                                StrokeShape="RoundRectangle 7" Stroke="Transparent"
-                                HorizontalOptions="Start" />
-                    </VerticalStackLayout>
-
-                    <!-- Action buttons skeleton -->
-                    <HorizontalStackLayout Spacing="10">
-                        <Border BackgroundColor="#1C1F3A" WidthRequest="110" HeightRequest="42"
-                                StrokeShape="RoundRectangle 21" Stroke="Transparent" />
-                        <Border BackgroundColor="#1C1F3A" WidthRequest="90" HeightRequest="42"
-                                StrokeShape="RoundRectangle 21" Stroke="Transparent" />
-                        <Border BackgroundColor="#1C1F3A" WidthRequest="130" HeightRequest="42"
-                                StrokeShape="RoundRectangle 21" Stroke="Transparent" />
-                    </HorizontalStackLayout>
-
-                    <!-- Ingredients skeleton -->
-                    <Border BackgroundColor="#131629" HeightRequest="180"
-                            StrokeShape="RoundRectangle 20" Stroke="Transparent" />
-
-                    <!-- Method skeleton -->
-                    <Border BackgroundColor="#131629" HeightRequest="220"
-                            StrokeShape="RoundRectangle 20" Stroke="Transparent" />
-
-                </VerticalStackLayout>
-
-            </VerticalStackLayout>
-        </ScrollView>
-
-        <!-- REAL CONTENT (hidden until data loads) -->
-        <ScrollView x:Name="RealContent" Opacity="0" InputTransparent="True">
+        <ScrollView>
 
             <VerticalStackLayout Spacing="0">
 
