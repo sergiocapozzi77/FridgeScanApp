@@ -173,8 +173,8 @@ public partial class ProductsPage : ContentPage
 
     private void OnSearchEntryUnfocused(object sender, FocusEventArgs e)
     {
-        if (ExpandedToolbar.IsVisible)
-            OnSearchDismissTapped(sender, e);
+        // Dismiss keyboard without collapsing the search bar
+        hiddenEntry.HideSoftInputAsync(CancellationToken.None);
     }
 
     private void OnSearchEntryHandlerChanged(object sender, EventArgs e)
