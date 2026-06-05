@@ -7,6 +7,14 @@ public partial class CookbookDetailPage : ContentPage
 {
     private readonly CookbookDetailViewModel? _vm;
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        // Reset any exit animation transform from back-navigation
+        TranslationY = 0;
+        Opacity = 1;
+    }
+
     public CookbookDetailPage()
     {
         InitializeComponent();
@@ -17,6 +25,11 @@ public partial class CookbookDetailPage : ContentPage
 
     private async void OnBackClicked(object? sender, TappedEventArgs e)
     {
+        // Exit transition: slide down + fade out before popping
+        await Task.WhenAll(
+            this.TranslateTo(0, 60, 150, Easing.CubicIn),
+            this.FadeTo(0, 150, Easing.CubicIn)
+        );
         await Shell.Current.GoToAsync("..");
     }
 
