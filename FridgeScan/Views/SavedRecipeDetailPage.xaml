@@ -26,9 +26,10 @@
                 <!-- HERO IMAGE -->
                 <Grid HeightRequest="340">
 
-                    <Image
+                    <controls:ProgressiveImage
                         Source="{Binding Recipe.ImageUrl}"
-                        Aspect="AspectFill" />
+                        Aspect="AspectFill"
+                        PlaceholderColor="#0D1023" />
 
                     <!-- Gradient Overlay -->
                     <Grid>

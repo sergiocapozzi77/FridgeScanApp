@@ -1,3 +1,5 @@
+using FridgeScan.Controls;
+
 namespace FridgeScan.Views;
 
 public class CookbookMosaic : ContentView
@@ -87,12 +89,14 @@ public class CookbookMosaic : ContentView
         }
     }
 
-    private static Image CreateImage(string url)
+    private static ProgressiveImage CreateImage(string url)
     {
-        return new Image
+        return new ProgressiveImage
         {
-            Source = ImageSource.FromUri(new Uri(url)),
-            Aspect = Aspect.AspectFill
+            Source = url,
+            Aspect = Aspect.AspectFill,
+            CornerRadius = 0,
+            PlaceholderColor = Color.FromArgb("#161638"),
         };
     }
 }
