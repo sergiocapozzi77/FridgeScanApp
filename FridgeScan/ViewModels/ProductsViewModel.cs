@@ -136,25 +136,6 @@ public partial class ProductsViewModel : BaseViewModel
     }
 
 
-    public void RefreshGrouping()
-    {
-        GroupedProducts.Clear();
-
-        if (productsManager.Products == null)
-            return;
-
-        var groups = productsManager.Products
-            .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category)
-            .OrderBy(g => g.Key);
-
-        foreach (var group in groups)
-        {
-            GroupedProducts.Add(
-                new ListViewFoodCategory(group.Key, group.ToList())
-            );
-        }
-    }
-
     public void RefreshDisplay()
     {
         GroupedProducts.Clear();
@@ -240,48 +221,6 @@ public partial class ProductsViewModel : BaseViewModel
     {
         RefreshDisplay();
     }
-
-    private void AddProductToGroups(Product product)
-    {
-        var category = string.IsNullOrWhiteSpace(product.Category)
-            ? "Other"
-            : product.Category;
-
-        var group = GroupedProducts.FirstOrDefault(g => g.FoodCategory == category);
-
-        // Create the group if missing
-        if (group == null)
-        {
-            group = new ListViewFoodCategory(category, new List<Product>());
-            GroupedProducts.Add(group);
-
-            // keep ordering alphabetical
-            var ordered = GroupedProducts.OrderBy(g => g.FoodCategory).ToList();
-            GroupedProducts.Clear();
-            foreach (var g in ordered)
-                GroupedProducts.Add(g);
-        }
-
-        group.FoodMenuCollection.Add(product);
-    }
-
-    private void RemoveProductFromGroups(Product product)
-    {
-        var category = string.IsNullOrWhiteSpace(product.Category)
-            ? "Other"
-            : product.Category;
-
-        var group = GroupedProducts.FirstOrDefault(g => g.FoodCategory == category);
-        if (group == null)
-            return;
-
-        group.FoodMenuCollection.Remove(product);
-
-        // Remove empty groups to keep UI tidy
-        if (group.FoodMenuCollection.Count == 0)
-            GroupedProducts.Remove(group);
-    }
-
 
     public void OnAddItem()
     {
