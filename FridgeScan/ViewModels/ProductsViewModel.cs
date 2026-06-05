@@ -114,7 +114,7 @@ public partial class ProductsViewModel : BaseViewModel
 
         productsManager.Init(items);
 
-        RefreshGrouping();
+        RefreshDisplay();
     }
 
     private async void LoadSuggestionsFromJson()
@@ -155,65 +155,90 @@ public partial class ProductsViewModel : BaseViewModel
         }
     }
 
+    public void RefreshDisplay()
+    {
+        GroupedProducts.Clear();
+
+        if (productsManager.Products == null)
+            return;
+
+        IEnumerable<Product> query = productsManager.Products;
+
+        // Apply search filter
+        if (!string.IsNullOrEmpty(SearchText))
+        {
+            query = query.Where(p =>
+                p.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Apply expiry filter
+        if (ActiveFilter == ProductFilterMode.ExpiringSoon)
+        {
+            // Shows products expiring within 7 days OR already expired
+            query = query.Where(p =>
+                p.DaysUntilExpiry.HasValue && p.DaysUntilExpiry.Value <= 7);
+        }
+        else if (ActiveFilter == ProductFilterMode.Expired)
+        {
+            query = query.Where(p =>
+                p.DaysUntilExpiry.HasValue && p.DaysUntilExpiry.Value < 0);
+        }
+
+        // Group by category
+        var groups = query
+            .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category);
+
+        // Apply sort mode
+        if (ActiveSort == ProductSortMode.Alphabetical)
+        {
+            var sorted = groups
+                .OrderBy(g => g.Key)
+                .Select(g => new ListViewFoodCategory(
+                    g.Key,
+                    g.OrderBy(p => p.Name).ToList()))
+                .ToList();
+
+            foreach (var g in sorted)
+                GroupedProducts.Add(g);
+        }
+        else // ByExpiry
+        {
+            var sorted = groups
+                .OrderBy(g => g.Min(p => p.DaysUntilExpiry ?? int.MaxValue))
+                .Select(g => new ListViewFoodCategory(
+                    g.Key,
+                    g.OrderBy(p => p.DaysUntilExpiry ?? int.MaxValue)
+                     .ThenBy(p => p.Name)
+                     .ToList()))
+                .ToList();
+
+            foreach (var g in sorted)
+                GroupedProducts.Add(g);
+        }
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        RefreshDisplay();
+    }
+
+    partial void OnActiveFilterChanged(ProductFilterMode value)
+    {
+        RefreshDisplay();
+    }
+
+    partial void OnActiveSortChanged(ProductSortMode value)
+    {
+        RefreshDisplay();
+    }
+
     /// <summary>
-    /// Syncs groupings in-place after edits/deletes from detail page.
-    /// Preserves scroll position by avoiding GroupedProducts.Clear().
+    /// Syncs groupings after edits/deletes from detail page.
+    /// Now respects active filter/sort/search by calling RefreshDisplay.
     /// </summary>
     public void RefreshAfterEdit()
     {
-        if (productsManager.Products == null) return;
-
-        var desired = productsManager.Products
-            .GroupBy(p => string.IsNullOrWhiteSpace(p.Category) ? "Other" : p.Category)
-            .OrderBy(g => g.Key)
-            .ToList();
-
-        var desiredKeys = desired.Select(g => g.Key).ToHashSet();
-
-        // Remove groups that no longer have any products
-        for (int i = GroupedProducts.Count - 1; i >= 0; i--)
-        {
-            if (!desiredKeys.Contains(GroupedProducts[i].FoodCategory))
-                GroupedProducts.RemoveAt(i);
-        }
-
-        var existingGroups = GroupedProducts.ToDictionary(g => g.FoodCategory);
-        int insertIndex = 0;
-
-        foreach (var group in desired)
-        {
-            if (existingGroups.TryGetValue(group.Key, out var existingGroup))
-            {
-                // Sync products in this group
-                var desiredProducts = group.ToList();
-                var desiredIds = desiredProducts.Select(p => p.RowId).ToHashSet();
-
-                // Remove products deleted or moved to another category
-                for (int i = existingGroup.FoodMenuCollection.Count - 1; i >= 0; i--)
-                {
-                    if (!desiredIds.Contains(existingGroup.FoodMenuCollection[i].RowId))
-                        existingGroup.FoodMenuCollection.RemoveAt(i);
-                }
-
-                // Add products that moved into this category
-                foreach (var product in desiredProducts)
-                {
-                    if (!existingGroup.FoodMenuCollection.Any(p => p.RowId == product.RowId))
-                        existingGroup.FoodMenuCollection.Add(product);
-                }
-
-                // Ensure alphabetical ordering of groups
-                var currentIndex = GroupedProducts.IndexOf(existingGroup);
-                if (currentIndex != insertIndex && currentIndex >= 0)
-                    GroupedProducts.Move(currentIndex, insertIndex);
-            }
-            else
-            {
-                // New group
-                GroupedProducts.Insert(insertIndex, new ListViewFoodCategory(group.Key, group.ToList()));
-            }
-            insertIndex++;
-        }
+        RefreshDisplay();
     }
 
     private void AddProductToGroups(Product product)
@@ -295,7 +320,7 @@ public partial class ProductsViewModel : BaseViewModel
             product.ExpiryDate = expiryDate;
 
         productsManager.AddProduct(product);
-        AddProductToGroups(product);
+        RefreshDisplay();
 
          await productService.AddOrUpdateQuantityAsync(product);
     }
