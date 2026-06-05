@@ -51,12 +51,14 @@
                 <!-- Row 0: Toolbar pills (collapsed vs expanded) -->
                 <Grid Grid.Row="0" x:Name="ToolbarRow" HeightRequest="36">
 
-                    <!-- Collapsed: icon-only search + auto-sized filter/sort -->
-                    <HorizontalStackLayout x:Name="CollapsedToolbar"
-                                            Spacing="8"
-                                            VerticalOptions="Center">
-                        <!-- Search icon button (no text) -->
-                        <Border x:Name="SearchPill"
+                    <!-- Collapsed: search left, filter/sort right -->
+                    <Grid x:Name="CollapsedToolbar"
+                          ColumnDefinitions="Auto,*,Auto,Auto"
+                          ColumnSpacing="8"
+                          VerticalOptions="Center">
+                        <!-- Search icon button (left) -->
+                        <Border Grid.Column="0"
+                                x:Name="SearchPill"
                                 BackgroundColor="#1E1E3A"
                                 StrokeShape="RoundRectangle 18"
                                 Stroke="Transparent"
@@ -74,8 +76,11 @@
                                    VerticalOptions="Center" />
                         </Border>
 
-                        <!-- Filter pill (auto-width) -->
-                        <Border x:Name="FilterPill"
+                        <!-- Spacer fills remaining space -->
+
+                        <!-- Filter pill (right) -->
+                        <Border Grid.Column="2"
+                                x:Name="FilterPill"
                                 BackgroundColor="#1E1E3A"
                                 StrokeShape="RoundRectangle 18"
                                 Stroke="Transparent"
@@ -107,8 +112,9 @@
                             </HorizontalStackLayout>
                         </Border>
 
-                        <!-- Sort pill (auto-width) -->
-                        <Border x:Name="SortPill"
+                        <!-- Sort pill (right) -->
+                        <Border Grid.Column="3"
+                                x:Name="SortPill"
                                 BackgroundColor="#1E1E3A"
                                 StrokeShape="RoundRectangle 18"
                                 Stroke="Transparent"
@@ -139,7 +145,7 @@
                                         VerticalOptions="Center" />
                             </HorizontalStackLayout>
                         </Border>
-                    </HorizontalStackLayout>
+                    </Grid>
 
                     <!-- Expanded: search bar + filter + sort on one row -->
                     <Grid x:Name="ExpandedToolbar"
@@ -562,14 +568,14 @@
                             HeightRequest="56"
                             VerticalOptions="End"
                             HorizontalOptions="End"
-                            Margin="0,0,16,16"
+                            Margin="0,0,16,20"
                             InputTransparent="False"
                             ZIndex="100">
                         <Border.Shadow>
-                            <Shadow Brush="#40000000"
-                                    Offset="0,4"
-                                    Radius="8"
-                                    Opacity="0.4" />
+                            <Shadow Brush="Black"
+                                    Offset="0,6"
+                                    Radius="16"
+                                    Opacity="0.5" />
                         </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BarcodeCommand}" />
