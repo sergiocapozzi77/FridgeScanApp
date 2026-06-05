@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using FridgeScan.Models;
 using FridgeScan.Services;
 using FridgeScan.Services.RecipeImport;
+using System.Text.RegularExpressions;
 
 namespace FridgeScan.ViewModels;
 
@@ -13,6 +14,30 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     private readonly FavouriteService _favouriteService;
     private readonly Func<string, IRecipeService> _recipeServiceFactory;
     private readonly RecipeAiService _recipeAiService;
+    private readonly IRecipeIngredientParser _ingredientParser;
+
+    private int _baseServings = 4;
+    private readonly List<ParsedIngredient> _parsedIngredients = new();
+
+    private static readonly Regex ServingNumberRegex = new(@"(\d+)", RegexOptions.Compiled);
+
+    /// <summary>
+    /// Extracts the first number from a serving string (e.g. "4", "4-6", "Serves 4").
+    /// Returns 4 as default when no number is found.
+    /// </summary>
+    private static int ParseServingCount(string? serving)
+    {
+        if (string.IsNullOrWhiteSpace(serving))
+            return 4;
+        var match = ServingNumberRegex.Match(serving);
+        return match.Success && int.TryParse(match.Groups[1].Value, out var count) ? count : 4;
+    }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ServingsLabel))]
+    private int servingCount = 4;
+
+    public string ServingsLabel => $"{ServingCount} servings";
 
     public string TotalTimeDisplay =>
         !string.IsNullOrEmpty(Recipe?.TotalTime)
@@ -106,16 +131,45 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         }
     }
 
+    [RelayCommand]
+    private void IncreaseServings()
+    {
+        var newServings = ServingCount + 1;
+        var ratio = (float)newServings / _baseServings;
+        ServingCount = newServings;
+        RecalculateQuantities(ratio);
+    }
+
+    [RelayCommand]
+    private void DecreaseServings()
+    {
+        if (ServingCount <= 1) return;
+        var newServings = ServingCount - 1;
+        var ratio = (float)newServings / _baseServings;
+        ServingCount = newServings;
+        RecalculateQuantities(ratio);
+    }
+
+    private void RecalculateQuantities(float ratio)
+    {
+        foreach (var item in IngredientItems)
+        {
+            item.AdjustQuantity(ratio);
+        }
+    }
+
     public SavedRecipeDetailViewModel(
         CookbookService cookbookService,
         FavouriteService favouriteService,
         Func<string, IRecipeService> recipeServiceFactory,
-        RecipeAiService recipeAiService)
+        RecipeAiService recipeAiService,
+        IRecipeIngredientParser ingredientParser)
     {
         _cookbookService = cookbookService;
         _favouriteService = favouriteService;
         _recipeServiceFactory = recipeServiceFactory;
         _recipeAiService = recipeAiService;
+        _ingredientParser = ingredientParser;
     }
 
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -269,9 +323,27 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     private void BuildIngredientItems()
     {
         IngredientItems.Clear();
+        _parsedIngredients.Clear();
         if (Recipe?.Ingredients == null) return;
-        foreach (var ing in Recipe.Ingredients)
-            IngredientItems.Add(new IngredientItem(ing));
+
+        // Set base servings from recipe data (default 4)
+        _baseServings = ParseServingCount(Recipe.Serving);
+        ServingCount = _baseServings;
+
+        var parsedList = _ingredientParser.Parse(Recipe.Ingredients);
+        for (int i = 0; i < Recipe.Ingredients.Count; i++)
+        {
+            var raw = Recipe.Ingredients[i];
+            var parsed = i < parsedList.Count ? parsedList[i] : null;
+
+            _parsedIngredients.Add(parsed!);
+
+            IngredientItems.Add(new IngredientItem(
+                raw,
+                parsed?.Quantity,
+                parsed?.Unit,
+                parsed?.Name));
+        }
     }
 
     private void BuildMethodSteps()

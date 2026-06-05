@@ -41,6 +41,7 @@ public static partial class MauiProgram
         builder.Services.AddSingleton<ProductDetailViewModel>();
 
         // Recipe import pipeline
+        builder.Services.AddSingleton<IRecipeIngredientParser, RecipeIngredientParser>();
         builder.Services.AddSingleton<IRecipeImageExtractor, RecipeImageExtractor>();
         builder.Services.AddSingleton<IRecipeExtractor, JsonLdRecipeExtractor>();
         builder.Services.AddSingleton<IRecipeExtractor, NextDataRecipeExtractor>();
