@@ -5,6 +5,9 @@ using System.Windows.Input;
 
 namespace FridgeScan.ViewModels;
 
+public enum ProductFilterMode { None, ExpiringSoon, Expired }
+public enum ProductSortMode { Alphabetical, ByExpiry }
+
 public partial class ProductsViewModel : BaseViewModel
 {
   
@@ -48,6 +51,28 @@ public partial class ProductsViewModel : BaseViewModel
     public ICommand AddItemCommand { get; }
 
     public ICommand BarcodeCommand { get; }
+
+    // -- New filter/sort/search state --
+
+    [ObservableProperty]
+    private string searchText = string.Empty;
+
+    [ObservableProperty]
+    private bool isSearchExpanded;
+
+    [ObservableProperty]
+    private bool isFilterExpanded;
+
+    [ObservableProperty]
+    private bool isSortExpanded;
+
+    [ObservableProperty]
+    private ProductFilterMode activeFilter;
+
+    [ObservableProperty]
+    private ProductSortMode activeSort;
+
+    // -- End new state --
 
     public ProductsViewModel(ProductService productService, ActivityService activityService, ProductsManager productsManager)
     {
