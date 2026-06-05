@@ -104,118 +104,118 @@
             </Label>
         </VerticalStackLayout>
 
-        <!-- Recipe list -->
-        <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding Recipes}"
-                        SelectionMode="Single"
-                        SelectionChanged="OnRecipeSelected"
-                        Margin="12,0">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:SavedRecipe">
-                    <Border Margin="8,4"
-                            Padding="0"
-                            BackgroundColor="#161638"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="#14FFFFFF"
-                            StrokeThickness="1">
-                        <Grid ColumnDefinitions="130,*" HeightRequest="100">
-                            <controls:ProgressiveImage Grid.Column="0"
-                                                        Source="{Binding ImageUrl}"
-                                                        Aspect="AspectFill"
-                                                        CornerRadius="0"
-                                                        PlaceholderColor="#161638"
-                                                        WidthRequest="130"
-                                                        HeightRequest="100" />
-                            <Grid Grid.Column="1"
-                                  ColumnDefinitions="*,Auto"
-                                  Padding="12, 4">
-                                <VerticalStackLayout VerticalOptions="Center" Spacing="2">
-                                    <Label Text="{Binding Name}"
-                                           FontSize="15"
-                                           FontAttributes="Bold"
-                                           TextColor="White"
-                                           LineBreakMode="TailTruncation"
-                                           MaxLines="2" />
-                                    <Label Text="{Binding RecipeSource}"
-                                           FontSize="12"
-                                           TextColor="#777" />
-                                    <HorizontalStackLayout Spacing="8" Margin="0,4,0,0">
-                                        <Border BackgroundColor="#3A3420"
-                                                StrokeShape="RoundRectangle 10"
-                                                Stroke="Transparent"
-                                                Padding="10,0"
-                                                HeightRequest="22"
-                                                IsVisible="{Binding TotalTime, Converter={StaticResource IsNotNullConverter}}">
-                                            <Label Text="{Binding TotalTime}"
-                                                   FontSize="10"
-                                                   TextColor="#E8C86A"
-                                                   VerticalOptions="Center" />
-                                        </Border>
-                                        <Border BackgroundColor="#1E3A2E"
-                                                StrokeShape="RoundRectangle 10"
-                                                Stroke="Transparent"
-                                                Padding="10,0"
-                                                HeightRequest="22"
-                                                IsVisible="{Binding Difficulty, Converter={StaticResource IsNotNullConverter}}">
-                                            <Label Text="{Binding Difficulty}"
-                                                   FontSize="10"
-                                                   TextColor="#81C784"
-                                                   VerticalOptions="Center" />
-                                        </Border>
-                                        <Border BackgroundColor="#2A1E3A"
-                                                StrokeShape="RoundRectangle 10"
-                                                Stroke="Transparent"
-                                                Padding="10,0"
-                                                HeightRequest="22"
-                                                IsVisible="{Binding Serving, Converter={StaticResource IsNotNullConverter}}">
-                                            <Label Text="{Binding Serving}"
-                                                   FontSize="10"
-                                                   TextColor="#CE93D8"
-                                                   VerticalOptions="Center" />
-                                        </Border>
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-                                <Label Grid.Column="1"
-                                       Text="&#x22ef;"
-                                       FontSize="20"
-                                       TextColor="#666"
-                                       VerticalOptions="Center"
-                                       Padding="8,0">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CookbookDetailViewModel}}, Path=EditRecipeCommand}"
-                                            CommandParameter="{Binding}" />
-                                    </Label.GestureRecognizers>
-                                </Label>
+        <!-- Content area (fades in after data loads) -->
+        <Grid Grid.Row="1" x:Name="ContentArea">
+            <CollectionView ItemsSource="{Binding Recipes}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnRecipeSelected"
+                            Margin="12,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:SavedRecipe">
+                        <Border Margin="8,4"
+                                Padding="0"
+                                BackgroundColor="#161638"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="#14FFFFFF"
+                                StrokeThickness="1">
+                            <Grid ColumnDefinitions="130,*" HeightRequest="100">
+                                <controls:ProgressiveImage Grid.Column="0"
+                                                            Source="{Binding ImageUrl}"
+                                                            Aspect="AspectFill"
+                                                            CornerRadius="0"
+                                                            PlaceholderColor="#161638"
+                                                            WidthRequest="130"
+                                                            HeightRequest="100" />
+                                <Grid Grid.Column="1"
+                                      ColumnDefinitions="*,Auto"
+                                      Padding="12, 4">
+                                    <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               TextColor="White"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2" />
+                                        <Label Text="{Binding RecipeSource}"
+                                               FontSize="12"
+                                               TextColor="#777" />
+                                        <HorizontalStackLayout Spacing="8" Margin="0,4,0,0">
+                                            <Border BackgroundColor="#3A3420"
+                                                    StrokeShape="RoundRectangle 10"
+                                                    Stroke="Transparent"
+                                                    Padding="10,0"
+                                                    HeightRequest="22"
+                                                    IsVisible="{Binding TotalTime, Converter={StaticResource IsNotNullConverter}}">
+                                                <Label Text="{Binding TotalTime}"
+                                                       FontSize="10"
+                                                       TextColor="#E8C86A"
+                                                       VerticalOptions="Center" />
+                                            </Border>
+                                            <Border BackgroundColor="#1E3A2E"
+                                                    StrokeShape="RoundRectangle 10"
+                                                    Stroke="Transparent"
+                                                    Padding="10,0"
+                                                    HeightRequest="22"
+                                                    IsVisible="{Binding Difficulty, Converter={StaticResource IsNotNullConverter}}">
+                                                <Label Text="{Binding Difficulty}"
+                                                       FontSize="10"
+                                                       TextColor="#81C784"
+                                                       VerticalOptions="Center" />
+                                            </Border>
+                                            <Border BackgroundColor="#2A1E3A"
+                                                    StrokeShape="RoundRectangle 10"
+                                                    Stroke="Transparent"
+                                                    Padding="10,0"
+                                                    HeightRequest="22"
+                                                    IsVisible="{Binding Serving, Converter={StaticResource IsNotNullConverter}}">
+                                                <Label Text="{Binding Serving}"
+                                                       FontSize="10"
+                                                       TextColor="#CE93D8"
+                                                       VerticalOptions="Center" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="1"
+                                           Text="&#x22ef;"
+                                           FontSize="20"
+                                           TextColor="#666"
+                                           VerticalOptions="Center"
+                                           Padding="8,0">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:CookbookDetailViewModel}}, Path=EditRecipeCommand}"
+                                                CommandParameter="{Binding}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-            <CollectionView.EmptyView>
-                <VerticalStackLayout HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     Padding="0,60"
-                                     Spacing="8">
-                    <Label Text="No recipes yet"
-                           FontSize="16"
-                           TextColor="#8888AA"
-                           HorizontalOptions="Center" />
-                    <Label Text="Import a recipe to get started"
-                           FontSize="13"
-                           TextColor="#8888AA"
-                           HorizontalOptions="Center" />
-                </VerticalStackLayout>
-            </CollectionView.EmptyView>
-        </CollectionView>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center"
+                                         VerticalOptions="Center"
+                                         Padding="0,60"
+                                         Spacing="8">
+                        <Label Text="No recipes yet"
+                               FontSize="16"
+                               TextColor="#8888AA"
+                               HorizontalOptions="Center" />
+                        <Label Text="Import a recipe to get started"
+                               FontSize="13"
+                               TextColor="#8888AA"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
 
-        <sfBusy:SfBusyIndicator Grid.Row="1"
-                                 AnimationType="CircularMaterial"
-                                 IsRunning="{Binding IsLoading}"
-                                 IsVisible="{Binding IsLoading}"
-                                 HorizontalOptions="Center"
-                                 VerticalOptions="Center"
-                                 HeightRequest="60"
-                                 WidthRequest="60" />
+            <sfBusy:SfBusyIndicator AnimationType="CircularMaterial"
+                                     IsRunning="{Binding IsLoading}"
+                                     IsVisible="{Binding IsLoading}"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     HeightRequest="60"
+                                     WidthRequest="60" />
+        </Grid>
     </Grid>
 </ContentPage>

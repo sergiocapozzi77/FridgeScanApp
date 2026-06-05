@@ -1,13 +1,16 @@
-using System.Collections.Concurrent;
-using System.Net.Http;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace FridgeScan.Controls;
 
 /// <summary>
-/// An image control that shows a solid placeholder immediately while downloading
-/// the remote image via HttpClient, then crossfades to the real image.
-/// Downloaded bytes are cached in-memory so back-navigation loads instantly.
+/// An image control that shows a solid placeholder immediately while
+/// MAUI/Glide loads the remote image natively. After a brief minimum
+/// display time the image crossfades in, avoiding the blank-rectangle
+/// pop that normally happens with direct Image bindings.
+///
+/// The real image is loaded via ImageSource.FromUri so that platform
+/// optimisations (Glide disk cache on Android, efficient decoding)
+/// are preserved — unlike a raw HttpClient download.
 /// </summary>
 public class ProgressiveImage : ContentView
 {
@@ -28,6 +31,10 @@ public class ProgressiveImage : ContentView
     public static readonly BindableProperty PlaceholderColorProperty =
         BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(ProgressiveImage),
             defaultValue: Color.FromArgb("#161638"), propertyChanged: OnVisualPropertyChanged);
+
+    public static readonly BindableProperty TransitionDelayProperty =
+        BindableProperty.Create(nameof(TransitionDelay), typeof(int), typeof(ProgressiveImage),
+            defaultValue: 400);
 
     public string Source
     {
@@ -53,6 +60,13 @@ public class ProgressiveImage : ContentView
         set => SetValue(PlaceholderColorProperty, value);
     }
 
+    /// <summary>Minimum ms the placeholder is visible before crossfade starts.</summary>
+    public int TransitionDelay
+    {
+        get => (int)GetValue(TransitionDelayProperty);
+        set => SetValue(TransitionDelayProperty, value);
+    }
+
     #endregion
 
     #region Internal state
@@ -60,15 +74,13 @@ public class ProgressiveImage : ContentView
     private readonly Border _placeholder;
     private readonly Image _image;
     private readonly Label _errorLabel;
-
-    private static readonly HttpClient _httpClient = new()
-    {
-        Timeout = TimeSpan.FromSeconds(15)
-    };
-
-    private static readonly ConcurrentDictionary<string, byte[]> _cache = new();
-
     private CancellationTokenSource? _cts;
+
+    /// <summary>Crossfade duration for the image fade-in.</summary>
+    private const uint FadeDuration = 400;
+
+    /// <summary>Crossfade duration for the placeholder fade-out.</summary>
+    private const uint PlaceholderFadeDuration = 300;
 
     #endregion
 
@@ -77,7 +89,7 @@ public class ProgressiveImage : ContentView
         _image = new Image
         {
             Opacity = 0,
-            Aspect = Aspect.AspectFill,
+            Aspect = Microsoft.Maui.Aspect.AspectFill,
         };
 
         _placeholder = new Border
@@ -90,7 +102,7 @@ public class ProgressiveImage : ContentView
 
         _errorLabel = new Label
         {
-            Text = "\U0001f37d️", // 🍽️ fork and knife emoji
+            Text = "\U0001f37d️",
             FontSize = 24,
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.Center,
@@ -131,12 +143,11 @@ public class ProgressiveImage : ContentView
     {
         var url = Source;
 
-        // Cancel any in-flight download from a previous binding change
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
 
-        // Reset to loading state
+        // Reset to loading state (placeholder visible, image hidden)
         _image.Opacity = 0;
         _image.Source = null;
         _errorLabel.IsVisible = false;
@@ -154,39 +165,28 @@ public class ProgressiveImage : ContentView
 
         try
         {
-            // Check / populate in-memory cache
-            if (!_cache.TryGetValue(url, out var bytes))
-            {
-                bytes = await _httpClient.GetByteArrayAsync(url, token);
-                if (bytes.Length == 0)
-                    throw new InvalidOperationException("Empty image data");
+            // Start native image loading (Glide on Android, URLSession on iOS, etc.)
+            // This uses the platform's built-in disk cache and efficient decoding.
+            _image.Source = ImageSource.FromUri(new Uri(url));
 
-                _cache[url] = bytes;
-            }
-
-            token.ThrowIfCancellationRequested();
-
-            // Hand the bytes to MAUI via a stream provider
-            var capturedBytes = bytes;
-            _image.Source = ImageSource.FromStream(() => new MemoryStream(capturedBytes));
-
-            // Wait one frame so the Image element can start rendering
-            await Task.Delay(16, token);
+            // Wait the minimum display time so the placeholder is
+            // perceptible even when the image is cached.
+            await Task.Delay(TransitionDelay, token);
 
             token.ThrowIfCancellationRequested();
 
             // Crossfade: image fades in, placeholder fades out
             await Task.WhenAll(
-                _image.FadeTo(1, 300, Easing.CubicOut),
-                _placeholder.FadeTo(0, 200, Easing.CubicOut)
+                _image.FadeTo(1, FadeDuration, Easing.CubicOut),
+                _placeholder.FadeTo(0, PlaceholderFadeDuration, Easing.CubicOut)
             );
 
             _placeholder.IsVisible = false;
-            _placeholder.Opacity = 1; // reset for potential reuse
+            _placeholder.Opacity = 1; // reset for reuse
         }
         catch (OperationCanceledException)
         {
-            // A new Source was set before this one finished — the next load handles it
+            // A new Source was set — the next load handles it
         }
         catch (Exception)
         {

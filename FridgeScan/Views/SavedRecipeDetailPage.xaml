@@ -19,7 +19,7 @@
 
     <Grid>
 
-        <ScrollView>
+        <ScrollView x:Name="ContentPanel">
 
             <VerticalStackLayout Spacing="0">
 
@@ -29,7 +29,8 @@
                     <controls:ProgressiveImage
                         Source="{Binding Recipe.ImageUrl}"
                         Aspect="AspectFill"
-                        PlaceholderColor="#0D1023" />
+                        PlaceholderColor="#0D1023"
+                        TransitionDelay="600" />
 
                     <!-- Gradient Overlay -->
                     <Grid>
