@@ -147,13 +147,16 @@
                           ColumnDefinitions="Auto,*,Auto,Auto"
                           ColumnSpacing="8"
                           VerticalOptions="Center">
-                        <!-- Search icon prefix -->
+                        <!-- Search icon prefix (tap to collapse) -->
                         <Border BackgroundColor="#1E1E3A"
                                 StrokeShape="RoundRectangle 18"
                                 Stroke="Transparent"
                                 WidthRequest="36"
                                 HeightRequest="36"
                                 Padding="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSearchDismissTapped" />
+                            </Border.GestureRecognizers>
                             <Label Text="&#xe8b6;"
                                    FontFamily="Material"
                                    FontSize="16"
@@ -178,7 +181,8 @@
                                        FontSize="12"
                                        BackgroundColor="Transparent"
                                        Text="{Binding SearchText, Mode=TwoWay}"
-                                       VerticalOptions="Center" />
+                                       VerticalOptions="Center"
+                                       Unfocused="OnSearchEntryUnfocused" />
                                 <Border Grid.Column="1"
                                         x:Name="SearchDismiss"
                                         BackgroundColor="Transparent"
@@ -549,9 +553,9 @@
                         </sf:SfListView.ItemTemplate>
                     </sf:SfListView>
 
-                    <!-- Floating barcode FAB -->
+                    <!-- Floating barcode FAB (M3 expressive tonal) -->
                     <Border x:Name="BarcodeFab"
-                            BackgroundColor="#D0BCFF"
+                            BackgroundColor="#2A2E58"
                             StrokeShape="RoundRectangle 28"
                             Stroke="Transparent"
                             WidthRequest="56"
@@ -561,13 +565,19 @@
                             Margin="0,0,16,16"
                             InputTransparent="False"
                             ZIndex="100">
+                        <Border.Shadow>
+                            <Shadow Brush="#40000000"
+                                    Offset="0,4"
+                                    Radius="8"
+                                    Opacity="0.4" />
+                        </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BarcodeCommand}" />
                         </Border.GestureRecognizers>
-                        <Label Text="&#xef39;"
+                        <Label Text="barcode"
                                FontFamily="Material"
                                FontSize="22"
-                               TextColor="#0D0D2B"
+                               TextColor="#CCCCDD"
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
                     </Border>

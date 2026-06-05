@@ -15,6 +15,9 @@ public partial class ProductsPage : ContentPage
         BindingContext = vm;
 
         Loaded += OnLoaded;
+
+        // Remove Android Entry underline on the search field
+        SearchEntry.HandlerChanged += OnSearchEntryHandlerChanged;
     }
 
     protected override void OnAppearing()
@@ -166,6 +169,23 @@ public partial class ProductsPage : ContentPage
         ExpandedToolbar.IsVisible = false;
         CollapsedToolbar.IsVisible = true;
         vm.IsSearchExpanded = false;
+    }
+
+    private void OnSearchEntryUnfocused(object sender, FocusEventArgs e)
+    {
+        if (ExpandedToolbar.IsVisible)
+            OnSearchDismissTapped(sender, e);
+    }
+
+    private void OnSearchEntryHandlerChanged(object sender, EventArgs e)
+    {
+#if ANDROID
+        if (SearchEntry.Handler?.PlatformView is Android.Widget.EditText editText)
+        {
+            editText.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(
+                Android.Graphics.Color.Transparent);
+        }
+#endif
     }
 
     // ── Filter / Sort toggle handlers ────────────────────────────
