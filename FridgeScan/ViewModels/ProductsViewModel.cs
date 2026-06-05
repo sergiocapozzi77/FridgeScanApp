@@ -331,7 +331,7 @@ public partial class ProductsViewModel : BaseViewModel
         if (product == null) return;
 
         productsManager.RemoveProduct(product);
-        RemoveProductFromGroups(product);
+        RefreshDisplay();
 
         var success = await productService.DeleteProductAsync(product.RowId);
 
