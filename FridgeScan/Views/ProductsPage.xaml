@@ -31,57 +31,314 @@
 
         <!-- Large expressive header -->
         <StackLayout Grid.Row="0" Spacing="12" Padding="0,20,0,0">
-            <!-- Top row: title + action buttons -->
-            <Grid ColumnDefinitions="*,Auto,Auto" Padding="4,0,4,0">
-                <!-- Title -->
-                <VerticalStackLayout Grid.Column="0" Spacing="4">
-                    <Label Text="Inventory"
-                           FontSize="28"
-                           FontAttributes="Bold"
-                           TextColor="White"
-                           CharacterSpacing="-0.3" />
-                    <Label Text="Keep track of products and expiry dates"
-                           FontSize="13"
-                           TextColor="#8888AA" />
-                </VerticalStackLayout>
+            <!-- Page header: title + subtitle only (no action buttons) -->
+            <VerticalStackLayout Spacing="4" Padding="4,0,4,0">
+                <Label Text="Inventory"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       CharacterSpacing="-0.3" />
+                <Label Text="Keep track of products and expiry dates"
+                       FontSize="13"
+                       TextColor="#8888AA" />
+            </VerticalStackLayout>
 
-                <!-- Search button -->
-                <Border Grid.Column="1"
-                        BackgroundColor="#1E1E3A"
-                        StrokeShape="RoundRectangle 20"
-                        Stroke="Transparent"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        Margin="8,0,0,0">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnSearchTapped" />
-                    </Border.GestureRecognizers>
-                    <Label Text="&#xe8b6;"
-                           FontFamily="Material"
-                           FontSize="18"
-                           TextColor="#CCCCDD"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                </Border>
+            <!-- Action toolbar: Search, Filter, Sort pills -->
+            <Grid x:Name="ToolbarGrid"
+                  RowDefinitions="Auto,Auto"
+                  Margin="4,8,4,12"
+                  ColumnSpacing="8">
 
-                <!-- Barcode button -->
-                <Border Grid.Column="2"
-                        BackgroundColor="#1E1E3A"
-                        StrokeShape="RoundRectangle 20"
-                        Stroke="Transparent"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        Margin="8,0,0,0">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding BarcodeCommand}" CommandParameter="{Binding}" />
-                    </Border.GestureRecognizers>
-                    <Label Text="barcode"
-                           FontFamily="Material"
-                           FontSize="18"
-                           TextColor="#CCCCDD"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                </Border>
+                <!-- Row 0: Default pill row -->
+                <Grid Grid.Row="0"
+                      x:Name="CollapsedToolbar"
+                      ColumnDefinitions="2*,*,*"
+                      ColumnSpacing="8">
+
+                    <!-- Search pill -->
+                    <Border Grid.Column="0"
+                            x:Name="SearchPill"
+                            BackgroundColor="#1E1E3A"
+                            StrokeShape="RoundRectangle 18"
+                            Stroke="Transparent"
+                            HeightRequest="36"
+                            Padding="14,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSearchPillTapped" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Label Text="&#xe8b6;"
+                                   FontFamily="Material"
+                                   FontSize="14"
+                                   TextColor="#8888AA"
+                                   VerticalOptions="Center" />
+                            <Label Text="Search"
+                                   FontSize="12"
+                                   TextColor="#8888AA"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Filter pill -->
+                    <Border Grid.Column="1"
+                            x:Name="FilterPill"
+                            BackgroundColor="#1E1E3A"
+                            StrokeShape="RoundRectangle 18"
+                            Stroke="Transparent"
+                            HeightRequest="36"
+                            Padding="14,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnFilterPillTapped" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Label x:Name="FilterIcon"
+                                   Text="&#xe152;"
+                                   FontFamily="Material"
+                                   FontSize="14"
+                                   TextColor="#CCCCDD"
+                                   VerticalOptions="Center" />
+                            <Label x:Name="FilterLabel"
+                                   Text="Filter"
+                                   FontSize="12"
+                                   TextColor="#CCCCDD"
+                                   VerticalOptions="Center" />
+                            <!-- Active indicator dot -->
+                            <Border x:Name="FilterDot"
+                                    IsVisible="False"
+                                    WidthRequest="6"
+                                    HeightRequest="6"
+                                    BackgroundColor="#D0BCFF"
+                                    StrokeShape="RoundRectangle 3"
+                                    Stroke="Transparent"
+                                    VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Sort pill -->
+                    <Border Grid.Column="2"
+                            x:Name="SortPill"
+                            BackgroundColor="#1E1E3A"
+                            StrokeShape="RoundRectangle 18"
+                            Stroke="Transparent"
+                            HeightRequest="36"
+                            Padding="14,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSortPillTapped" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Label x:Name="SortIcon"
+                                   Text="&#xe164;"
+                                   FontFamily="Material"
+                                   FontSize="14"
+                                   TextColor="#CCCCDD"
+                                   VerticalOptions="Center" />
+                            <Label x:Name="SortLabel"
+                                   Text="Sort"
+                                   FontSize="12"
+                                   TextColor="#CCCCDD"
+                                   VerticalOptions="Center" />
+                            <Border x:Name="SortDot"
+                                    IsVisible="False"
+                                    WidthRequest="6"
+                                    HeightRequest="6"
+                                    BackgroundColor="#D0BCFF"
+                                    StrokeShape="RoundRectangle 3"
+                                    Stroke="Transparent"
+                                    VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Row 1: Expanded panels / secondary pills -->
+                <Grid Grid.Row="1" x:Name="ToolbarRow1">
+
+                    <!-- Search expanded bar (full width) -->
+                    <Border x:Name="SearchExpanded"
+                            IsVisible="False"
+                            BackgroundColor="#1E1E3A"
+                            StrokeShape="RoundRectangle 18"
+                            Stroke="#D0BCFF"
+                            HeightRequest="36"
+                            Padding="12,0">
+                        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                            <Label Grid.Column="0"
+                                   Text="&#xe8b6;"
+                                   FontFamily="Material"
+                                   FontSize="14"
+                                   TextColor="#D0BCFF"
+                                   VerticalOptions="Center" />
+                            <Entry Grid.Column="1"
+                                   x:Name="SearchEntry"
+                                   Placeholder="Search products..."
+                                   PlaceholderColor="#666688"
+                                   TextColor="White"
+                                   FontSize="12"
+                                   BackgroundColor="Transparent"
+                                   Text="{Binding SearchText, Mode=TwoWay}"
+                                   VerticalOptions="Center"
+                                   Margin="8,0,0,0" />
+                            <Border Grid.Column="2"
+                                    x:Name="SearchDismiss"
+                                    BackgroundColor="Transparent"
+                                    StrokeShape="RoundRectangle 12"
+                                    Stroke="Transparent"
+                                    WidthRequest="24"
+                                    HeightRequest="24"
+                                    VerticalOptions="Center">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSearchDismissTapped" />
+                                </Border.GestureRecognizers>
+                                <Label Text="&#xe5cd;"
+                                       FontFamily="Material"
+                                       FontSize="14"
+                                       TextColor="#8888AA"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Secondary Filter/Sort pills (shown when search is expanded) -->
+                    <HorizontalStackLayout x:Name="SecondaryPills"
+                                            IsVisible="False"
+                                            Spacing="8"
+                                            Margin="0,6,0,0">
+                        <Border BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="Transparent"
+                                HeightRequest="34"
+                                Padding="12,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSecondaryFilterTapped" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="&#xe152;"
+                                       FontFamily="Material"
+                                       FontSize="13"
+                                       TextColor="#CCCCDD" />
+                                <Label Text="Filter"
+                                       FontSize="11"
+                                       TextColor="#CCCCDD" />
+                            </HorizontalStackLayout>
+                        </Border>
+                        <Border BackgroundColor="#1E1E3A"
+                                StrokeShape="RoundRectangle 18"
+                                Stroke="Transparent"
+                                HeightRequest="34"
+                                Padding="12,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSecondarySortTapped" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="&#xe164;"
+                                       FontFamily="Material"
+                                       FontSize="13"
+                                       TextColor="#CCCCDD" />
+                                <Label Text="Sort"
+                                       FontSize="11"
+                                       TextColor="#CCCCDD" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <!-- Filter segment panel -->
+                    <Border x:Name="FilterPanel"
+                            IsVisible="False"
+                            BackgroundColor="#14142E"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="#2A2E58"
+                            Padding="4"
+                            HeightRequest="36"
+                            HorizontalOptions="Start"
+                            Margin="0,6,0,0">
+                        <HorizontalStackLayout Spacing="3" VerticalOptions="Center">
+                            <Border x:Name="FilterSegmentExpiring"
+                                    BackgroundColor="#2A2E58"
+                                    StrokeShape="RoundRectangle 9"
+                                    Stroke="Transparent"
+                                    Padding="12,7">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnFilterSegmentExpiringTapped" />
+                                </Border.GestureRecognizers>
+                                <Label x:Name="FilterLabelExpiring"
+                                       Text="Expiring soon"
+                                       FontSize="11"
+                                       TextColor="White"
+                                       VerticalOptions="Center" />
+                            </Border>
+                            <Border x:Name="FilterSegmentExpired"
+                                    BackgroundColor="Transparent"
+                                    StrokeShape="RoundRectangle 9"
+                                    Stroke="Transparent"
+                                    Padding="12,7">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnFilterSegmentExpiredTapped" />
+                                </Border.GestureRecognizers>
+                                <Label x:Name="FilterLabelExpired"
+                                       Text="Expired"
+                                       FontSize="11"
+                                       TextColor="#8888AA"
+                                       VerticalOptions="Center" />
+                            </Border>
+                            <Border x:Name="FilterSegmentAll"
+                                    BackgroundColor="Transparent"
+                                    StrokeShape="RoundRectangle 9"
+                                    Stroke="Transparent"
+                                    Padding="12,7">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnFilterSegmentAllTapped" />
+                                </Border.GestureRecognizers>
+                                <Label x:Name="FilterLabelAll"
+                                       Text="All"
+                                       FontSize="11"
+                                       TextColor="#8888AA"
+                                       VerticalOptions="Center" />
+                            </Border>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Sort segment panel -->
+                    <Border x:Name="SortPanel"
+                            IsVisible="False"
+                            BackgroundColor="#14142E"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="#2A2E58"
+                            Padding="4"
+                            HeightRequest="36"
+                            HorizontalOptions="End"
+                            Margin="0,6,0,0">
+                        <HorizontalStackLayout Spacing="3" VerticalOptions="Center">
+                            <Border x:Name="SortSegmentAZ"
+                                    BackgroundColor="#2A2E58"
+                                    StrokeShape="RoundRectangle 9"
+                                    Stroke="Transparent"
+                                    Padding="12,7">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSortSegmentAZTapped" />
+                                </Border.GestureRecognizers>
+                                <Label x:Name="SortLabelAZ"
+                                       Text="A-Z"
+                                       FontSize="11"
+                                       TextColor="White"
+                                       VerticalOptions="Center" />
+                            </Border>
+                            <Border x:Name="SortSegmentExpiry"
+                                    BackgroundColor="Transparent"
+                                    StrokeShape="RoundRectangle 9"
+                                    Stroke="Transparent"
+                                    Padding="12,7">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSortSegmentExpiryTapped" />
+                                </Border.GestureRecognizers>
+                                <Label x:Name="SortLabelExpiry"
+                                       Text="By expiry"
+                                       FontSize="11"
+                                       TextColor="#8888AA"
+                                       VerticalOptions="Center" />
+                            </Border>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
             </Grid>
 
             <!-- Add item card (tonal container wrapping SfAutocomplete) -->
@@ -281,6 +538,29 @@
                             </DataTemplate>
                         </sf:SfListView.ItemTemplate>
                     </sf:SfListView>
+
+                    <!-- Floating barcode FAB -->
+                    <Border x:Name="BarcodeFab"
+                            BackgroundColor="#D0BCFF"
+                            StrokeShape="RoundRectangle 28"
+                            Stroke="Transparent"
+                            WidthRequest="56"
+                            HeightRequest="56"
+                            VerticalOptions="End"
+                            HorizontalOptions="End"
+                            Margin="0,0,16,16"
+                            InputTransparent="False"
+                            ZIndex="100">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BarcodeCommand}" />
+                        </Border.GestureRecognizers>
+                        <Label Text="&#xef39;"
+                               FontFamily="Material"
+                               FontSize="22"
+                               TextColor="#0D0D2B"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
                 </Grid>
             </pulltoRefresh:SfPullToRefresh.PullableContent>
         </pulltoRefresh:SfPullToRefresh>

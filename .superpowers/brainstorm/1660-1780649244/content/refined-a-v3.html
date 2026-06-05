@@ -1,0 +1,116 @@
+<h2>Approach A v3 — Segments Aligned Under Their Pill</h2>
+<p class="subtitle">Filter and Sort chips expand downward with the segmented control anchored directly below the calling button.</p>
+
+<div class="section">
+  <h3>Sort expanded — segment anchored under Sort pill</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;max-width:360px;margin-bottom:16px;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;flex:2;">
+        <span>🔍</span><span>Search</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>⬇</span><span>Filter</span>
+      </div>
+      <div style="background:#2A2E58;border-radius:18px;padding:7px 14px;color:#D0BCFF;font-size:12px;display:flex;align-items:center;gap:6px;border:1px solid #D0BCFF;position:relative;">
+        <span>↕</span><span>Sort</span>
+        <!-- Decorative arrow connecting pill to its panel -->
+        <div style="position:absolute;bottom:-8px;left:50%;margin-left:-4px;width:8px;height:8px;background:#2A2E58;transform:rotate(45deg);border-left:1px solid #D0BCFF;border-top:1px solid #D0BCFF;"></div>
+      </div>
+    </div>
+    <!-- Expanded panel directly below Sort pill, right-aligned to pill -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+      <div style="background:#14142E;border-radius:12px;padding:4px;border:1px solid #2A2E58;">
+        <div style="display:flex;gap:3px;">
+          <div style="padding:7px 14px;border-radius:9px;background:#2A2E58;color:white;font-size:11px;">A-Z</div>
+          <div style="padding:7px 14px;border-radius:9px;color:#8888AA;font-size:11px;">By expiry</div>
+        </div>
+      </div>
+    </div>
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Cheese — 6 days</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — Expired</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Filter expanded — segment anchored under Filter pill</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;max-width:360px;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;flex:2;">
+        <span>🔍</span><span>Search</span>
+      </div>
+      <div style="background:#2A2E58;border-radius:18px;padding:7px 14px;color:#D0BCFF;font-size:12px;display:flex;align-items:center;gap:6px;border:1px solid #D0BCFF;position:relative;">
+        <span>⬇</span><span>Filter</span>
+        <div style="position:absolute;bottom:-8px;left:50%;margin-left:-4px;width:8px;height:8px;background:#2A2E58;transform:rotate(45deg);border-left:1px solid #D0BCFF;border-top:1px solid #D0BCFF;"></div>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>↕</span><span>Sort</span>
+      </div>
+    </div>
+    <!-- Expanded panel directly below Filter pill -->
+    <div style="display:flex;margin-bottom:12px;">
+      <div style="background:#14142E;border-radius:12px;padding:4px;border:1px solid #2A2E58;">
+        <div style="display:flex;gap:3px;">
+          <div style="padding:7px 14px;border-radius:9px;background:#2A2E58;color:white;font-size:11px;">Expiring soon</div>
+          <div style="padding:7px 14px;border-radius:9px;color:#8888AA;font-size:11px;">Expired</div>
+          <div style="padding:7px 14px;border-radius:9px;color:#8888AA;font-size:11px;">All</div>
+        </div>
+      </div>
+    </div>
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — Expired</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Cheese — 6 days</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Search expanded — text field spans full width</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;max-width:360px;">
+    <!-- Search bar expanded full-width -->
+    <div style="background:#1E1E3A;border-radius:18px;padding:0 14px;margin-bottom:6px;display:flex;align-items:center;gap:8px;border:1px solid #D0BCFF;height:38px;">
+      <span style="color:#D0BCFF;">🔍</span>
+      <span style="color:#CCCCDD;font-size:12px;flex:1;">Type to filter products...</span>
+      <span style="color:#8888AA;font-size:16px;">✕</span>
+    </div>
+    <!-- Filter and Sort drop to second row, left-aligned -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#CCCCDD;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>⬇</span><span>Filter</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#CCCCDD;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>↕</span><span>Sort</span>
+      </div>
+    </div>
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — Expired</div>
+  </div>
+  <p style="color:#8888AA;font-size:12px;margin-top:6px;">Search takes full width since it's the only expanded element in its row. When collapsed back, Filter & Sort return to the first row.</p>
+</div>
+
+<div class="section">
+  <h3>Summary of all states</h3>
+  <table style="width:100%;font-size:12px;border-collapse:collapse;margin-top:8px;">
+    <tr style="border-bottom:1px solid #1E1E3A;">
+      <th style="padding:8px 12px;text-align:left;color:#8888AA;">Button</th>
+      <th style="padding:8px 12px;text-align:left;color:#8888AA;">Tap behavior</th>
+      <th style="padding:8px 12px;text-align:left;color:#8888AA;">Panel anchored</th>
+    </tr>
+    <tr style="border-bottom:1px solid #1E1E3A;">
+      <td style="padding:8px 12px;color:white;">🔍 Search</td>
+      <td style="padding:8px 12px;color:#8888AA;">Expands to full-width Entry with ✕ dismiss</td>
+      <td style="padding:8px 12px;color:#8888AA;">Full row</td>
+    </tr>
+    <tr style="border-bottom:1px solid #1E1E3A;">
+      <td style="padding:8px 12px;color:white;">⬇ Filter</td>
+      <td style="padding:8px 12px;color:#8888AA;">Shows 3-option segment: Expiring soon / Expired / All</td>
+      <td style="padding:8px 12px;color:#8888AA;">Under Filter pill, left-aligned</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px;color:white;">↕ Sort</td>
+      <td style="padding:8px 12px;color:#8888AA;">Shows 2-option segment: A-Z / By expiry</td>
+      <td style="padding:8px 12px;color:#8888AA;">Under Sort pill, right-aligned</td>
+    </tr>
+  </table>
+</div>
+
+<p style="margin-top:16px;color:#8888AA;">Does this alignment look right? If so, I'll move ahead and write the full design spec with all the details — ViewModel properties, XAML layout, animations, and edge cases.</p>

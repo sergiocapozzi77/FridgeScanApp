@@ -1,0 +1,129 @@
+<h2>Approach A Refined — Toolbar Above Add Item</h2>
+<p class="subtitle">Compact action pills sit between the header and the Add Item card. Barcode is a 56dp FAB in bottom-right.</p>
+
+<div class="section">
+  <h3>Layout Hierarchy</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;font-size:11px;line-height:1.6;max-width:360px;">
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+      <div style="color:white;font-weight:bold;font-size:16px;">Inventory</div>
+    </div>
+
+    <!-- Filter/Sort/Search toolbar -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#8888AA;font-size:11px;display:flex;align-items:center;gap:4px;flex:1;">
+        <span>🔍</span><span>Search</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#CCCCDD;font-size:11px;display:flex;align-items:center;gap:4px;">
+        <span>⬇</span><span>Filter</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#CCCCDD;font-size:11px;display:flex;align-items:center;gap:4px;">
+        <span>A↕Z</span><span>Sort</span>
+      </div>
+    </div>
+
+    <!-- Add Item -->
+    <div style="background:#202448;border-radius:10px;padding:10px;margin-bottom:12px;display:flex;gap:6px;">
+      <span style="color:#8888AA;">+</span><span style="color:#8888AA;">Add item...</span>
+    </div>
+
+    <!-- List -->
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — Expired</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Cheese — 6 days</div>
+
+    <!-- FAB -->
+    <div style="position:relative;margin-top:24px;height:30px;">
+      <div style="position:absolute;right:-4px;bottom:0;width:56px;height:56px;background:#D0BCFF;border-radius:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,0.3);">
+        <span style="color:#0D0D2B;font-weight:bold;font-size:20px;">📷</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Sort UX — Two recommended approaches</h3>
+  <p style="color:#8888AA;font-size:13px;">Since it's just 2 modes (A-Z and by expiry), here are the options:</p>
+
+  <div class="cards" style="margin-top:8px;">
+    <div class="card" data-choice="sort-toggle" onclick="toggleSelect(this)">
+      <div class="card-body">
+        <h3>Option 1: Toggle Button</h3>
+        <p style="font-size:13px;color:#8888AA;">Single button that cycles between modes. The label updates to show current state.</p>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#CCCCDD;font-size:11px;display:flex;align-items:center;gap:4px;border:1px solid #D0BCFF;">
+            <span style="color:#D0BCFF;">A↕Z</span><span style="color:#D0BCFF;">A-Z</span>
+          </div>
+          <span style="color:#666688;font-size:18px;align-self:center;">→</span>
+          <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#CCCCDD;font-size:11px;display:flex;align-items:center;gap:4px;">
+            <span>📅</span><span>Expiry</span>
+          </div>
+          <span style="color:#666688;font-size:18px;align-self:center;">→</span>
+          <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#8888AA;font-size:11px;display:flex;align-items:center;gap:4px;">
+            <span>A↕Z</span><span>A-Z</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#666688;margin-top:8px;">Tapping the same button cycles: A-Z → Expiry → A-Z → ...</p>
+        <div class="pros-cons" style="margin:8px 0 0;">
+          <div class="pros"><h4>Pros</h4><ul><li>Fast — one tap to switch</li><li>No popups or menus</li><li>Smallest footprint</li></ul></div>
+          <div class="cons"><h4>Cons</h4><ul><li>Not obvious there are 2 modes</li><li>Requires memorizing what each icon means</li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-choice="sort-picker" onclick="toggleSelect(this)">
+      <div class="card-body">
+        <h3>Option 2: Segmented Chip</h3>
+        <p style="font-size:13px;color:#8888AA;">The sort button opens a small animated picker showing both options side by side. User taps one to select.</p>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#CCCCDD;font-size:11px;display:flex;align-items:center;gap:4px;">
+            <span>A↕Z</span><span>Sort</span>
+          </div>
+        </div>
+        <div style="margin-top:8px;background:#14142E;border-radius:12px;padding:12px;border:1px solid #1E1E3A;">
+          <p style="font-size:11px;color:#8888AA;margin-bottom:6px;">↓ on tap, expands inline:</p>
+          <div style="display:flex;gap:4px;background:#1E1E3A;border-radius:10px;padding:3px;">
+            <div style="flex:1;text-align:center;padding:6px;border-radius:8px;background:#2A2E58;color:white;font-size:11px;">A-Z</div>
+            <div style="flex:1;text-align:center;padding:6px;border-radius:8px;color:#8888AA;font-size:11px;">By expiry</div>
+          </div>
+        </div>
+        <div class="pros-cons" style="margin:8px 0 0;">
+          <div class="pros"><h4>Pros</h4><ul><li>Shows both options clearly</li><li>No guesswork for the user</li><li>Satisfying micro-animation</li></ul></div>
+          <div class="cons"><h4>Cons</h4><ul><li>Two taps to change sort (open picker, tap option)</li><li>Takes more vertical space when expanded</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Search Expansion</h3>
+  <p style="color:#8888AA;font-size:13px;">The Search pill animates horizontally to reveal an Entry field — similar to how the current header search button focuses the autocomplete. When tapped, the pill expands with a spring animation into a full-width search bar, pushing filter/sort pills to the right or onto a second row.</p>
+  <div style="display:flex;gap:8px;margin-top:8px;max-width:360px;">
+    <div style="flex:1;background:#1E1E3A;border-radius:18px;padding:8px 14px;color:#8888AA;font-size:11px;display:flex;align-items:center;gap:4px;border:1px solid #D0BCFF;">
+      <span>🔍</span><span style="color:#D0BCFF;">Type to filter...</span>
+    </div>
+    <div style="background:#1E1E3A;border-radius:18px;padding:8px 14px;color:#CCCCDD;font-size:11px;display:flex;align-items:center;gap:4px;">⬇ Filter</div>
+    <div style="background:#1E1E3A;border-radius:18px;padding:8px 14px;color:#CCCCDD;font-size:11px;display:flex;align-items:center;gap:4px;">A↕Z Sort</div>
+  </div>
+  <p style="font-size:11px;color:#666688;margin-top:6px;">When expanded, the search field takes the full width. Filter and Sort drop to a second row below.</p>
+</div>
+
+<div class="section">
+  <h3>Filter Behavior</h3>
+  <p style="color:#8888AA;font-size:13px;">The Filter pill toggles between 3 states. A small dot indicator shows when it's active:</p>
+  <div style="display:flex;gap:8px;margin:8px 0;">
+    <div style="background:#1E1E3A;border-radius:18px;padding:6px 14px;color:#8888AA;font-size:11px;">⬇ Filter</div>
+    <span style="color:#666688;font-size:18px;">→</span>
+    <div style="background:#2A1E1E;border-radius:18px;padding:6px 14px;color:#ff6b6b;font-size:11px;display:flex;align-items:center;gap:4px;border:1px solid #ff6b6b;">
+      <span>⬇</span><span>Expiring soon</span><span style="width:6px;height:6px;background:#ff6b6b;border-radius:3px;display:inline-block;"></span>
+    </div>
+    <span style="color:#666688;font-size:18px;">→</span>
+    <div style="background:#2A1E1E;border-radius:18px;padding:6px 14px;color:#ff6b6b;font-size:11px;display:flex;align-items:center;gap:4px;border:1px solid #ff6b6b;">
+      <span>⬇</span><span>Expired only</span><span style="width:6px;height:6px;background:#ff6b6b;border-radius:3px;display:inline-block;"></span>
+    </div>
+  </div>
+  <p style="font-size:11px;color:#666688;">Cycles: No filter → Expiring soon → Expired only → No filter → ...</p>
+</div>
+
+<p style="margin-top:16px;color:#8888AA;">Take a look at the refined layout and the two sort UX options. Let me know what you think!</p>

@@ -117,4 +117,17 @@ public partial class ProductsPage : ContentPage
                 vm.EditProductCommand.Execute(product);
         }
     }
+
+    // Toolbar pill event handlers (stubs — Task 4 implements the actual logic)
+    private void OnSearchPillTapped(object sender, EventArgs e) { }
+    private void OnFilterPillTapped(object sender, EventArgs e) { }
+    private void OnSortPillTapped(object sender, EventArgs e) { }
+    private void OnSearchDismissTapped(object sender, EventArgs e) { }
+    private void OnSecondaryFilterTapped(object sender, EventArgs e) { }
+    private void OnSecondarySortTapped(object sender, EventArgs e) { }
+    private void OnFilterSegmentExpiringTapped(object sender, EventArgs e) { }
+    private void OnFilterSegmentExpiredTapped(object sender, EventArgs e) { }
+    private void OnFilterSegmentAllTapped(object sender, EventArgs e) { }
+    private void OnSortSegmentAZTapped(object sender, EventArgs e) { }
+    private void OnSortSegmentExpiryTapped(object sender, EventArgs e) { }
 }

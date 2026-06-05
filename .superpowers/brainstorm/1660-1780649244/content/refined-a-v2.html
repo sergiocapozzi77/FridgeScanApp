@@ -1,0 +1,116 @@
+<h2>Approach A v2 — Unified Segmented Chip Pattern</h2>
+<p class="subtitle">Both Filter and Sort use the same expandable segmented chip. Search expands into a text field.</p>
+
+<div class="section">
+  <h3>Resting state — toolbar collapsed</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;max-width:360px;margin-bottom:16px;">
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;flex:2;">
+        <span>🔍</span><span>Search</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#CCCCDD;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>⬇</span><span>Filter</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#CCCCDD;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>↕</span><span>Sort</span>
+      </div>
+    </div>
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — Expired</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Cheese — 6 days</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Filter expanded — shows 3-state segmented control</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;max-width:360px;margin-bottom:16px;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;flex:2;">
+        <span>🔍</span><span>Search</span>
+      </div>
+      <div style="background:#2A2E58;border-radius:18px;padding:7px 14px;color:#D0BCFF;font-size:12px;display:flex;align-items:center;gap:6px;border:1px solid #D0BCFF;">
+        <span>⬇</span><span>Filter</span><span style="font-size:8px;">▲</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>↕</span><span>Sort</span>
+      </div>
+    </div>
+    <!-- Expanded segmented control below Filter -->
+    <div style="background:#14142E;border-radius:12px;padding:4px;border:1px solid #2A2E58;margin-bottom:12px;max-width:200px;">
+      <div style="display:flex;gap:3px;">
+        <div style="flex:1;text-align:center;padding:7px 10px;border-radius:9px;background:#2A2E58;color:white;font-size:11px;">Expiring soon</div>
+        <div style="flex:1;text-align:center;padding:7px 10px;border-radius:9px;color:#8888AA;font-size:11px;">Expired</div>
+        <div style="flex:1;text-align:center;padding:7px 10px;border-radius:9px;color:#8888AA;font-size:11px;">All</div>
+      </div>
+    </div>
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — <span style="color:#ff6b6b;">Expired</span></div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Cheese — <span style="color:#ffa500;">6 days</span></div>
+  </div>
+  <p style="color:#8888AA;font-size:12px;">3 segments: <strong>Expiring soon</strong> | <strong>Expired</strong> | <strong>All</strong> (clear filter). The chip stays highlighted while active.</p>
+</div>
+
+<div class="section">
+  <h3>Sort expanded — shows 2-option segmented control</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;max-width:360px;margin-bottom:16px;">
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;flex:2;">
+        <span>🔍</span><span>Search</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#8888AA;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>⬇</span><span>Filter</span>
+      </div>
+      <div style="background:#2A2E58;border-radius:18px;padding:7px 14px;color:#D0BCFF;font-size:12px;display:flex;align-items:center;gap:6px;border:1px solid #D0BCFF;">
+        <span>↕</span><span>Sort</span><span style="font-size:8px;">▲</span>
+      </div>
+    </div>
+    <!-- Expanded segmented control below Sort -->
+    <div style="background:#14142E;border-radius:12px;padding:4px;border:1px solid #2A2E58;margin-bottom:12px;max-width:160px;">
+      <div style="display:flex;gap:3px;">
+        <div style="flex:1;text-align:center;padding:7px 10px;border-radius:9px;background:#2A2E58;color:white;font-size:11px;">A-Z</div>
+        <div style="flex:1;text-align:center;padding:7px 10px;border-radius:9px;color:#8888AA;font-size:11px;">By expiry</div>
+      </div>
+    </div>
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Cheese — <span style="color:#ffa500;">6 days</span></div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — <span style="color:#ff6b6b;">Expired</span></div>
+  </div>
+  <p style="color:#8888AA;font-size:12px;">When Sort changes, group order updates: A-Z (default) or by earliest expiry date.</p>
+</div>
+
+<div class="section">
+  <h3>Search expanded — full-width text field</h3>
+  <div style="background:#0D0D2B;border-radius:16px;padding:20px;font-family:monospace;max-width:360px;">
+    <!-- Search bar expanded full-width -->
+    <div style="background:#1E1E3A;border-radius:18px;padding:0 14px;margin-bottom:6px;display:flex;align-items:center;gap:8px;border:1px solid #D0BCFF;height:38px;">
+      <span style="color:#D0BCFF;">🔍</span>
+      <span style="color:#CCCCDD;font-size:12px;flex:1;">Type to filter products...</span>
+      <span style="color:#8888AA;font-size:16px;">✕</span>
+    </div>
+    <!-- Filter and Sort drop to second row -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#CCCCDD;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>⬇</span><span>Filter</span>
+      </div>
+      <div style="background:#1E1E3A;border-radius:18px;padding:7px 14px;color:#CCCCDD;font-size:12px;display:flex;align-items:center;gap:6px;">
+        <span>↕</span><span>Sort</span>
+      </div>
+    </div>
+    <div style="color:#666688;font-size:10px;">Dairy (3 items) &gt;</div>
+    <div style="background:#171A35;border-radius:10px;padding:8px 10px;margin:6px 0;">Milk — Expired</div>
+  </div>
+  <p style="color:#8888AA;font-size:12px;margin-top:6px;">When Search expands, Filter & Sort drop to a second row. Tap ✕ to collapse search back to a pill.</p>
+</div>
+
+<div class="section">
+  <h3>Interaction rules</h3>
+  <ul style="color:#8888AA;font-size:12px;line-height:1.8;">
+    <li><strong>Expand one at a time:</strong> tapping Filter when Sort is expanded collapses Sort and expands Filter</li>
+    <li><strong>Search is independent:</strong> tapping Search collapses any open Filter/Sort segment and expands the text field</li>
+    <li><strong>Select + auto-collapse:</strong> tapping a segment option ("A-Z", "Expiring soon") selects it and collapses the picker back to a pill</li>
+    <li><strong>Active indicator:</strong> the pill icon/color changes when a filter or sort is active so you know something is applied</li>
+    <li><strong>Dismiss:</strong> tapping outside the toolbar or tapping the active pill again collapses without changing</li>
+  </ul>
+</div>
+
+<p style="margin-top:16px;color:#8888AA;">Does this combined pattern work for you? Any tweaks to the interaction rules before I move on to the detailed design?</p>
