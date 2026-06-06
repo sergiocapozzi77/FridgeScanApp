@@ -23,6 +23,14 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
     private bool isLoading;
 
     [ObservableProperty]
+    private bool isInitialLoading;
+
+    public bool ShimmerActive => IsLoading || IsInitialLoading;
+
+    partial void OnIsLoadingChanged(bool value) => OnPropertyChanged(nameof(ShimmerActive));
+    partial void OnIsInitialLoadingChanged(bool value) => OnPropertyChanged(nameof(ShimmerActive));
+
+    [ObservableProperty]
     private bool isUncategorised;
 
     public bool HasActions => !IsUncategorised;
@@ -42,6 +50,9 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
+        // Track previous cookbook to detect fresh navigation vs back-navigation
+        var previousCookbookId = _cookbookId;
+
         if (query.TryGetValue("CookbookId", out var id))
         {
             _cookbookId = id?.ToString() ?? string.Empty;
@@ -56,7 +67,20 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
                 Name = IsUncategorised ? "Uncategorised" : cookbookName
             };
         }
-        _ = LoadRecipesAsync();
+        // Only load data on fresh navigation (new cookbook or first load).
+        // Skipped when returning from a sub-page like SavedRecipeDetailPage.
+        if (_cookbookId != previousCookbookId || Recipes.Count == 0)
+        {
+            Recipes.Clear();
+            IsInitialLoading = true;
+            _ = LoadRecipesWithInitialDelayAsync();
+        }
+    }
+
+    private async Task LoadRecipesWithInitialDelayAsync()
+    {
+        await Task.Delay(400);
+        await LoadRecipesAsync();
     }
 
     [RelayCommand]
@@ -98,40 +122,19 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
         finally
         {
             IsLoading = false;
+            IsInitialLoading = false;
         }
     }
 
     [RelayCommand]
     private async Task OpenRecipe(SavedRecipe recipe)
     {
-        // Show loading indicator while prefetching recipe data.
-        // Navigating only when data is ready avoids a freeze on the
-        // target page — it appears with content already populated.
-        IsLoading = true;
-        try
+        // Navigate immediately — SavedRecipeDetailPage handles loading + shimmer
+        var parameters = new Dictionary<string, object>
         {
-            var fullRecipe = await _favouriteService.GetFavouriteByIdAsync(recipe.RowId);
-
-            var parameters = new Dictionary<string, object>
-            {
-                { "Recipe", fullRecipe }
-            };
-            await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(Tag, $"Error prefetching recipe: {ex.Message}");
-            // Fallback: navigate anyway — SavedRecipeDetailPage will load by ID
-            var parameters = new Dictionary<string, object>
-            {
-                { "RecipeId", recipe.RowId }
-            };
-            await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
-        }
-        finally
-        {
-            IsLoading = false;
-        }
+            { "RecipeId", recipe.RowId }
+        };
+        await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
     }
 
     [RelayCommand]

@@ -97,7 +97,20 @@ public class MainActivity : MauiAppCompatActivity
     private void ProcessPendingShareUrl()
     {
         if (_pendingShareUrl == null) return;
-        if (Shell.Current == null) return; // still too early — OnResume will retry
+
+        // Shell.Current throws InvalidOperationException if the Shell instance
+        // hasn't been fully initialized yet (e.g. during OnCreate). In that case
+        // OnResume will retry — that's the reliable fallback path.
+        Shell shell;
+        try
+        {
+            shell = Shell.Current;
+        }
+        catch (InvalidOperationException)
+        {
+            return;
+        }
+        if (shell == null) return;
 
         var url = _pendingShareUrl;
         _pendingShareUrl = null;          // consume the URL

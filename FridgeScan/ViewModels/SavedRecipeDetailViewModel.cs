@@ -51,6 +51,14 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
     private bool isLoading;
 
     [ObservableProperty]
+    private bool isInitialLoading;
+
+    public bool ShimmerActive => IsLoading || IsInitialLoading;
+
+    partial void OnIsLoadingChanged(bool value) => OnPropertyChanged(nameof(ShimmerActive));
+    partial void OnIsInitialLoadingChanged(bool value) => OnPropertyChanged(nameof(ShimmerActive));
+
+    [ObservableProperty]
     private bool isSavedRecipe;
 
     // Cookbook picker state
@@ -190,7 +198,8 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         if (query.TryGetValue("RecipeId", out var id))
         {
             IsSavedRecipe = true;
-            _ = LoadRecipeAsync(id?.ToString() ?? string.Empty);
+            IsInitialLoading = true;
+            _ = LoadRecipeWithInitialDelayAsync(id?.ToString() ?? string.Empty);
             return;
         }
 
@@ -198,12 +207,17 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         if (query.ContainsKey("RecipeUrl") && query.ContainsKey("provider") && query.ContainsKey("Recipe"))
         {
             IsSavedRecipe = false;
-            var url = query["RecipeUrl"].ToString();
-            var provider = query["provider"].ToString();
-            var recipe = query["Recipe"] as RecipeSuggestion;
-
-            await LoadRecipeDetails(provider, recipe);
+            IsInitialLoading = true;
+            _ = LoadRecipeDetailsWithInitialDelayAsync(query);
+            return;
         }
+    }
+
+    private async Task LoadRecipeWithInitialDelayAsync(string? recipeId)
+    {
+        if (string.IsNullOrEmpty(recipeId)) return;
+        await Task.Delay(400);
+        await LoadRecipeAsync(recipeId);
     }
 
     private async Task LoadRecipeAsync(string recipeId)
@@ -220,7 +234,16 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         finally
         {
             IsLoading = false;
+            IsInitialLoading = false;
         }
+    }
+
+    private async Task LoadRecipeDetailsWithInitialDelayAsync(IDictionary<string, object> query)
+    {
+        await Task.Delay(400);
+        var provider = query["provider"].ToString();
+        var recipe = query["Recipe"] as RecipeSuggestion;
+        await LoadRecipeDetails(provider, recipe);
     }
 
     private async Task LoadRecipeDetails(string? provider, RecipeSuggestion? suggestion)
@@ -265,6 +288,7 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
         finally
         {
             IsLoading = false;
+            IsInitialLoading = false;
         }
     }
 

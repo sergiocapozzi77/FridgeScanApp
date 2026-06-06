@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Name="thisPage"
-    xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Shimmer;assembly=Syncfusion.Maui.Core"
     xmlns:models="clr-namespace:FridgeScan.Models"
     xmlns:controls="clr-namespace:FridgeScan.Controls"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -19,499 +19,518 @@
 
     <Grid>
 
-        <ScrollView>
+        <shimmer:SfShimmer IsActive="{Binding ShimmerActive}"
+                           Fill="#0D1023"
+                           WaveColor="#252555"
+                           BackgroundColor="#0D1023">
+            <shimmer:SfShimmer.CustomView>
+                <Grid RowDefinitions="Auto,*,Auto" VerticalOptions="Fill">
+                    <!-- Hero image skeleton -->
+                    <BoxView Grid.Row="0" HeightRequest="300" Color="#1E1E3A" />
+                    <!-- Body skeleton fills remaining space -->
+                    <VerticalStackLayout Grid.Row="1" Padding="16,20,16,0" Spacing="16">
+                        <BoxView HeightRequest="22" WidthRequest="260" Color="#1E1E3A" CornerRadius="4" HorizontalOptions="Start" />
+                        <BoxView HeightRequest="14" WidthRequest="160" Color="#1E1E3A" CornerRadius="4" HorizontalOptions="Start" />
+                        <HorizontalStackLayout Spacing="10" Margin="0,4,0,0">
+                            <BoxView HeightRequest="32" WidthRequest="80" Color="#1E1E3A" CornerRadius="16" />
+                            <BoxView HeightRequest="32" WidthRequest="60" Color="#1E1E3A" CornerRadius="16" />
+                            <BoxView HeightRequest="32" WidthRequest="70" Color="#1E1E3A" CornerRadius="16" />
+                        </HorizontalStackLayout>
+                        <BoxView HeightRequest="12" WidthRequest="300" Color="#1E1E3A" CornerRadius="4" HorizontalOptions="Start" />
+                        <BoxView HeightRequest="12" WidthRequest="250" Color="#1E1E3A" CornerRadius="4" HorizontalOptions="Start" />
+                        <HorizontalStackLayout Spacing="10">
+                            <BoxView HeightRequest="36" WidthRequest="100" Color="#1E1E3A" CornerRadius="18" />
+                            <BoxView HeightRequest="36" WidthRequest="80" Color="#1E1E3A" CornerRadius="18" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </shimmer:SfShimmer.CustomView>
 
-            <VerticalStackLayout Spacing="0">
+            <ScrollView>
 
-                <!-- HERO IMAGE -->
-                <Grid HeightRequest="340">
+                <VerticalStackLayout Spacing="0">
 
-                    <Image
-                        Source="{Binding Recipe.ImageUrl}"
-                        Aspect="AspectFill" />
+                    <!-- HERO IMAGE -->
+                    <Grid HeightRequest="340">
 
-                    <!-- Gradient Overlay -->
-                    <Grid>
+                        <Image
+                            Source="{Binding Recipe.ImageUrl}"
+                            Aspect="AspectFill" />
 
-                        <Grid.Background>
-                            <LinearGradientBrush EndPoint="0,1">
-                                <GradientStop Color="#00000000" Offset="0" />
-                                <GradientStop Color="#F0000000" Offset="1" />
-                            </LinearGradientBrush>
-                        </Grid.Background>
+                        <!-- Gradient Overlay -->
+                        <Grid>
 
-                        <!-- Top Bar -->
-                        <Grid
-                            Padding="20,30,20,0"
-                            VerticalOptions="Start"
-                            ColumnDefinitions="Auto,*,Auto">
+                            <Grid.Background>
+                                <LinearGradientBrush EndPoint="0,1">
+                                    <GradientStop Color="#00000000" Offset="0" />
+                                    <GradientStop Color="#F0000000" Offset="1" />
+                                </LinearGradientBrush>
+                            </Grid.Background>
 
-                            <!-- Back button -->
-                            <Border
-                                WidthRequest="44"
-                                HeightRequest="44"
-                                BackgroundColor="#55000000"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 22">
+                            <!-- Top Bar -->
+                            <Grid
+                                Padding="20,30,20,0"
+                                VerticalOptions="Start"
+                                ColumnDefinitions="Auto,*,Auto">
+
+                                <!-- Back button -->
+                                <Border
+                                    WidthRequest="44"
+                                    HeightRequest="44"
+                                    BackgroundColor="#55000000"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22">
+                                    <Label
+                                        FontFamily="Material"
+                                        Text="&#xe5c4;"
+                                        FontSize="22"
+                                        TextColor="White"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnBackClicked" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Border>
+
+                                <!-- Overflow menu -->
+                                <Border
+                                    Grid.Column="2"
+                                    WidthRequest="44"
+                                    HeightRequest="44"
+                                    BackgroundColor="#55000000"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22">
+                                    <Label
+                                        FontFamily="Material"
+                                        Text="&#xe5d4;"
+                                        FontSize="22"
+                                        TextColor="White"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnOverflowClicked" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Border>
+
+                            </Grid>
+
+                            <!-- Title + Source Overlay -->
+                            <VerticalStackLayout
+                                VerticalOptions="End"
+                                Padding="20,0,20,20"
+                                Spacing="6">
+
                                 <Label
-                                    FontFamily="Material"
-                                    Text="&#xe5c4;"
-                                    FontSize="22"
+                                    Text="{Binding Recipe.Name}"
+                                    FontSize="34"
+                                    FontAttributes="Bold"
                                     TextColor="White"
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="Center">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnBackClicked" />
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </Border>
+                                    LineBreakMode="WordWrap" />
 
-                            <!-- Overflow menu -->
-                            <Border
-                                Grid.Column="2"
-                                WidthRequest="44"
-                                HeightRequest="44"
-                                BackgroundColor="#55000000"
-                                StrokeThickness="0"
-                                StrokeShape="RoundRectangle 22">
-                                <Label
-                                    FontFamily="Material"
-                                    Text="&#xe5d4;"
-                                    FontSize="22"
-                                    TextColor="White"
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="Center">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnOverflowClicked" />
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </Border>
+                                <!-- Source row: link icon button + source name -->
+                                <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+
+                                    <Border
+                                        WidthRequest="26"
+                                        HeightRequest="26"
+                                        BackgroundColor="#1E1E3A"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 13"
+                                        IsVisible="{Binding HasRecipeUrl}">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding OpenRecipeUrlCommand}" />
+                                        </Border.GestureRecognizers>
+                                        <Label
+                                            Text="&#xe157;"
+                                            FontFamily="Material"
+                                            FontSize="14"
+                                            TextColor="#CCCCDD"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center" />
+                                    </Border>
+
+                                    <Label
+                                        Text="{Binding Recipe.RecipeSource}"
+                                        FontSize="14"
+                                        TextColor="#CCCCCC"
+                                        VerticalOptions="Center"
+                                        >
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding OpenRecipeUrlCommand}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+
+                                </HorizontalStackLayout>
+
+                            </VerticalStackLayout>
 
                         </Grid>
 
-                        <!-- Title + Source Overlay -->
-                        <VerticalStackLayout
-                            VerticalOptions="End"
-                            Padding="20,0,20,20"
-                            Spacing="6">
-
-                            <Label
-                                Text="{Binding Recipe.Name}"
-                                FontSize="34"
-                                FontAttributes="Bold"
-                                TextColor="White"
-                                LineBreakMode="WordWrap" />
-
-                            <!-- Source row: link icon button + source name -->
-                            <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-
-                                <Border
-                                    WidthRequest="26"
-                                    HeightRequest="26"
-                                    BackgroundColor="#1E1E3A"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 13"
-                                    IsVisible="{Binding HasRecipeUrl}">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding OpenRecipeUrlCommand}" />
-                                    </Border.GestureRecognizers>
-                                    <Label
-                                        Text="&#xe157;"
-                                        FontFamily="Material"
-                                        FontSize="14"
-                                        TextColor="#CCCCDD"
-                                        HorizontalOptions="Center"
-                                        VerticalOptions="Center" />
-                                </Border>
-
-                                <Label
-                                    Text="{Binding Recipe.RecipeSource}"
-                                    FontSize="14"
-                                    TextColor="#CCCCCC"
-                                    VerticalOptions="Center" 
-                                    >
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding OpenRecipeUrlCommand}" />
-                                    </Label.GestureRecognizers>
-                                </Label>
-
-                            </HorizontalStackLayout>
-
-                        </VerticalStackLayout>
-
                     </Grid>
 
-                </Grid>
+                    <!-- CONTENT -->
+                    <VerticalStackLayout
+                        Padding="16,20,16,40"
+                        Spacing="20">
 
-                <!-- CONTENT -->
-                <VerticalStackLayout
-                    Padding="16,20,16,40"
-                    Spacing="20">
+                        <!-- Metadata chips: icon + value / label -->
+                        <FlexLayout
+                            Wrap="Wrap"
+                            Direction="Row"
+                            JustifyContent="Start"
+                            BindableLayout.ItemsSource="{Binding MetadataChips}">
 
-                    <!-- Metadata chips: icon + value / label -->
-                    <FlexLayout
-                        Wrap="Wrap"
-                        Direction="Row"
-                        JustifyContent="Start"
-                        BindableLayout.ItemsSource="{Binding MetadataChips}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:MetadataChip">
 
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="models:MetadataChip">
+                                    <Border
+                                        Margin="0,0,10,10"
+                                        Padding="14,10"
+                                        BackgroundColor="#1C1F3A"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 16">
 
-                                <Border
-                                    Margin="0,0,10,10"
-                                    Padding="14,10"
-                                    BackgroundColor="#1C1F3A"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 16">
+                                        <HorizontalStackLayout Spacing="8">
 
-                                    <HorizontalStackLayout Spacing="8">
-
-                                        <Label
-                                            FontFamily="Material"
-                                            Text="{Binding Icon}"
-                                            FontSize="18"
-                                            TextColor="#8B7CFF"
-                                            VerticalOptions="Center" />
-
-                                        <VerticalStackLayout Spacing="0" VerticalOptions="Center">
                                             <Label
-                                                Text="{Binding Value}"
-                                                FontSize="14"
-                                                FontAttributes="Bold"
-                                                TextColor="White" />
-                                            <Label
-                                                Text="{Binding Label}"
-                                                FontSize="11"
-                                                TextColor="#888888" />
-                                        </VerticalStackLayout>
+                                                FontFamily="Material"
+                                                Text="{Binding Icon}"
+                                                FontSize="18"
+                                                TextColor="#8B7CFF"
+                                                VerticalOptions="Center" />
 
-                                    </HorizontalStackLayout>
+                                            <VerticalStackLayout Spacing="0" VerticalOptions="Center">
+                                                <Label
+                                                    Text="{Binding Value}"
+                                                    FontSize="14"
+                                                    FontAttributes="Bold"
+                                                    TextColor="White" />
+                                                <Label
+                                                    Text="{Binding Label}"
+                                                    FontSize="11"
+                                                    TextColor="#888888" />
+                                            </VerticalStackLayout>
 
-                                </Border>
+                                        </HorizontalStackLayout>
 
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
+                                    </Border>
 
-                    </FlexLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
 
-                    <!-- Description -->
-                    <Label
-                        Text="{Binding Recipe.Description}"
-                        IsVisible="{Binding HasDescription}"
-                        FontSize="15"
-                        TextColor="#CCCCCC"
-                        LineBreakMode="WordWrap" />
+                        </FlexLayout>
 
-                    <!-- Quick Actions: Save / Share / Add ingredients -->
-                    <HorizontalStackLayout Spacing="10">
-
-                        <Border
-                            BackgroundColor="#1C1F3A"
-                            Padding="16,12"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 22">
-                            <HorizontalStackLayout Spacing="8">
-                                <Label FontFamily="Material" Text="&#xe86d;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
-                                <Label Text="CookBook" TextColor="White" FontSize="14" VerticalOptions="Center" />
-                            </HorizontalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ShowCookbookPickerCommand}" />
-                            </Border.GestureRecognizers>
-                        </Border>
-
-                        <Border
-                            BackgroundColor="#1C1F3A"
-                            Padding="16,12"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 22">
-                            <HorizontalStackLayout Spacing="8">
-                                <Label FontFamily="Material" Text="&#xe80d;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
-                                <Label Text="Share" TextColor="White" FontSize="14" VerticalOptions="Center" />
-                            </HorizontalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ShareRecipeCommand}" />
-                            </Border.GestureRecognizers>
-                        </Border>
-
-                        <Border
-                            BackgroundColor="#1C1F3A"
-                            Padding="16,12"
-                            StrokeThickness="0"
-                            StrokeShape="RoundRectangle 22">
-                            <HorizontalStackLayout Spacing="8">
-                                <Label FontFamily="Material" Text="&#xe8cc;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
-                                <Label Text="Add ingredients" TextColor="White" FontSize="14" VerticalOptions="Center" />
-                            </HorizontalStackLayout>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding AddIngredientsCommand}" />
-                            </Border.GestureRecognizers>
-                        </Border>
-
-                    </HorizontalStackLayout>
-
-                    <!-- INGREDIENTS -->
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <!-- Description -->
                         <Label
-                            Text="Ingredients"
-                            FontSize="26"
-                            FontAttributes="Bold"
-                            TextColor="White"
-                            VerticalOptions="Center" />
+                            Text="{Binding Recipe.Description}"
+                            IsVisible="{Binding HasDescription}"
+                            FontSize="15"
+                            TextColor="#CCCCCC"
+                            LineBreakMode="WordWrap" />
 
-                        <!-- Serving adjuster -->
-                        <HorizontalStackLayout
-                            Grid.Column="1"
-                            Spacing="6"
-                            VerticalOptions="Center">
+                        <!-- Quick Actions: Save / Share / Add ingredients -->
+                        <HorizontalStackLayout Spacing="10">
 
-                            <!-- Minus button -->
                             <Border
-                                WidthRequest="36"
-                                HeightRequest="36"
-                                BackgroundColor="#1E1E3A"
+                                BackgroundColor="#1C1F3A"
+                                Padding="16,12"
                                 StrokeThickness="0"
-                                StrokeShape="RoundRectangle 18">
-                                <Label
-                                    FontFamily="Material"
-                                    Text="&#xe15b;"
-                                    FontSize="18"
-                                    TextColor="#CCCCDD"
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="Center" />
+                                StrokeShape="RoundRectangle 22">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label FontFamily="Material" Text="&#xe86d;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
+                                    <Label Text="CookBook" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding DecreaseServingsCommand}" />
+                                    <TapGestureRecognizer Command="{Binding ShowCookbookPickerCommand}" />
                                 </Border.GestureRecognizers>
                             </Border>
 
-                            <!-- Serving count -->
-                            <VerticalStackLayout Spacing="0" VerticalOptions="Center" MinimumWidthRequest="40">
-                                <Label
-                                    Text="{Binding ServingCount}"
-                                    FontSize="16"
-                                    FontAttributes="Bold"
-                                    TextColor="White"
-                                    HorizontalOptions="Center" />
-                                <Label
-                                    Text="servings"
-                                    FontSize="10"
-                                    TextColor="#8888AA"
-                                    HorizontalOptions="Center" />
-                            </VerticalStackLayout>
-
-                            <!-- Plus button -->
                             <Border
-                                WidthRequest="36"
-                                HeightRequest="36"
-                                BackgroundColor="#1E1E3A"
+                                BackgroundColor="#1C1F3A"
+                                Padding="16,12"
                                 StrokeThickness="0"
-                                StrokeShape="RoundRectangle 18">
-                                <Label
-                                    FontFamily="Material"
-                                    Text="&#xe145;"
-                                    FontSize="18"
-                                    TextColor="#CCCCDD"
-                                    HorizontalOptions="Center"
-                                    VerticalOptions="Center" />
+                                StrokeShape="RoundRectangle 22">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label FontFamily="Material" Text="&#xe80d;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
+                                    <Label Text="Share" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding IncreaseServingsCommand}" />
+                                    <TapGestureRecognizer Command="{Binding ShareRecipeCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <Border
+                                BackgroundColor="#1C1F3A"
+                                Padding="16,12"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 22">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label FontFamily="Material" Text="&#xe8cc;" TextColor="#8B7CFF" FontSize="18" VerticalOptions="Center" />
+                                    <Label Text="Add ingredients" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding AddIngredientsCommand}" />
                                 </Border.GestureRecognizers>
                             </Border>
 
                         </HorizontalStackLayout>
 
-                    </Grid>
+                        <!-- INGREDIENTS -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Label
+                                Text="Ingredients"
+                                FontSize="26"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                VerticalOptions="Center" />
 
-                    <Border
-                        BackgroundColor="#131629"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20">
+                            <!-- Serving adjuster -->
+                            <HorizontalStackLayout
+                                Grid.Column="1"
+                                Spacing="6"
+                                VerticalOptions="Center">
 
-                        <CollectionView
-                            ItemsSource="{Binding IngredientItems}"
-                            SelectionMode="None">
+                                <!-- Minus button -->
+                                <Border
+                                    WidthRequest="36"
+                                    HeightRequest="36"
+                                    BackgroundColor="#1E1E3A"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 18">
+                                    <Label
+                                        FontFamily="Material"
+                                        Text="&#xe15b;"
+                                        FontSize="18"
+                                        TextColor="#CCCCDD"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center" />
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding DecreaseServingsCommand}" />
+                                    </Border.GestureRecognizers>
+                                </Border>
 
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
+                                <!-- Serving count -->
+                                <VerticalStackLayout Spacing="0" VerticalOptions="Center" MinimumWidthRequest="40">
+                                    <Label
+                                        Text="{Binding ServingCount}"
+                                        FontSize="16"
+                                        FontAttributes="Bold"
+                                        TextColor="White"
+                                        HorizontalOptions="Center" />
+                                    <Label
+                                        Text="servings"
+                                        FontSize="10"
+                                        TextColor="#8888AA"
+                                        HorizontalOptions="Center" />
+                                </VerticalStackLayout>
 
-                                    <Grid
-                                        Padding="16,14"
-                                        ColumnDefinitions="Auto,*"
-                                        ColumnSpacing="12">
+                                <!-- Plus button -->
+                                <Border
+                                    WidthRequest="36"
+                                    HeightRequest="36"
+                                    BackgroundColor="#1E1E3A"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 18">
+                                    <Label
+                                        FontFamily="Material"
+                                        Text="&#xe145;"
+                                        FontSize="18"
+                                        TextColor="#CCCCDD"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center" />
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding IncreaseServingsCommand}" />
+                                    </Border.GestureRecognizers>
+                                </Border>
 
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnIngredientTapped" />
-                                        </Grid.GestureRecognizers>
+                            </HorizontalStackLayout>
 
-                                        <!-- Checkbox -->
-                                        <Border
-                                            WidthRequest="24"
-                                            HeightRequest="24"
-                                            StrokeThickness="0"
-                                            StrokeShape="RoundRectangle 6"
-                                            BackgroundColor="{Binding CheckboxBackground}"
-                                            VerticalOptions="Center">
-                                            <Label
-                                                FontFamily="Material"
-                                                Text="&#xe5ca;"
-                                                FontSize="16"
-                                                TextColor="White"
-                                                HorizontalOptions="Center"
-                                                VerticalOptions="Center"
-                                                IsVisible="{Binding IsChecked}" />
-                                        </Border>
-
-                                        <!-- Ingredient text -->
-                                        <Label
-                                            Grid.Column="1"
-                                            Text="{Binding DisplayText}"
-                                            FontSize="15"
-                                            TextColor="{Binding TextColor}"
-                                            TextDecorations="{Binding TextDecorations}"
-                                            LineBreakMode="WordWrap"
-                                            VerticalOptions="Center" />
-
-                                    </Grid>
-
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-
-                    </Border>
-
-                    <!-- METHOD -->
-                    <Label
-                        Text="Method"
-                        FontSize="26"
-                        FontAttributes="Bold"
-                        TextColor="White" />
-
-                    <CollectionView
-                        ItemsSource="{Binding MethodSteps}"
-                        SelectionMode="None">
-
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:MethodStep">
-                                <Grid>
-                                    <!-- Section header -->
-                                    <VerticalStackLayout IsVisible="{Binding IsSectionHeader}" Padding="0,8,0,4">
-                                        <Label Text="{Binding Text}" FontSize="15" FontAttributes="Bold"
-                                               TextColor="#8888AA" />
-                                    </VerticalStackLayout>
-
-                                    <!-- Step card -->
-                                    <Border
-                                        Margin="0,0,0,10"
-                                        Padding="16"
-                                        BackgroundColor="#131629"
-                                        StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 20"
-                                        IsVisible="{Binding IsSectionHeader, Converter={StaticResource InvertBool}}">
-
-                                        <Grid
-                                            ColumnDefinitions="44,*,Auto"
-                                            ColumnSpacing="14">
-
-                                            <!-- Step number badge -->
-                                            <Border
-                                                WidthRequest="40"
-                                                HeightRequest="40"
-                                                BackgroundColor="#2D2B6B"
-                                                StrokeThickness="0"
-                                                StrokeShape="RoundRectangle 10"
-                                                VerticalOptions="Start">
-                                                <Label
-                                                    Text="{Binding Number}"
-                                                    FontAttributes="Bold"
-                                                    FontSize="16"
-                                                    TextColor="White"
-                                                    HorizontalOptions="Center"
-                                                    VerticalOptions="Center" />
-                                            </Border>
-
-                                            <!-- Step text -->
-                                            <Label
-                                                Grid.Column="1"
-                                                Text="{Binding Text}"
-                                                FontSize="15"
-                                                TextColor="#DDDDDD"
-                                                LineBreakMode="WordWrap"
-                                                VerticalOptions="Center" />
-
-                                            <!-- Timer (shown only when StepDuration is set) -->
-                                            <VerticalStackLayout
-                                                Grid.Column="2"
-                                                Spacing="2"
-                                                VerticalOptions="Start"
-                                                IsVisible="{Binding HasDuration}">
-                                                <Label
-                                                    FontFamily="Material"
-                                                    Text="&#xe425;"
-                                                    FontSize="16"
-                                                    TextColor="#888888"
-                                                    HorizontalOptions="Center" />
-                                                <Label
-                                                    Text="{Binding StepDuration}"
-                                                    FontSize="12"
-                                                    TextColor="#888888"
-                                                    HorizontalOptions="Center" />
-                                            </VerticalStackLayout>
-
-                                        </Grid>
-
-                                    </Border>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-
-                    </CollectionView>
-
-                    <!-- NUTRITION -->
-                    <VerticalStackLayout
-                        IsVisible="{Binding HasNutrition}"
-                        Spacing="12">
-
-                        <Label
-                            Text="Nutrition"
-                            FontSize="26"
-                            FontAttributes="Bold"
-                            TextColor="White" />
+                        </Grid>
 
                         <Border
                             BackgroundColor="#131629"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 20">
 
-                            <CollectionView ItemsSource="{Binding Recipe.Nutritions}">
+                            <CollectionView
+                                ItemsSource="{Binding IngredientItems}"
+                                SelectionMode="None">
+
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Label
-                                            Padding="16,12"
-                                            Text="{Binding .}"
-                                            TextColor="#DDDDDD"
-                                            FontSize="15" />
+
+                                        <Grid
+                                            Padding="16,14"
+                                            ColumnDefinitions="Auto,*"
+                                            ColumnSpacing="12">
+
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnIngredientTapped" />
+                                            </Grid.GestureRecognizers>
+
+                                            <!-- Checkbox -->
+                                            <Border
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 6"
+                                                BackgroundColor="{Binding CheckboxBackground}"
+                                                VerticalOptions="Center">
+                                                <Label
+                                                    FontFamily="Material"
+                                                    Text="&#xe5ca;"
+                                                    FontSize="16"
+                                                    TextColor="White"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                    IsVisible="{Binding IsChecked}" />
+                                            </Border>
+
+                                            <!-- Ingredient text -->
+                                            <Label
+                                                Grid.Column="1"
+                                                Text="{Binding DisplayText}"
+                                                FontSize="15"
+                                                TextColor="{Binding TextColor}"
+                                                TextDecorations="{Binding TextDecorations}"
+                                                LineBreakMode="WordWrap"
+                                                VerticalOptions="Center" />
+
+                                        </Grid>
+
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
 
                         </Border>
 
+                        <!-- METHOD -->
+                        <Label
+                            Text="Method"
+                            FontSize="26"
+                            FontAttributes="Bold"
+                            TextColor="White" />
+
+                        <CollectionView
+                            ItemsSource="{Binding MethodSteps}"
+                            SelectionMode="None">
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:MethodStep">
+                                    <Grid>
+                                        <!-- Section header -->
+                                        <VerticalStackLayout IsVisible="{Binding IsSectionHeader}" Padding="0,8,0,4">
+                                            <Label Text="{Binding Text}" FontSize="15" FontAttributes="Bold"
+                                                   TextColor="#8888AA" />
+                                        </VerticalStackLayout>
+
+                                        <!-- Step card -->
+                                        <Border
+                                            Margin="0,0,0,10"
+                                            Padding="16"
+                                            BackgroundColor="#131629"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 20"
+                                            IsVisible="{Binding IsSectionHeader, Converter={StaticResource InvertBool}}">
+
+                                            <Grid
+                                                ColumnDefinitions="44,*,Auto"
+                                                ColumnSpacing="14">
+
+                                                <!-- Step number badge -->
+                                                <Border
+                                                    WidthRequest="40"
+                                                    HeightRequest="40"
+                                                    BackgroundColor="#2D2B6B"
+                                                    StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 10"
+                                                    VerticalOptions="Start">
+                                                    <Label
+                                                        Text="{Binding Number}"
+                                                        FontAttributes="Bold"
+                                                        FontSize="16"
+                                                        TextColor="White"
+                                                        HorizontalOptions="Center"
+                                                        VerticalOptions="Center" />
+                                                </Border>
+
+                                                <!-- Step text -->
+                                                <Label
+                                                    Grid.Column="1"
+                                                    Text="{Binding Text}"
+                                                    FontSize="15"
+                                                    TextColor="#DDDDDD"
+                                                    LineBreakMode="WordWrap"
+                                                    VerticalOptions="Center" />
+
+                                                <!-- Timer (shown only when StepDuration is set) -->
+                                                <VerticalStackLayout
+                                                    Grid.Column="2"
+                                                    Spacing="2"
+                                                    VerticalOptions="Start"
+                                                    IsVisible="{Binding HasDuration}">
+                                                    <Label
+                                                        FontFamily="Material"
+                                                        Text="&#xe425;"
+                                                        FontSize="16"
+                                                        TextColor="#888888"
+                                                        HorizontalOptions="Center" />
+                                                    <Label
+                                                        Text="{Binding StepDuration}"
+                                                        FontSize="12"
+                                                        TextColor="#888888"
+                                                        HorizontalOptions="Center" />
+                                                </VerticalStackLayout>
+
+                                            </Grid>
+
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
+
+                        <!-- NUTRITION -->
+                        <VerticalStackLayout
+                            IsVisible="{Binding HasNutrition}"
+                            Spacing="12">
+
+                            <Label
+                                Text="Nutrition"
+                                FontSize="26"
+                                FontAttributes="Bold"
+                                TextColor="White" />
+
+                            <Border
+                                BackgroundColor="#131629"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 20">
+
+                                <CollectionView ItemsSource="{Binding Recipe.Nutritions}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label
+                                                Padding="16,12"
+                                                Text="{Binding .}"
+                                                TextColor="#DDDDDD"
+                                                FontSize="15" />
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                            </Border>
+
+                        </VerticalStackLayout>
+
                     </VerticalStackLayout>
 
                 </VerticalStackLayout>
 
-            </VerticalStackLayout>
-
-        </ScrollView>
-
-        <sfBusy:SfBusyIndicator
-            AnimationType="CircularMaterial"
-            IsRunning="{Binding IsLoading}"
-            IsVisible="{Binding IsLoading}"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            WidthRequest="60"
-            HeightRequest="60" />
+            </ScrollView>
+        </shimmer:SfShimmer>
 
         <controls:CookbookPickerControl
             x:Name="CookbookPicker"

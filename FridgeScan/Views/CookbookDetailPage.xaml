@@ -105,7 +105,7 @@
 
         <!-- Recipe list with shimmer -->
         <shimmer:SfShimmer Grid.Row="1"
-                           IsActive="{Binding IsLoading}"
+                           IsActive="{Binding ShimmerActive}"
                            Fill="#0D0D2B"
                            WaveColor="#252555"
                            BackgroundColor="#0D0D2B">
