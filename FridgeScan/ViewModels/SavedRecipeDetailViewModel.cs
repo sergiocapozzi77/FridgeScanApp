@@ -342,7 +342,8 @@ public partial class SavedRecipeDetailViewModel : BaseViewModel, IQueryAttributa
                 raw,
                 parsed?.Quantity,
                 parsed?.Unit,
-                parsed?.Name));
+                parsed?.Name,
+                parsed?.RawQuantity));
         }
     }
 

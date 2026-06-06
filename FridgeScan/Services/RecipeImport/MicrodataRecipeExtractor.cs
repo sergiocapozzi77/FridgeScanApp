@@ -56,7 +56,7 @@ public class MicrodataRecipeExtractor : RecipeExtractor
             {
                 var text = SanitizeText(node.InnerText);
                 if (!string.IsNullOrWhiteSpace(text))
-                    ingredients.Add(ConvertImperialToMetric(text));
+                    ingredients.Add(text);
             }
         }
         result.Ingredients = ingredients;

@@ -4,15 +4,21 @@ namespace FridgeScan.Models;
 
 public partial class IngredientItem : ObservableObject
 {
-    public IngredientItem(string name, float? quantity = null, string? unit = null, string? ingredientName = null)
+    private readonly string? _rawQuantity;
+
+    public IngredientItem(string name, float? quantity = null, string? unit = null, string? ingredientName = null, string? rawQuantity = null)
     {
         Name = name;
         OriginalQuantity = quantity;
         Unit = unit;
         IngredientName = ingredientName ?? name;
-        DisplayText = quantity.HasValue
-            ? FormatQuantityText(quantity.Value, Unit, IngredientName)
-            : name;
+        _rawQuantity = rawQuantity;
+
+        DisplayText = rawQuantity != null
+            ? FormatOriginalText(rawQuantity, Unit, IngredientName)
+            : quantity.HasValue
+                ? FormatAdjustedText(quantity.Value, Unit, IngredientName)
+                : name;
     }
 
     [ObservableProperty]
@@ -49,21 +55,38 @@ public partial class IngredientItem : ObservableObject
     /// <summary>
     /// Adjusts the displayed quantity by the given ratio and updates DisplayText.
     /// For ingredients without a parseable quantity, DisplayText stays unchanged.
+    /// Shows the adjusted value as a decimal (fractions aren't useful after scaling).
     /// </summary>
     public void AdjustQuantity(float ratio)
     {
         if (OriginalQuantity.HasValue)
         {
             var adjusted = OriginalQuantity.Value * ratio;
-            DisplayText = FormatQuantityText(adjusted, Unit, IngredientName);
+            DisplayText = FormatAdjustedText(adjusted, Unit, IngredientName);
         }
     }
 
-    private static string FormatQuantityText(float qty, string? unit, string name)
+    /// <summary>
+    /// Formats the display using the original quantity string from the recipe
+    /// (e.g. "1/4", "½"), preserving fractions exactly as written.
+    /// </summary>
+    private static string FormatOriginalText(string rawQuantity, string? unit, string name)
+    {
+        if (string.IsNullOrEmpty(unit))
+            return $"{rawQuantity} {name}";
+
+        return $"{rawQuantity} {unit} {name}";
+    }
+
+    /// <summary>
+    /// Formats the display using a computed decimal quantity.
+    /// Used for serving-adjusted values where fractions don't apply.
+    /// </summary>
+    private static string FormatAdjustedText(float qty, string? unit, string name)
     {
         var qtyStr = qty == Math.Floor(qty) && qty < int.MaxValue
             ? ((int)qty).ToString()
-            : qty.ToString("0.#");
+            : qty.ToString("0.##");
 
         if (string.IsNullOrEmpty(unit))
             return $"{qtyStr} {name}";

@@ -62,7 +62,7 @@ public class PostContentRecipeExtractor : RecipeExtractor
                     if (!string.IsNullOrEmpty(note)) line = $"{line}, {note}";
                     line = SanitizeText(line);
                     if (!string.IsNullOrWhiteSpace(line))
-                        ingredients.Add(ConvertImperialToMetric(line));
+                        ingredients.Add(line);
                 }
             }
             result.Ingredients = ingredients;

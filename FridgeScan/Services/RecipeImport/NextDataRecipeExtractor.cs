@@ -63,7 +63,7 @@ public class NextDataRecipeExtractor : RecipeExtractor
 
             if (schemaObj["recipeIngredient"] is JArray ingredients)
                 result.Ingredients = ingredients
-                    .Select(i => ConvertImperialToMetric(SanitizeText(i.ToString())))
+                    .Select(i => SanitizeText(i.ToString()))
                     .Where(s => !string.IsNullOrWhiteSpace(s))
                     .ToList();
         }
@@ -99,7 +99,7 @@ public class NextDataRecipeExtractor : RecipeExtractor
                 if (!string.IsNullOrEmpty(note)) line = $"{line}, {note}";
                 line = SanitizeText(line);
                 if (!string.IsNullOrWhiteSpace(line))
-                    result.Add(ConvertImperialToMetric(line));
+                    result.Add(line);
             }
         }
 

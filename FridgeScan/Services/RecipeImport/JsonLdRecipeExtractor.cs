@@ -42,7 +42,7 @@ public class JsonLdRecipeExtractor : RecipeExtractor
         if (schema["recipeIngredient"] is JArray ingredients)
         {
             result.Ingredients = ingredients
-                .Select(i => ConvertImperialToMetric(SanitizeText(i.ToString())))
+                .Select(i => SanitizeText(i.ToString()))
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList();
         }

@@ -101,6 +101,7 @@ public class RecipeIngredientParser : IRecipeIngredientParser
 
             if (KnownUnits.Contains(unitStr))
             {
+                parsed.RawQuantity = qtyStr;
                 parsed.Quantity = ParseFraction(NormalizeQuantity(qtyStr));
                 parsed.Unit = unitStr;
                 return input[(affixMatch.Length)..].Trim();
@@ -113,12 +114,13 @@ public class RecipeIngredientParser : IRecipeIngredientParser
         {
             var qtyStr = leadMatch.Groups[1].Value;
             var rest = leadMatch.Groups[2].Value;
+            parsed.RawQuantity = qtyStr;
             var parsedQty = ParseFraction(NormalizeQuantity(qtyStr));
 
             if (!parsedQty.HasValue)
             {
                 // Quantity didn't parse — don't use this match
-                // (e.g. "1-2" with hyphen might fail; rest will be tried by trailing)
+                parsed.RawQuantity = null; // reset, will be tried by trailing
             }
             else
             {
@@ -159,6 +161,7 @@ public class RecipeIngredientParser : IRecipeIngredientParser
                 if (unitEnd < input.Length && char.IsWhiteSpace(input[unitEnd]) &&
                     KnownUnits.Contains(candidateUnit))
                 {
+                    parsed.RawQuantity = input[..digitEnd];
                     var leadingQty = ParseFraction(input[..digitEnd]);
                     if (leadingQty.HasValue)
                     {
@@ -193,9 +196,11 @@ public class RecipeIngredientParser : IRecipeIngredientParser
             var lastChar = input[^1];
             if ("½⅓¼⅛⅔¾⅜⅝⅞⅕⅙".Contains(lastChar))
             {
-                var candidateQty = ParseFraction(lastChar.ToString());
+                var rawQtyStr = lastChar.ToString();
+                var candidateQty = ParseFraction(rawQtyStr);
                 if (candidateQty.HasValue)
                 {
+                    parsed.RawQuantity = rawQtyStr;
                     parsed.Quantity = candidateQty;
                     return input[..^1].Trim();
                 }
@@ -214,6 +219,7 @@ public class RecipeIngredientParser : IRecipeIngredientParser
             if (secondLastSpace <= 0) return input;
 
             var candidateQtyStr = beforeUnit[(secondLastSpace + 1)..];
+            parsed.RawQuantity = candidateQtyStr;
             var candidateQty = ParseFraction(NormalizeQuantity(candidateQtyStr));
 
             if (candidateQty.HasValue)
@@ -229,6 +235,7 @@ public class RecipeIngredientParser : IRecipeIngredientParser
         // No known unit — try bare number at end: "Uova 2", "Tuorli 1"
         if (float.TryParse(candidateUnit, NumberStyles.Any, CultureInfo.InvariantCulture, out var bareQty))
         {
+            parsed.RawQuantity = candidateUnit;
             parsed.Quantity = bareQty;
             return input[..lastSpace].Trim();
         }
