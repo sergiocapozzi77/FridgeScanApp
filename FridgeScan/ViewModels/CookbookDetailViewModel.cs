@@ -129,12 +129,18 @@ public partial class CookbookDetailViewModel : BaseViewModel, IQueryAttributable
     [RelayCommand]
     private async Task OpenRecipe(SavedRecipe recipe)
     {
-        // Navigate immediately — SavedRecipeDetailPage handles loading + shimmer
-        var parameters = new Dictionary<string, object>
+        // Navigate immediately using PushAsync — always animates, unlike Shell route caching
+        var services = Application.Current?.Handler?.MauiContext?.Services;
+        if (services == null) return;
+        var page = services.GetRequiredService<SavedRecipeDetailPage>();
+        if (page.BindingContext is IQueryAttributable attributable)
         {
-            { "RecipeId", recipe.RowId }
-        };
-        await Shell.Current.GoToAsync("SavedRecipeDetailPage", parameters);
+            attributable.ApplyQueryAttributes(new Dictionary<string, object>
+            {
+                { "RecipeId", recipe.RowId }
+            });
+        }
+        await Shell.Current.Navigation.PushAsync(page, true);
     }
 
     [RelayCommand]
