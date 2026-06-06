@@ -34,7 +34,10 @@
       "Read(//usr/share/dotnet/**)",
       "Bash(dotnet list *)",
       "Bash(dotnet add *)",
-      "Bash(dotnet clean *)"
+      "Bash(dotnet clean *)",
+      "Bash(dotnet test *)",
+      "Bash(dotnet restore *)",
+      "Bash(Select-String -Pattern \"FAIL\")"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -39,6 +39,12 @@ public class MainActivity : MauiAppCompatActivity
         ProcessPendingShareUrl();
     }
 
+    /// <summary>
+    /// Handler for share intents from other apps.
+    /// Android share sheets often include text before the URL
+    /// (e.g. "Recipe Title | SiteName https://share.google/...").
+    /// Extracts only the URL so the import pipeline receives a clean address.
+    /// </summary>
     private void HandleShareIntent(Android.Content.Intent intent)
     {
         if (intent?.Action == Android.Content.Intent.ActionSend && intent?.Type == "text/plain")
@@ -46,11 +52,46 @@ public class MainActivity : MauiAppCompatActivity
             var sharedText = intent.GetStringExtra(Android.Content.Intent.ExtraText);
             if (!string.IsNullOrWhiteSpace(sharedText))
             {
-                _pendingShareUrl = Uri.EscapeDataString(sharedText);
-                // Try now in case Shell is already available (warm start via OnNewIntent)
-                ProcessPendingShareUrl();
+                var url = ExtractUrlFromText(sharedText);
+                Logger.Debug("FridgeScan.ShareIntent",
+                    $"sharedText='{sharedText}' extractedUrl='{url ?? "(null)"}'");
+
+                if (url != null)
+                {
+                    _pendingShareUrl = Uri.EscapeDataString(url);
+                    // Try now in case Shell is already available (warm start via OnNewIntent)
+                    ProcessPendingShareUrl();
+                }
             }
         }
+    }
+
+    /// <summary>
+    /// Extracts the last absolute http/https URL from a block of shared text.
+    /// Android share sheets commonly attach a title before the URL,
+    /// e.g. "Ciasto rabarbarowe | AniaGotuje.pl https://share.google/6dapkM9DoDmfTCRqz"
+    /// — this method picks out the URL portion.
+    /// Falls back to the full text if no http/https URL is found
+    /// (preserves existing behaviour for plain-URL shares).
+    /// </summary>
+    private static string? ExtractUrlFromText(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return null;
+
+        // Walk backwards through whitespace-delimited tokens and return
+        // the last one that looks like an absolute http/https URL.
+        var parts = text.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        for (int i = parts.Length - 1; i >= 0; i--)
+        {
+            if (Uri.TryCreate(parts[i], UriKind.Absolute, out var uri) &&
+                (uri.Scheme == "http" || uri.Scheme == "https"))
+            {
+                return parts[i];
+            }
+        }
+
+        // No URL-like token found — let the existing pipeline handle it as-is.
+        return text;
     }
 
     private void ProcessPendingShareUrl()

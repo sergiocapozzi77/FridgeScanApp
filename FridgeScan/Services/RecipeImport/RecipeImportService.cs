@@ -26,11 +26,12 @@ public class RecipeImportService
     public async Task<RecipeSuggestion?> ImportFromUrlAsync(string url)
     {
         LastErrorMessage = null;
-        var html = await FetchHtmlAsync(url);
-        if (html == null)
+        var fetchResult = await FetchHtmlAsync(url);
+        if (fetchResult == null)
             return null;
 
-        var baseUrl = new Uri(url);
+        var html = fetchResult.Html;
+        var baseUrl = fetchResult.FinalUri;
 
         var extractTasks = _extractors.Select(e => e.ExtractAsync(html, baseUrl));
         var results = await Task.WhenAll(extractTasks);
@@ -54,7 +55,7 @@ public class RecipeImportService
         var recipe = new RecipeSuggestion
         {
             Name = merged.Name ?? "Unknown Recipe",
-            Url = url,
+            Url = baseUrl.ToString(),
             Ingredients = merged.Ingredients ?? new List<string>(),
             MethodSteps = merged.MethodSteps ?? new List<InstructionSection>(),
             PrepTime = merged.PrepTime ?? string.Empty,
@@ -66,7 +67,7 @@ public class RecipeImportService
             Nutritions = merged.Nutritions ?? new List<string>(),
         };
 
-        Logger.Debug(Tag, $"imported recipe: name='{recipe.Name}', ingredients={recipe.Ingredients.Count}, steps={recipe.MethodSteps.Count}, source='{recipe.RecipeSource}'");
+        Logger.Debug(Tag, $"imported recipe: name='{recipe.Name}', url='{recipe.Url}', ingredients={recipe.Ingredients.Count}, steps={recipe.MethodSteps.Count}, source='{recipe.RecipeSource}'");
 
         return recipe;
     }
@@ -135,15 +136,32 @@ public class RecipeImportService
     }
 
     /// <summary>
+    /// Holds the fetched HTML together with the final URI after any HTTP redirects.
+    /// This is critical for share.google and other short-link redirectors where
+    /// the resolved URL is needed to correctly resolve relative image links.
+    /// </summary>
+    private sealed record FetchResult(string Html, Uri FinalUri);
+
+    /// <summary>
     /// Attempts to fetch HTML from the URL, first via HttpClient (fast path),
     /// falling back to a platform WebView when the server blocks the request.
+    /// Returns both the HTML content and the final URI after all redirects.
     /// </summary>
-    private async Task<string?> FetchHtmlAsync(string url)
+    private async Task<FetchResult?> FetchHtmlAsync(string url)
     {
         // ---- Attempt 1: Direct HttpClient (fast, lightweight) ----
         try
         {
-            return await _httpClient.GetStringAsync(url);
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var html = await response.Content.ReadAsStringAsync();
+            // After following redirects, RequestUri reflects the final URL.
+            var finalUri = response.RequestMessage?.RequestUri ?? new Uri(url);
+
+            if (finalUri.ToString() != url)
+                Logger.Debug(Tag, $"redirect resolved: '{url}' -> '{finalUri}'");
+
+            return new FetchResult(html, finalUri);
         }
         catch (HttpRequestException ex) when (ex.StatusCode.HasValue)
         {
@@ -158,7 +176,8 @@ public class RecipeImportService
                 if (webHtml != null)
                 {
                     Logger.Debug(Tag, $"WebView fallback succeeded ({webHtml.Length} chars)");
-                    return webHtml;
+                    // WebView doesn't track final redirect URL, so use the original
+                    return new FetchResult(webHtml, new Uri(url));
                 }
                 Logger.Debug(Tag, "WebView fallback also failed");
             }
