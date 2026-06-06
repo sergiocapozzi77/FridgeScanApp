@@ -6,6 +6,7 @@
     xmlns:sfCards="clr-namespace:Syncfusion.Maui.Cards;assembly=Syncfusion.Maui.Cards"
     xmlns:sfPull="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
     xmlns:sfBusy="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Shimmer;assembly=Syncfusion.Maui.Core"
     xmlns:views="clr-namespace:FridgeScan.Views"
     xmlns:controls="clr-namespace:FridgeScan.Controls"
     xmlns:models="clr-namespace:FridgeScan.Models"
@@ -39,45 +40,115 @@
                        HorizontalOptions="Center" />
             </Border>
         </Grid>
-        <sfPull:SfPullToRefresh Grid.Row="1"
-                                 IsRefreshing="{Binding IsLoading}"
-                                 RefreshCommand="{Binding LoadCookbooksCommand}">
-            <sfPull:SfPullToRefresh.PullableContent>
-                <CollectionView ItemsSource="{Binding Cookbooks}"
-                                ItemsLayout="VerticalGrid, 2"
-                                SelectionMode="Single"
-                                SelectionChanged="OnCookbookSelected"
-                                Margin="12,0">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Cookbook">
-                            <sfCards:SfCardView Margin="5"
-                                                CornerRadius="16"
-                                                Padding="0"
-                                                BackgroundColor="#161638">
-                                <VerticalStackLayout Padding="0" Spacing="0">
-                                    <views:CookbookMosaic ImageUrls="{Binding PreviewImageUrls}" HeightRequest="150" />
-                                    <VerticalStackLayout Padding="12,10,12,12">
-                                        <Label Text="{Binding Name}"
-                                               FontSize="14"
-                                               FontAttributes="Bold"
-                                               TextColor="White"
-                                               LineBreakMode="TailTruncation"
-                                               MaxLines="2" />
-                                        <Label FontSize="12" TextColor="#8888AA">
-                                            <Label.Text>
-                                                <MultiBinding StringFormat="{}{0} recipes">
-                                                    <Binding Path="RecipeCount" />
-                                                </MultiBinding>
-                                            </Label.Text>
-                                        </Label>
-                                    </VerticalStackLayout>
+        <shimmer:SfShimmer Grid.Row="1"
+                           IsActive="{Binding IsLoading}"
+                           Fill="#0D0D2B"
+                           WaveColor="#252555"
+                           BackgroundColor="#0D0D2B">
+            <shimmer:SfShimmer.CustomView>
+                <VerticalStackLayout Padding="12,0,12,0" Spacing="10">
+                    <!-- Row 1: skeleton cards -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0"
+                                StrokeShape="RoundRectangle 16"
+                                Stroke="Transparent"
+                                BackgroundColor="Transparent"
+                                HeightRequest="240">
+                            <VerticalStackLayout Spacing="0">
+                                <BoxView HeightRequest="150" Color="#1E1E3A" VerticalOptions="Start" CornerRadius="16,16,0,0" />
+                                <VerticalStackLayout Padding="12,10,12,12" Spacing="8">
+                                    <BoxView HeightRequest="14" WidthRequest="130" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
+                                    <BoxView HeightRequest="10" WidthRequest="80" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
                                 </VerticalStackLayout>
-                            </sfCards:SfCardView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </sfPull:SfPullToRefresh.PullableContent>
-        </sfPull:SfPullToRefresh>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 16"
+                                Stroke="Transparent"
+                                BackgroundColor="Transparent"
+                                HeightRequest="240">
+                            <VerticalStackLayout Spacing="0">
+                                <BoxView HeightRequest="150" Color="#1E1E3A" VerticalOptions="Start" CornerRadius="16,16,0,0" />
+                                <VerticalStackLayout Padding="12,10,12,12" Spacing="8">
+                                    <BoxView HeightRequest="14" WidthRequest="110" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
+                                    <BoxView HeightRequest="10" WidthRequest="70" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                    <!-- Row 2: skeleton cards -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0"
+                                StrokeShape="RoundRectangle 16"
+                                Stroke="Transparent"
+                                BackgroundColor="Transparent"
+                                HeightRequest="240">
+                            <VerticalStackLayout Spacing="0">
+                                <BoxView HeightRequest="150" Color="#1E1E3A" VerticalOptions="Start" CornerRadius="16,16,0,0" />
+                                <VerticalStackLayout Padding="12,10,12,12" Spacing="8">
+                                    <BoxView HeightRequest="14" WidthRequest="100" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
+                                    <BoxView HeightRequest="10" WidthRequest="90" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 16"
+                                Stroke="Transparent"
+                                BackgroundColor="Transparent"
+                                HeightRequest="240">
+                            <VerticalStackLayout Spacing="0">
+                                <BoxView HeightRequest="150" Color="#1E1E3A" VerticalOptions="Start" CornerRadius="16,16,0,0" />
+                                <VerticalStackLayout Padding="12,10,12,12" Spacing="8">
+                                    <BoxView HeightRequest="14" WidthRequest="120" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
+                                    <BoxView HeightRequest="10" WidthRequest="75" Color="#1E1E3A" HorizontalOptions="Start" CornerRadius="4" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </shimmer:SfShimmer.CustomView>
+
+            <sfPull:SfPullToRefresh IsRefreshing="{Binding IsLoading}"
+                                     RefreshCommand="{Binding LoadCookbooksCommand}"
+                                     BackgroundColor="#0D0D2B">
+                <sfPull:SfPullToRefresh.PullableContent>
+                    <CollectionView ItemsSource="{Binding Cookbooks}"
+                                    ItemsLayout="VerticalGrid, 2"
+                                    SelectionMode="Single"
+                                    SelectionChanged="OnCookbookSelected"
+                                    Margin="12,0"
+                                    BackgroundColor="#0D0D2B">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Cookbook">
+                                <sfCards:SfCardView Margin="5"
+                                                    CornerRadius="16"
+                                                    Padding="0"
+                                                    BackgroundColor="#161638">
+                                    <VerticalStackLayout Padding="0" Spacing="0">
+                                        <views:CookbookMosaic ImageUrls="{Binding PreviewImageUrls}" HeightRequest="150" />
+                                        <VerticalStackLayout Padding="12,10,12,12">
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="2" />
+                                            <Label FontSize="12" TextColor="#8888AA">
+                                                <Label.Text>
+                                                    <MultiBinding StringFormat="{}{0} recipes">
+                                                        <Binding Path="RecipeCount" />
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+                                </sfCards:SfCardView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </sfPull:SfPullToRefresh.PullableContent>
+            </sfPull:SfPullToRefresh>
+        </shimmer:SfShimmer>
         </Grid>
 
         <!-- Floating Bottom Bar -->
